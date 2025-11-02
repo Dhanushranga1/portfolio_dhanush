@@ -3,10 +3,10 @@ import projectImage from '@assets/generated_images/Project_dashboard_interface_6
 
 export default function ProjectCardExample() {
   return (
-    <div className="max-w-md">
+    <div className="max-w-md bg-background p-6">
       <ProjectCard
-        title="TaskFlow Pro"
-        description="A modern task management application with real-time collaboration, beautiful UI, and powerful features for teams."
+        title="taskflow"
+        description="a context-aware desktop focus companion"
         image={projectImage}
         tags={["React", "TypeScript", "Node.js"]}
         liveUrl="#"

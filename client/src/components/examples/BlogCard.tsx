@@ -1,16 +1,13 @@
 import BlogCard from '../BlogCard'
-import blogImage from '@assets/generated_images/Abstract_tech_visual_1ab6a0b2.png'
 
 export default function BlogCardExample() {
   return (
-    <div className="max-w-md">
+    <div className="max-w-2xl bg-background p-6">
       <BlogCard
-        title="Building Modern Web Applications with React"
-        excerpt="Learn how to create beautiful, performant web applications using React, TypeScript, and modern development practices."
-        date="Nov 2, 2025"
-        readTime="5 min read"
+        title="building modern web applications"
+        excerpt="intuitive page transitions that map website hierarchy to 2D space (in sveltekit)"
+        date="02/22/2025"
         category="Development"
-        image={blogImage}
       />
     </div>
   )

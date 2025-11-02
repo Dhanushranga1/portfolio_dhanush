@@ -1,9 +1,6 @@
 import { useState } from "react";
-import { Mail, Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
 export default function ContactForm() {
@@ -18,56 +15,66 @@ export default function ContactForm() {
     e.preventDefault();
     console.log("Form submitted:", formData);
     toast({
-      title: "Message sent!",
-      description: "Thanks for reaching out. I'll get back to you soon!",
+      title: "message sent",
+      description: "thanks for reaching out. i'll get back to you soon!",
     });
     setFormData({ name: "", email: "", message: "" });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6" data-testid="form-contact">
+    <form onSubmit={handleSubmit} className="space-y-6 font-mono" data-testid="form-contact">
       <div className="space-y-2">
-        <Label htmlFor="name">Name</Label>
+        <label htmlFor="name" className="text-sm text-muted-foreground">
+          name
+        </label>
         <Input
           id="name"
-          placeholder="Your name"
+          placeholder="your name"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           required
+          className="font-mono text-sm border-border"
           data-testid="input-name"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <label htmlFor="email" className="text-sm text-muted-foreground">
+          email (if you want a reply)
+        </label>
         <Input
           id="email"
           type="email"
           placeholder="your@email.com"
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          required
+          className="font-mono text-sm border-border"
           data-testid="input-email"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="message">Message</Label>
+        <label htmlFor="message" className="text-sm text-muted-foreground">
+          your message...
+        </label>
         <Textarea
           id="message"
-          placeholder="Your message..."
+          placeholder=""
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-          className="min-h-[150px] resize-none"
+          className="min-h-[150px] resize-none font-mono text-sm border-border"
           required
           data-testid="input-message"
         />
       </div>
 
-      <Button type="submit" size="lg" className="w-full sm:w-auto" data-testid="button-submit">
-        <Send className="h-4 w-4 mr-2" />
-        Send Message
-      </Button>
+      <button
+        type="submit"
+        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        data-testid="button-submit"
+      >
+        submit →
+      </button>
     </form>
   );
 }

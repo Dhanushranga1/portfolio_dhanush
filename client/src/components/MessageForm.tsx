@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 
@@ -10,8 +8,6 @@ interface MessageFormProps {
 
 export default function MessageForm({ onSubmit }: MessageFormProps) {
   const [message, setMessage] = useState("");
-  const [charCount, setCharCount] = useState(0);
-  const maxChars = 500;
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -19,42 +15,30 @@ export default function MessageForm({ onSubmit }: MessageFormProps) {
     if (message.trim()) {
       onSubmit?.(message);
       toast({
-        title: "Message sent!",
-        description: "Thank you for your message. I'll read it soon!",
+        title: "message sent",
+        description: "thanks for your message!",
       });
       setMessage("");
-      setCharCount(0);
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value;
-    if (value.length <= maxChars) {
-      setMessage(value);
-      setCharCount(value.length);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4" data-testid="form-message">
-      <div className="space-y-2">
-        <Textarea
-          placeholder="Leave an anonymous message..."
-          value={message}
-          onChange={handleChange}
-          className="min-h-[150px] resize-none"
-          data-testid="input-message"
-        />
-        <div className="flex items-center justify-between text-sm">
-          <span className={`${charCount > maxChars * 0.9 ? "text-destructive" : "text-muted-foreground"}`}>
-            {charCount} / {maxChars}
-          </span>
-        </div>
-      </div>
-      <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={!message.trim()} data-testid="button-send-message">
-        <Send className="h-4 w-4 mr-2" />
-        Send Message
-      </Button>
+    <form onSubmit={handleSubmit} className="space-y-4 font-mono" data-testid="form-message">
+      <Textarea
+        placeholder="your message..."
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        className="min-h-[120px] resize-none font-mono text-sm border-border"
+        data-testid="input-message"
+      />
+      <button
+        type="submit"
+        disabled={!message.trim()}
+        className="text-sm text-muted-foreground hover:text-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        data-testid="button-send-message"
+      >
+        submit →
+      </button>
     </form>
   );
 }

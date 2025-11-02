@@ -2,156 +2,180 @@
 
 ## Design Approach
 
-**Reference-Based Approach**: Drawing inspiration from modern portfolio sites like Awwwards winners, Bruno Simon's portfolio, and the minimalist aesthetic of Linear combined with the playfulness of uiverse.io components. The design emphasizes bold typography, generous whitespace, and carefully placed micro-interactions.
+**Reference-Based Approach**: Inspired by refact0r.dev, Rasmus Andersson's blog, and terminal-based developer portfolios. The design embraces a minimalist code/terminal aesthetic with monospace typography, very dark backgrounds, and text-based interfaces reminiscent of command-line environments.
 
-## Core Design Principles
-
-1. **Bold Minimalism**: Large typography, generous spacing, purposeful negative space
-2. **Micro-Interactions**: Subtle animations inspired by 60fps.design - hover states, reveal effects, smooth transitions
-3. **Modern Brutalism**: Strong typography hierarchy with unexpected UI elements from uiverse.io
-4. **Content-First**: Let work and writing breathe with minimal chrome
+**Core Principles**:
+1. **Terminal Aesthetic**: Text-based interfaces, minimal visual decoration
+2. **Monospace Everything**: Consistent typeface across all content
+3. **Information Density**: Efficient use of space, list-based layouts
+4. **Subtle Interactions**: Underlines, brackets, cursor indicators instead of animations
 
 ## Typography System
 
-**Fonts via Google Fonts/Fontshare**:
-- Display/Headings: "Clash Display" or "Cabinet Grotesk" (bold, modern, geometric)
-- Body: "General Sans" or "Satoshi" (clean, highly legible)
-- Mono/Code: "JetBrains Mono" for technical content
+**Fonts via Google Fonts**:
+- Primary: "JetBrains Mono" or "Fira Code" (all text content)
+- Fallback: "Courier New", monospace
 
-**Hierarchy**:
-- Hero Name: 4xl to 8xl (responsive), font-weight 700-800, tight letter-spacing
-- Section Headings: 3xl to 5xl, font-weight 700
-- Subsection Headings: xl to 2xl, font-weight 600
-- Body Text: base to lg, font-weight 400-500, increased line-height (1.7-1.8)
-- Captions/Meta: sm to base, font-weight 400
+**Hierarchy** (achieved through size and weight only):
+- Page Headers: text-4xl to text-5xl, font-weight-700
+- Section Headers: text-2xl to text-3xl, font-weight-600
+- Content Headers: text-xl, font-weight-600
+- Body Text: text-base, font-weight-400
+- Metadata: text-sm, font-weight-400
+- All text uses increased letter-spacing (tracking-wide)
 
 ## Layout System
 
-**Spacing Units**: Tailwind units of 4, 6, 8, 12, 16, 20, 24, 32 for consistent rhythm
+**Spacing Units**: Tailwind units of 2, 4, 6, 8, 12, 16, 20, 24
 
 **Grid Structure**:
-- Container: max-w-7xl centered with px-6 to px-12
-- Section Padding: py-20 to py-32 (desktop), py-12 to py-16 (mobile)
-- Component Spacing: gap-6 to gap-12 between major elements
+- Container: max-w-4xl centered (narrower for terminal feel)
+- Consistent left padding: pl-4 or pl-6 (terminal prompt simulation)
+- Section spacing: space-y-12 to space-y-16
+- Line spacing: leading-relaxed (1.75) for readability
 
-**Responsive Breakpoints**:
-- Mobile-first approach
-- Grid columns: 1 (mobile) → 2 (md) → 3 (lg) for galleries
-- Stack to side-by-side at md breakpoint for content sections
+**Terminal Decorations**:
+- Prompt indicators: ">" or "$" prefix for sections
+- Separators: ASCII lines (─────) or simple borders
+- Brackets: [text] for metadata, tags
+- Cursor: Blinking underscore or block for active states
 
 ## Page Layouts
 
 ### Homepage
-- **Hero Section** (min-h-screen): Full-screen introduction with large animated typography displaying "Dhanush Ranga Gopisetty" with staggered fade-in. Tagline below (text-xl). Minimal scroll indicator. No background image - pure typography focus with gradient mesh effect.
-- **Featured Work Grid**: 2-3 large project cards with hover-triggered reveal effects
-- **Quick Bio**: Single column, max-w-3xl, large readable text
-- **Recent Posts**: Horizontal scroll cards for latest blog entries
-- **CTA Section**: Prominent message board invitation
+**Terminal Boot Sequence**: Opening animation showing ASCII art name or simple text fade-in of "dhanush@portfolio:~$"
+**Header Section**: Name as h1 (text-4xl), tagline below (text-lg), simple navigation links as text list
+**About Block**: Paragraph-style bio, max-w-3xl, no decorative elements
+**Projects List**: Simple ordered/unordered list format:
+```
+Projects
+--------
+[01] Project Name - Brief description (tech, tech, tech) → Link
+[02] Project Name - Brief description (tech, tech, tech) → Link
+```
+**Recent Posts**: Same list format with dates in [YYYY-MM-DD] format
+**Contact/Links**: Simple text links with arrows (→) as separators
 
-### Projects Gallery
-- **Masonry Grid Layout**: Responsive grid (grid-cols-1 md:grid-cols-2 lg:grid-cols-3)
-- **Project Cards**: Image with overlay, title, tech stack tags, animated border on hover
-- **Filter Bar**: Pill-style category filters with active state indicators
-- **Detail Modal**: Full-screen overlay with project images, description, tech stack, links
+### Projects Page
+**List Layout**: Single column, full-width container
+**Project Entries**:
+- Header: [##] Project Name
+- Metadata: [date] | [category] | [tech stack]
+- Description: Paragraph text
+- Links: → Live Demo | → Source Code
+- Separator: Horizontal line between entries
+**Filter Navigation**: Text-based links at top: "all | web | mobile | design"
 
-### Blog (CMS)
-- **Article Grid**: 2-column layout (lg) with featured post spanning full width
-- **Article Cards**: Thumbnail, title, excerpt, read time, date, category tags
-- **Article Page**: Single column max-w-3xl, generous line-height, pull quotes, code blocks with syntax highlighting
-- **CMS Editor**: Clean interface with rich text toolbar, category selector, image upload
+### Blog Page
+**Article List**: Chronological, no thumbnails
+**Entry Format**:
+```
+[2024-01-15] Article Title
+    Category: Development | Read Time: 5 min
+    Excerpt text here...
+    → Read More
+```
+**Article Detail**: 
+- Full-width text (max-w-3xl)
+- Inline code blocks with subtle background
+- Blockquotes with left border indicator
+- Headings with "##" or "###" prefixes
 
-### Photo Gallery (CMS)
-- **Masonry Grid**: Pinterest-style layout with varying image heights
-- **Lightbox**: Full-screen image viewer with prev/next navigation, close button
-- **Upload Interface**: Drag-and-drop zone with progress indicators
-- **Album Organization**: Tabs or filter system for different photo categories
+### Photo Gallery
+**Grid Layout**: Simple 2-column (md) to 3-column (lg) grid
+**Image Presentation**: Aspect-ratio boxes, minimal borders
+**Caption Format**: [filename.jpg] below each image
+**Lightbox**: Full-screen overlay, simple prev/next text navigation
 
 ### Message Board
-- **Message Wall**: Stacked message cards, newest first, max-w-4xl centered
-- **Anonymous Post Form**: Simple textarea with character counter, floating submit button
-- **Message Cards**: Timestamp, content, subtle animated entry (slide up + fade)
-- **Moderation Tools**: Hidden admin controls for managing messages
+**Terminal Chat Interface**: Messages displayed like console output
+**Entry Format**:
+```
+[anon-user-id] @ [timestamp]
+> Message content here
+```
+**Input**: Simple textarea with "> " prefix, submit as text link
+**Layout**: Reverse chronological, max-w-3xl
 
-### About
-- **Split Layout**: Text content (60%) + Skills/Tools visualization (40%)
-- **Tech Stack**: Icon grid with labels, hover effects showing proficiency
-- **Timeline**: Optional career/education milestones with connecting lines
+### About Page
+**Single Column**: Comprehensive bio sections
+**Skills Section**: List format with proficiency indicators
+```
+Languages & Tools
+-----------------
+JavaScript/TypeScript  [████████░░] 80%
+React/Next.js          [█████████░] 90%
+```
+**Timeline**: Simple date-aligned list of experiences
 
 ## Component Library
 
 ### Navigation
-- **Fixed Header**: Backdrop blur, subtle shadow on scroll, logo left, nav links right
-- **Mobile Menu**: Full-screen overlay with staggered link animations
-- **Active State**: Underline indicator with smooth transition
+**Header**: Fixed top bar with text links, no background initially, border-bottom on scroll
+**Link Format**: Underline on hover only, current page has "> " prefix
+**Mobile**: Stacked text menu, full-screen overlay with dark background
 
-### Buttons & CTAs
-- **Primary Button**: Rounded corners (rounded-lg), padding px-8 py-4, subtle hover lift (translate-y-1)
-- **Secondary Button**: Outline style with hover fill animation
-- **Icon Buttons**: Rounded-full, hover scale effect
-- **Floating Action Button**: Fixed position for message board/scroll-to-top
+### Buttons & Links
+**Primary Links**: Underlined text with "→" suffix
+**Active States**: Brackets around text [link] or inverse background
+**External Links**: "↗" suffix indicator
+**No button components**: All interactions are text-based links
 
-### Cards
-- **Project Cards**: Aspect ratio 16:9 or 4:3, rounded-2xl, overflow-hidden, image with gradient overlay
-- **Blog Cards**: Vertical layout, rounded-xl, hover shadow increase
-- **Message Cards**: Soft rounded corners (rounded-xl), border accent on left edge, padding p-6
-
-### Interactive Elements (Inspired by uiverse.io)
-- **Animated Loaders**: Minimal spinner or skeleton screens during CMS operations
-- **Hover Cards**: 3D tilt effect on project/blog cards (subtle, 2-3deg max)
-- **Gradient Borders**: Animated gradient borders on featured elements
-- **Glowing Effects**: Subtle glow on active inputs and focused elements
-- **Morphing Icons**: Menu hamburger → X transition, expand/collapse arrows
+### Lists & Data Display
+**Project/Post Cards**: No cards - simple list entries with metadata
+**Tags**: [tag] format, space-separated
+**Dates**: [YYYY-MM-DD] or relative format in brackets
+**Status Indicators**: [active] [archived] [wip] in brackets
 
 ### Forms
-- **Input Fields**: Minimal borders, bottom-border-only style, focus state with border thickness increase
-- **Text Areas**: Rounded-lg border, focus ring, auto-expand for message board
-- **Upload Zones**: Dashed border, hover state with background shift, drag-over animation
-- **Validation**: Inline error messages, success checkmarks
+**Inputs**: Single-line bottom border, no rounded corners
+**Textareas**: Minimal border, monospace font
+**Labels**: Text above input, no special styling
+**Validation**: Inline text messages, ✓ or ✗ symbols
 
-### Data Display
-- **Tags/Pills**: Rounded-full, small text, padding px-3 py-1, hover brightness
-- **Timestamps**: Relative time format ("2 hours ago"), muted styling
-- **Stats Counter**: Large numbers with animated count-up on scroll into view
+### Code Blocks
+**Inline Code**: Subtle background, same monospace font
+**Code Blocks**: Slightly different background, line numbers optional
+**Syntax Highlighting**: Minimal, 2-3 accent colors maximum
 
-## Animations & Transitions
+## Interactions & Animations
 
-**Timing**: Fast interactions (150-200ms), content reveals (300-500ms), page transitions (400-600ms)
+**Minimal Motion**: 
+- Cursor blink on active inputs
+- Simple fade transitions (200ms)
+- No hover transforms, scales, or rotations
+- Text underline on link hover only
 
-**Effects**:
-- Fade + Slide Up: For content reveals on scroll
-- Scale + Opacity: For card hovers
-- Stagger: For list/grid item animations
-- Smooth Scroll: For anchor link navigation
-- Page Transitions: Fade between routes (Next.js page transitions)
+**Page Transitions**: Quick fade (150ms) between routes
 
-**Performance**: Use CSS transforms (translate, scale) and opacity only. No layout-triggering animations.
+**Scroll Behavior**: Smooth scroll for anchor links, no parallax effects
 
 ## Images
 
-**Hero Section**: No large hero image - typography-focused with animated gradient mesh background
+**No Hero Images**: Homepage is text-only
 
-**Project Cards**: Featured project images at 16:9 aspect ratio, optimized WebP format
+**Project Screenshots**: Include as necessary in project detail views, full-width or inline, simple border treatment
 
-**Blog Thumbnails**: 3:2 aspect ratio, consistent sizing across grid
+**Photo Gallery**: Only page with heavy image use, minimal presentation
 
-**Photo Gallery**: Variable aspect ratios for authentic portfolio feel, lazy loading
+**About Page**: Optional small avatar/headshot (128x128px, square)
 
-**About Section**: Professional headshot (1:1 ratio, rounded), optional tech stack icons
+**All images**: Sharp edges (no border-radius), thin border if needed
 
 ## Accessibility
 
-- Minimum touch target: 44x44px
-- Keyboard navigation: Visible focus states, logical tab order
-- ARIA labels: For icon-only buttons, modal dialogs
-- Color contrast: Ensure text meets WCAG AA standards
-- Skip links: For keyboard users to bypass navigation
-- Alt text: Descriptive for all images, empty for decorative
+- High contrast text (light on very dark background)
+- Focus indicators: Visible outline or inverse background
+- Touch targets: Minimum 44px height for links
+- Keyboard navigation: Full support with focus states
+- Screen reader: Semantic HTML, proper heading hierarchy
+- Skip links: "Skip to content" at top
 
 ## Technical Specifications
 
-- **Framework**: Next.js with App Router
-- **Styling**: Tailwind CSS with custom configuration
-- **Icons**: Heroicons for UI elements
-- **CMS**: Local state management or lightweight headless CMS integration
-- **Database**: For message board and CMS content persistence
-- **Animation**: Framer Motion for complex animations, CSS transitions for simple effects
+- Framework: Next.js with App Router
+- Styling: Tailwind CSS with monospace font configuration
+- Icons: Minimal use - prefer text symbols (→ ↗ ✓ ✗)
+- State: Local state or lightweight CMS
+- Database: Message board persistence
+- Performance: No heavy animations, optimized images only where used

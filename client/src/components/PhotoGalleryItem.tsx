@@ -5,42 +5,33 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 interface PhotoGalleryItemProps {
   src: string;
   alt: string;
-  aspectRatio?: "square" | "portrait" | "landscape";
 }
 
 export default function PhotoGalleryItem({
   src,
   alt,
-  aspectRatio = "landscape",
 }: PhotoGalleryItemProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
-
-  const aspectClasses = {
-    square: "aspect-square",
-    portrait: "aspect-[3/4]",
-    landscape: "aspect-video",
-  };
 
   return (
     <>
       <div
-        className={`group relative overflow-hidden rounded-xl cursor-pointer hover-elevate active-elevate-2 transition-all ${aspectClasses[aspectRatio]}`}
+        className="cursor-pointer border border-border overflow-hidden hover:border-primary transition-colors"
         onClick={() => setLightboxOpen(true)}
         data-testid={`photo-${alt.toLowerCase().replace(/\s+/g, '-')}`}
       >
         <img
           src={src}
           alt={alt}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-auto object-cover"
         />
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
       <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
-        <DialogContent className="max-w-7xl w-full p-0 bg-background/95 backdrop-blur-lg">
+        <DialogContent className="max-w-7xl w-full p-0 bg-background/95 backdrop-blur-lg border-border">
           <button
             onClick={() => setLightboxOpen(false)}
-            className="absolute top-4 right-4 z-50 p-2 rounded-full bg-background/80 hover-elevate active-elevate-2"
+            className="absolute top-4 right-4 z-50 p-2 text-foreground hover:text-primary transition-colors"
             data-testid="button-close-lightbox"
           >
             <X className="h-6 w-6" />
