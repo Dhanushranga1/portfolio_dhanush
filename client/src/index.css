@@ -132,57 +132,63 @@
   --elevate-1: rgba(255,255,255, .02);
   --elevate-2: rgba(255,255,255, .05);
 
-  --background: 210 11% 7%;
+  /* Hybrid Terminal Palette - Near-black blue/grey base */
+  --background: 210 14% 9%;          /* #121619 - bg-primary */
 
-  --foreground: 0 0% 85%;
+  --foreground: 171 23% 85%;          /* #d1e8e5 - text-primary (off-white with teal tint) */
 
-  --border: 210 11% 15%;
+  --border: 210 14% 18%;
 
-  --card: 210 11% 9%;
+  --card: 210 14% 11%;
 
-  --card-foreground: 0 0% 85%;
+  --card-foreground: 171 23% 85%;
 
-  --card-border: 210 11% 12%;
+  --card-border: 210 14% 14%;
 
-  --sidebar: 210 11% 8%;
+  --sidebar: 210 14% 10%;
 
-  --sidebar-foreground: 0 0% 85%;
+  --sidebar-foreground: 171 23% 85%;
 
-  --sidebar-border: 210 11% 14%;
+  --sidebar-border: 210 14% 16%;
 
-  --sidebar-primary: 200 95% 65%;
+  /* Mint teal accent - primary interactive color */
+  --sidebar-primary: 168 44% 65%;     /* #7fd0bd - accent-info */
 
-  --sidebar-primary-foreground: 210 11% 7%;
+  --sidebar-primary-foreground: 210 14% 9%;
 
-  --sidebar-accent: 210 11% 12%;
+  --sidebar-accent: 210 14% 14%;
 
-  --sidebar-accent-foreground: 0 0% 85%;
+  --sidebar-accent-foreground: 171 23% 85%;
 
-  --sidebar-ring: 200 95% 65%;
+  --sidebar-ring: 168 44% 65%;
 
-  --popover: 210 11% 9%;
+  --popover: 210 14% 11%;
 
-  --popover-foreground: 0 0% 85%;
+  --popover-foreground: 171 23% 85%;
 
-  --popover-border: 210 11% 15%;
+  --popover-border: 210 14% 18%;
 
-  --primary: 200 95% 65%;
+  /* Mint teal - primary brand color */
+  --primary: 168 44% 65%;             /* #7fd0bd */
 
-  --primary-foreground: 210 11% 7%;
+  --primary-foreground: 210 14% 9%;
 
-  --secondary: 210 11% 15%;
+  /* Darker grey for secondary elements */
+  --secondary: 0 0% 31%;              /* #4f4f4f - text-secondary */
 
-  --secondary-foreground: 0 0% 85%;
+  --secondary-foreground: 171 23% 85%;
 
-  --muted: 210 11% 12%;
+  --muted: 210 14% 14%;
 
-  --muted-foreground: 0 0% 55%;
+  --muted-foreground: 0 0% 55%;       /* Subtle grey for metadata */
 
-  --accent: 200 95% 65%;
+  /* Rust orange accent for CTAs */
+  --accent: 16 77% 54%;               /* #ea5c2a - accent-action */
 
-  --accent-foreground: 210 11% 7%;
+  --accent-foreground: 171 23% 95%;
 
-  --destructive: 0 70% 60%;
+  /* Rose red for warnings/errors */
+  --destructive: 353 97% 61%;         /* #fb3f58 - accent-warn */
 
   --destructive-foreground: 0 0% 98%;
 

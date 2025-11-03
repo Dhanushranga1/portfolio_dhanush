@@ -11,6 +11,15 @@ export default {
         sm: ".1875rem", /* 3px */
       },
       colors: {
+        // Hybrid Terminal palette - semantic tokens
+        terminal: {
+          bg: "#121619",          // Near-black blue/grey
+          text: "#d1e8e5",        // Off-white with teal tint
+          muted: "#4f4f4f",       // Dark grey for metadata
+          accent: "#7fd0bd",      // Mint teal for links/prompts
+          action: "#ea5c2a",      // Rust orange for CTAs
+          warn: "#fb3f58",        // Rose red for warnings
+        },
         // Flat / base colors (regular buttons)
         background: "hsl(var(--background) / <alpha-value>)",
         foreground: "hsl(var(--foreground) / <alpha-value>)",
@@ -86,7 +95,7 @@ export default {
         sans: ["Inter", "var(--font-sans)"],
         display: ["Space Grotesk", "Inter", "sans-serif"],
         serif: ["var(--font-serif)"],
-        mono: ["JetBrains Mono", "var(--font-mono)"],
+        mono: ["JetBrains Mono", "Fira Code", "Courier New", "monospace"],
       },
       keyframes: {
         "accordion-down": {
@@ -97,10 +106,30 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "blink": {
+          "0%, 49%": { opacity: "1" },
+          "50%, 100%": { opacity: "0" },
+        },
+        "typewriter": {
+          "0%": { width: "0" },
+          "100%": { width: "100%" },
+        },
+        "slide-in-underline": {
+          "0%": { width: "0" },
+          "100%": { width: "100%" },
+        },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "blink": "blink 1s step-end infinite",
+        "typewriter": "typewriter 2s steps(40) forwards",
+        "slide-in-underline": "slide-in-underline 0.2s ease-out forwards",
+        "fade-in": "fade-in 0.15s ease-in",
       },
     },
   },
