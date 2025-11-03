@@ -1,4 +1,5 @@
 import { Link, useLocation } from "wouter";
+import { Command } from "lucide-react";
 
 export default function Navigation() {
   const [location] = useLocation();
@@ -36,6 +37,23 @@ export default function Navigation() {
                 </span>
               </Link>
             ))}
+            
+            <button
+              onClick={() => {
+                // Trigger command palette
+                const event = new KeyboardEvent('keydown', {
+                  key: 'k',
+                  metaKey: true,
+                  bubbles: true
+                });
+                document.dispatchEvent(event);
+              }}
+              className="flex items-center gap-1 text-xs font-mono text-muted-foreground hover:text-foreground transition-colors px-2 py-1 border border-border rounded"
+              aria-label="Open command palette"
+            >
+              <Command className="h-3 w-3" />
+              <span>K</span>
+            </button>
           </div>
         </div>
       </div>
