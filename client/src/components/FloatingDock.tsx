@@ -18,9 +18,9 @@ export default function FloatingDock() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-      <div className="bg-terminal-bg/95 backdrop-blur-xl border border-terminal-border rounded-2xl shadow-2xl px-3 py-3">
-        <div className="flex items-center gap-2">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100]">
+      <div className="bg-black/90 backdrop-blur-xl border-2 border-white/20 rounded-2xl shadow-2xl px-4 py-3">
+        <div className="flex items-center gap-3">
           {navItems.map((item, index) => {
             const isActive = location === item.path;
             const Icon = item.icon;
@@ -34,22 +34,22 @@ export default function FloatingDock() {
                 >
                   {/* Tooltip */}
                   <div
-                    className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-terminal-bg border border-terminal-border rounded-lg text-xs font-mono whitespace-nowrap transition-all duration-200 ${
+                    className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-2 bg-black border border-white/30 rounded-lg text-xs font-mono whitespace-nowrap transition-all duration-200 text-white shadow-lg ${
                       hoveredIndex === index
                         ? "opacity-100 translate-y-0"
                         : "opacity-0 translate-y-1 pointer-events-none"
                     }`}
                   >
                     {item.label}
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px w-2 h-2 bg-terminal-bg border-r border-b border-terminal-border rotate-45" />
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px w-2 h-2 bg-black border-r border-b border-white/30 rotate-45" />
                   </div>
 
                   {/* Icon Button */}
                   <button
-                    className={`relative w-12 h-12 flex items-center justify-center rounded-xl transition-all duration-300 ${
+                    className={`relative w-14 h-14 flex items-center justify-center rounded-xl transition-all duration-300 ${
                       isActive
-                        ? "bg-terminal-accent-blue/20 text-terminal-accent-blue scale-110"
-                        : "text-terminal-text-dim hover:text-terminal-text hover:bg-terminal-bg-alt hover:scale-110"
+                        ? "bg-blue-500/30 text-blue-400 scale-110 shadow-lg shadow-blue-500/50"
+                        : "text-gray-400 hover:text-white hover:bg-white/10 hover:scale-110"
                     }`}
                   >
                     <Icon
@@ -60,7 +60,7 @@ export default function FloatingDock() {
                     
                     {/* Active Indicator */}
                     {isActive && (
-                      <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-terminal-accent-blue animate-pulse" />
+                      <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
                     )}
                   </button>
                 </div>
@@ -71,7 +71,7 @@ export default function FloatingDock() {
       </div>
 
       {/* Glow effect */}
-      <div className="absolute inset-0 -z-10 bg-terminal-accent-blue/5 blur-xl rounded-3xl" />
+      <div className="absolute inset-0 -z-10 bg-blue-500/10 blur-2xl rounded-3xl" />
     </div>
   );
 }
