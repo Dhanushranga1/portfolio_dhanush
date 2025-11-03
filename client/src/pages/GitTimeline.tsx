@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { fetchCommits, fetchCommitDetails, transformGitHubCommit } from "@/lib/githubApi";
+import { useToast } from "@/hooks/use-toast";
 import { 
   GitCommit, 
   GitBranch, 
@@ -103,14 +105,54 @@ const mockCommits: GitCommit[] = [
 ];
 
 export default function GitTimeline() {
+  const { toast } = useToast();
   const [commits, setCommits] = useState<GitCommit[]>(mockCommits);
   const [filteredCommits, setFilteredCommits] = useState<GitCommit[]>(mockCommits);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [branchFilter, setBranchFilter] = useState<string>("all");
-  const [playbackSpeed, setPlaybackSpeed] = useState<number>(2000);
+  const [selectedBranch, setSelectedBranch] = useState("all");
+  const [branchFilter, setBranchFilter] = useState("all");
   const [selectedCommit, setSelectedCommit] = useState<GitCommit | null>(mockCommits[0]);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1000);
+  const [isLoadingGitHub, setIsLoadingGitHub] = useState(false);
+  const [useRealData, setUseRealData] = useState(false);
+  
+  // Configuration - update these with your GitHub details
+  const GITHUB_OWNER = "dhanush"; // Your GitHub username
+  const GITHUB_REPO = "UniquePortfolio"; // Your repo name
+  const GITHUB_BRANCH = "enhance/hybrid-terminal"; // Default branch
+  
+  // Load GitHub data
+  const loadGitHubData = useCallback(async () => {
+    setIsLoadingGitHub(true);
+    try {
+      const githubCommits = await fetchCommits(GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, 30);
+      const transformedCommits = githubCommits.map(commit => 
+        transformGitHubCommit(commit, GITHUB_BRANCH)
+      );
+      setCommits(transformedCommits);
+      setFilteredCommits(transformedCommits);
+      setCurrentIndex(0);
+      if (transformedCommits.length > 0) {
+        setSelectedCommit(transformedCommits[0]);
+      }
+      setUseRealData(true);
+      toast({
+        title: "GitHub data loaded",
+        description: `Loaded ${transformedCommits.length} commits from ${GITHUB_OWNER}/${GITHUB_REPO}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Failed to load GitHub data",
+        description: error instanceof Error ? error.message : "Unknown error",
+        variant: "destructive",
+      });
+      console.error("GitHub API error:", error);
+    } finally {
+      setIsLoadingGitHub(false);
+    }
+  }, [GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, toast]);
 
   // Get unique branches
   const branches = Array.from(new Set(commits.map(c => c.branch)));
@@ -221,9 +263,21 @@ export default function GitTimeline() {
         {/* Controls */}
         <Card className="border-terminal-muted bg-terminal-bg/50">
           <CardHeader>
-            <CardTitle className="text-terminal-accent-action flex items-center gap-2">
-              <Play className="w-5 h-5" />
-              playback controls
+            <CardTitle className="text-terminal-accent-action flex items-center gap-2 justify-between">
+              <span className="flex items-center gap-2">
+                <Play className="w-5 h-5" />
+                playback controls
+              </span>
+              <Button
+                onClick={loadGitHubData}
+                disabled={isLoadingGitHub}
+                variant={useRealData ? "secondary" : "default"}
+                size="sm"
+                className="gap-2"
+              >
+                <GitBranch className="w-4 h-4" />
+                {isLoadingGitHub ? "loading..." : useRealData ? "using real data" : "load from GitHub"}
+              </Button>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
