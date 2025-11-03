@@ -252,3 +252,126 @@ git log --oneline -5
 ---
 
 Last updated: November 4, 2025, 04:20 IST
+
+---
+
+## 📊 MILESTONE COMPLETION LOG
+
+### ✅ Milestone 1: Core Navigation (November 4, 2025)
+**Time**: 30 minutes  
+**Commit**: `2ee1824`
+
+**Deliverables:**
+- ✅ TerminalNavbar component (121 lines)
+  - Bottom-centered fixed position
+  - Keyboard navigation (ArrowLeft/Right, Enter)
+  - ARIA-compliant (navigation, menubar, menuitem roles)
+  - Responsive design (desktop labels, mobile tooltips)
+  - Active indicator with `>` prefix in accent-info color
+  - Focus management with visible focus rings
+
+- ✅ CommandHints component (66 lines)
+  - Dismissible keyboard shortcuts help
+  - localStorage persistence ("terminal-hints-dismissed")
+  - Platform detection (⌘ vs Ctrl)
+  - ARIA status region (role="status", aria-live="polite")
+  - Fade-in animation
+
+- ✅ App.tsx integration
+  - Replaced FloatingDock import with TerminalNavbar
+  - Added CommandHints component
+  - Verified no compilation errors
+
+- ✅ Cleanup
+  - Deleted FloatingDock.tsx (old glossy dock component)
+
+**Testing:**
+- Keyboard navigation working (Tab, ArrowLeft/Right, Enter)
+- Focus rings visible on all interactive elements
+- CommandHints dismissible and localStorage working
+- Dev server running cleanly on localhost:5000
+
+---
+
+### ✅ Milestone 2: Command Palette Enhancement (November 4, 2025)
+**Time**: 45 minutes  
+**Commit**: `f1b6289`
+
+**Deliverables:**
+- ✅ useCommandPalette hook (110 lines)
+  - Command parser for terminal-style filters
+  - Keyboard shortcuts (Cmd/Ctrl+K, /, Esc)
+  - State management (open, searchQuery, parsedCommand)
+  - Flag parsing support (--category, --tech, etc.)
+  - closeDialog utility function
+
+- ✅ Enhanced CommandPalette component (300 lines)
+  - Refactored with command structure (id, label, icon, keywords, action, category)
+  - Added 14 commands across 3 categories (navigation, action, external)
+  - Keyword-based search with command flags support
+  - Terminal-styled empty state with $ prompt
+  - Dynamic filtering based on search query and flags
+  - Added About route to navigation
+
+**Features:**
+- Command parsing: `ls --category navigation` filters only navigation commands
+- Keyword search: Search by label or keywords
+- Enhanced ARIA: Updated descriptions and placeholder text
+- Font-mono styling throughout for terminal aesthetic
+
+**Testing:**
+- Cmd/Ctrl+K opens/closes palette
+- `/` key opens palette (when not in input)
+- Esc closes palette
+- Search filtering works with keywords
+- Flag-based filtering works (--category flag tested)
+- All commands execute correctly
+
+---
+
+## 🚀 NEXT MILESTONES
+
+### Milestone 3: Hero Component Revamp (45 min)
+- Boot sequence animation with typing effect
+- Skip button (Esc key)
+- Recruiter Snapshot section
+- /recruiter dedicated page
+- Print styles for PDF export
+- Reduced-motion support
+
+### Milestone 4: FavoriteMovies Widget (90 min)
+- Grid/list toggle (V key)
+- Search, sort, filter by tags
+- Trailer modal with native <dialog>
+- Export JSON (Ctrl/Cmd+E)
+- Strapi API integration
+- JSON-LD structured data
+
+### Milestone 5: Projects Enhancement (60 min)
+- Terminal ls-style layout
+- Status tags (archived/active/deployed)
+- Keyboard navigation
+- Command-style filters
+
+### Milestone 6: Component Unification (90 min)
+- CardPrimitive component
+- AsciiProgress component
+- Refactor all cards (Blog, Project, Message)
+
+### Milestone 7: Testing & Polish (60 min)
+- axe-core accessibility audit
+- Lighthouse performance test
+- Pa11y testing
+- Manual keyboard & screen reader testing
+
+### Milestone 8: Documentation & PR (30 min)
+- Update README with keyboard shortcuts
+- Create milestone reports
+- Prepare comprehensive PR
+- Document deviations from DESIGN_SYSTEM.md
+
+---
+
+**Total Completed**: 2/8 milestones (25%)  
+**Estimated Remaining Time**: 8 hours  
+**Branch Health**: Clean, no merge conflicts, all commits descriptive
