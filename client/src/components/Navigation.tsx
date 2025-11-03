@@ -8,7 +8,7 @@ export default function Navigation() {
     { path: "/about", label: "about" },
     { path: "/projects", label: "projects" },
     { path: "/blog", label: "blog" },
-    { path: "/photos", label: "pics" },
+    { path: "/favorites", label: "favorites" },
     { path: "/messages", label: "messages" },
     { path: "/contact", label: "contact" },
   ];

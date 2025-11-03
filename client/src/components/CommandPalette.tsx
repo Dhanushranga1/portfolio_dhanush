@@ -110,10 +110,10 @@ export default function CommandPalette() {
             <span>Blog</span>
             <span className="ml-auto text-xs text-muted-foreground">/blog</span>
           </CommandItem>
-          <CommandItem onSelect={() => navigate("/photos")} className="font-mono">
+          <CommandItem onSelect={() => navigate("/favorites")} className="font-mono">
             <Camera className="mr-2 h-4 w-4" />
-            <span>Photos</span>
-            <span className="ml-auto text-xs text-muted-foreground">/photos</span>
+            <span>Favorites</span>
+            <span className="ml-auto text-xs text-muted-foreground">/favorites</span>
           </CommandItem>
           <CommandItem onSelect={() => navigate("/contact")} className="font-mono">
             <Mail className="mr-2 h-4 w-4" />

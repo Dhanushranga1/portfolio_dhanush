@@ -12,7 +12,7 @@ import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Projects from "@/pages/Projects";
 import Blog from "@/pages/Blog";
-import Photos from "@/pages/Photos";
+import Favorites from "@/pages/Favorites";
 import Messages from "@/pages/Messages";
 import Contact from "@/pages/Contact";
 import NotFound from "@/pages/not-found";
@@ -24,7 +24,7 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/projects" component={Projects} />
       <Route path="/blog" component={Blog} />
-      <Route path="/photos" component={Photos} />
+      <Route path="/favorites" component={Favorites} />
       <Route path="/messages" component={Messages} />
       <Route path="/contact" component={Contact} />
       <Route component={NotFound} />
