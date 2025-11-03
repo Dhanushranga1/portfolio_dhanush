@@ -18,7 +18,13 @@
  * Create .env file in root with:
  * VITE_STRAPI_URL=https://your-project.strapiapp.com
  * VITE_STRAPI_TOKEN=your_api_token_here
+ * 
+ * Dependencies installed:
+ * - @strapi/client (v5 SDK for Strapi Cloud)
+ * - axios (HTTP client)
  */
+
+import axios from 'axios';
 
 export const STRAPI_CONFIG = {
   // Strapi Cloud URL (set in .env file)
@@ -127,4 +133,41 @@ export function buildStrapiQuery(params: {
   
   const queryString = queryParams.toString();
   return queryString ? `?${queryString}` : '';
+}
+
+/**
+ * Create an Axios instance configured for Strapi Cloud
+ * Use this for making API calls to your Strapi backend
+ */
+export const strapiClient = axios.create({
+  baseURL: STRAPI_CONFIG.API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+    ...(STRAPI_CONFIG.API_TOKEN && { 
+      Authorization: `Bearer ${STRAPI_CONFIG.API_TOKEN}` 
+    }),
+  },
+});
+
+/**
+ * Helper function to fetch data from Strapi
+ * @example
+ * const movies = await fetchFromStrapi('/api/movies', { populate: 'image' });
+ */
+export async function fetchFromStrapi<T = any>(
+  endpoint: string, 
+  params?: Record<string, any>
+): Promise<T | null> {
+  if (!STRAPI_CONFIG.API_URL) {
+    console.warn('Strapi URL not configured. Set VITE_STRAPI_URL in .env');
+    return null;
+  }
+
+  try {
+    const response = await strapiClient.get(endpoint, { params });
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching from Strapi (${endpoint}):`, error);
+    return null;
+  }
 }
