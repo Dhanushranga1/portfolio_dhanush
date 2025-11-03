@@ -37,7 +37,11 @@ export default function BootSequence() {
     // Check if user has seen the boot sequence before
     const hasSeenBoot = localStorage.getItem("hasSeenBoot");
     
-    if (!hasSeenBoot) {
+    // In development, always show boot sequence (can be skipped)
+    // In production, show only once
+    const isDev = import.meta.env.DEV;
+    
+    if (!hasSeenBoot || isDev) {
       setIsVisible(true);
       setShowContent(true);
       
@@ -60,6 +64,18 @@ export default function BootSequence() {
       return () => clearInterval(messageInterval);
     }
   }, []);
+
+  // Add escape key handler
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isVisible) {
+        handleSkip();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isVisible]);
 
   const handleSkip = () => {
     setIsVisible(false);
