@@ -9,7 +9,7 @@ export default function Hero() {
         </h1>
         
         <p className="text-base md:text-lg font-mono text-muted-foreground leading-relaxed">
-          hey there! i'm dhanush, a full-stack developer interested in building beautiful things for the web.
+          hey there! i'm dhanush, i like building things
         </p>
 
         <div className="flex items-center justify-center gap-6 text-sm font-mono">
