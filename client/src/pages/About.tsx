@@ -10,21 +10,68 @@ export default function About() {
         <div className="space-y-12 font-mono text-sm">
           <div className="space-y-4 leading-relaxed text-foreground">
             <p>
-              hey there! i'm dhanush, a full-stack developer passionate about building beautiful, functional web applications.
+              hey there! i'm dhanush ranga gopisetty, a computer science student at srm institute of science and technology with a passion for ai/ml and full-stack development.
             </p>
             <p>
-              i love creating things that are both aesthetically pleasing and solve real problems. my work spans from frontend interfaces to backend systems, and i enjoy every part of the process.
+              currently maintaining a 9.06/10.0 cgpa while building production-level projects that solve real-world problems. i've worked as an artificial intelligence intern at deep algorithms solutions, where i engineered fastapi endpoints for document qa systems and implemented neural architectures for image segmentation.
             </p>
             <p>
-              when i'm not coding, you'll find me exploring new technologies, contributing to open source, or capturing moments through photography.
+              i'm passionate about creating intelligent systems that combine modern web technologies with machine learning. my projects include ai-powered support platforms, movie-to-book recommendation engines, and data preprocessing libraries published on pypi.
             </p>
+            <p>
+              when i'm not coding, you'll find me contributing to open source (fosshack 2024 & 2025), exploring cloud architecture patterns, or learning about the latest in llms and vector databases.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold">experience</h2>
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-semibold">artificial intelligence intern</h3>
+                    <p className="text-muted-foreground">deep algorithms solutions • remote</p>
+                  </div>
+                  <span className="text-muted-foreground text-xs">may 2025 – jun 2025</span>
+                </div>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <li>engineered fastapi endpoints for document qa using transformer embeddings, improving answer relevance by 40%</li>
+                  <li>implemented neural architectures (cnns, transformers, diffusion models) achieving 90% accuracy on image segmentation</li>
+                  <li>automated data preparation pipelines, reducing manual processing time by 30%</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold">education</h2>
+            <div className="space-y-2">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-semibold">bachelor of technology in computer science engineering</h3>
+                  <p className="text-muted-foreground">srm institute of science and technology • kattankulathur, india</p>
+                  <p className="text-muted-foreground">cgpa: 9.06/10.0</p>
+                </div>
+                <span className="text-muted-foreground text-xs">aug 2022 – may 2026</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold">achievements</h2>
+            <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+              <li>aws academy graduate – cloud foundations (2024)</li>
+              <li>open source contributor – fosshack 2024 & 2025</li>
+              <li>published scrubpy on pypi – 30+ downloads in first month</li>
+              <li>maintained 9.06/10.0 cgpa while building production-level projects</li>
+            </ul>
           </div>
 
           <div className="space-y-4">
             <h2 className="text-xl font-bold">links</h2>
             <div className="space-y-2">
               <a
-                href="https://github.com"
+                href="https://github.com/dhanushranga1"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -34,7 +81,7 @@ export default function About() {
                 <span>github <ExternalLink className="inline h-3 w-3 ml-1" /></span>
               </a>
               <a
-                href="https://linkedin.com"
+                href="https://linkedin.com/in/dhanush-ranga"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -44,7 +91,7 @@ export default function About() {
                 <span>linkedin <ExternalLink className="inline h-3 w-3 ml-1" /></span>
               </a>
               <a
-                href="mailto:hello@dhanushranga.dev"
+                href="mailto:dhanushrangag@gmail.com"
                 className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
                 data-testid="link-email"
               >
