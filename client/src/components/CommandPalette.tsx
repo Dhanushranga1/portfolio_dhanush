@@ -23,6 +23,8 @@ import {
   Moon,
 } from "lucide-react";
 import { useTheme } from "next-themes";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export default function CommandPalette() {
   const [open, setOpen] = useState(false);
@@ -76,9 +78,16 @@ export default function CommandPalette() {
 
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
+      <VisuallyHidden>
+        <DialogTitle>Command Palette</DialogTitle>
+        <DialogDescription>
+          Quick navigation and actions. Use arrow keys to navigate, enter to select.
+        </DialogDescription>
+      </VisuallyHidden>
       <CommandInput 
         placeholder="Type a command or search..." 
         className="font-mono"
+        aria-label="Search for commands or pages"
       />
       <CommandList>
         <CommandEmpty className="font-mono text-sm py-6 text-muted-foreground">
