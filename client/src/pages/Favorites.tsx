@@ -1,636 +1,754 @@
-import { useState, useEffect } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState, useRef, useEffect } from "react";
+import { 
+  Search, Star, Calendar, Download, Grid3x3, List, 
+  Play, Edit, X, Check, Filter, ArrowUpDown 
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { LayoutGrid, List, Download, Play, Star, MapPin, Calendar, Search, X } from "lucide-react";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
 
-// Import existing photos
-import photo1 from '@assets/generated_images/Nature_photo_one_c2ff85be.png';
-import photo2 from '@assets/generated_images/Architecture_photo_617368a3.png';
-import photo3 from '@assets/generated_images/Abstract_tech_visual_1ab6a0b2.png';
+// For production, replace with: import { useMovies, useAddMovie } from "@/hooks/useStrapi";
+// For now, we'll use mock data since Strapi isn't set up yet
 
 type Movie = {
-  id: number;
+  id: string;
   title: string;
   year: number;
-  rating: number;
-  genre: string[];
-  director: string;
-  poster: string;
-  trailer: string;
-  watchlist: boolean;
+  director: string | null;
+  genre: string;
+  rating: number; // 1-10 scale
+  watched: boolean;
+  watchedDate: string | null;
+  poster: string | null;
+  tmdbId: string | null;
   notes: string;
-  dateAdded: string;
-};
-
-type Photo = {
-  id: number;
-  title: string;
-  location: string;
-  date: string;
-  url: string;
-  thumbnail: string;
   tags: string[];
-  description: string;
+  favorite: boolean;
+  trailer: string | null;
+  addedAt: string;
 };
 
-// Mock movie data - replace with your actual favorites
-const mockMovies: Movie[] = [
+// Mock data matching the research spec format
+const MOCK_MOVIES: Movie[] = [
   {
-    id: 1,
-    title: "The Shawshank Redemption",
-    year: 1994,
-    rating: 9.3,
-    genre: ["Drama", "Crime"],
-    director: "Frank Darabont",
-    poster: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300&h=450&fit=crop",
-    trailer: "https://www.youtube.com/embed/6hB3S9bIaco",
-    watchlist: true,
-    notes: "All-time favorite. The ending is perfect.",
-    dateAdded: "2024-01-15"
-  },
-  {
-    id: 2,
-    title: "Inception",
-    year: 2010,
-    rating: 8.8,
-    genre: ["Sci-Fi", "Thriller", "Action"],
-    director: "Christopher Nolan",
-    poster: "https://images.unsplash.com/photo-1594908900066-3f47337549d8?w=300&h=450&fit=crop",
-    trailer: "https://www.youtube.com/embed/YoHD9XEInc0",
-    watchlist: false,
-    notes: "Mind-bending masterpiece",
-    dateAdded: "2024-02-20"
-  },
-  {
-    id: 3,
-    title: "The Dark Knight",
-    year: 2008,
-    rating: 9.0,
-    genre: ["Action", "Crime", "Drama"],
-    director: "Christopher Nolan",
-    poster: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=300&h=450&fit=crop",
-    trailer: "https://www.youtube.com/embed/EXeTwQWrcwY",
-    watchlist: false,
-    notes: "Ledger's performance is unforgettable",
-    dateAdded: "2024-01-10"
-  },
-  {
-    id: 4,
-    title: "Pulp Fiction",
-    year: 1994,
-    rating: 8.9,
-    genre: ["Crime", "Drama"],
-    director: "Quentin Tarantino",
-    poster: "https://images.unsplash.com/photo-1574267432644-f610f5c0d258?w=300&h=450&fit=crop",
-    trailer: "https://www.youtube.com/embed/s7EdQ4FqbhY",
-    watchlist: true,
-    notes: "Non-linear storytelling at its best",
-    dateAdded: "2024-03-05"
-  },
-  {
-    id: 5,
-    title: "Interstellar",
-    year: 2014,
-    rating: 8.7,
-    genre: ["Sci-Fi", "Drama", "Adventure"],
-    director: "Christopher Nolan",
-    poster: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=300&h=450&fit=crop",
-    trailer: "https://www.youtube.com/embed/zSWdZVtXT7E",
-    watchlist: false,
-    notes: "Beautiful score, emotional journey",
-    dateAdded: "2024-02-28"
-  },
-  {
-    id: 6,
+    id: "1",
     title: "The Matrix",
     year: 1999,
-    rating: 8.7,
-    genre: ["Sci-Fi", "Action"],
     director: "Wachowskis",
-    poster: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=300&h=450&fit=crop",
+    genre: "Sci-Fi, Action",
+    rating: 10,
+    watched: true,
+    watchedDate: "2024-01-01",
+    poster: "https://image.tmdb.org/t/p/w500/f89J6sVrpETYoGk2xfB9g6mEGYb.jpg",
+    tmdbId: "603",
+    notes: "A foundational film. *Mind-bending* cyberpunk masterpiece.",
+    tags: ["sci-fi", "action", "mind-bending"],
+    favorite: true,
     trailer: "https://www.youtube.com/embed/vKQi3bBA1y8",
-    watchlist: true,
-    notes: "Revolutionary action sequences",
-    dateAdded: "2024-01-25"
+    addedAt: "2024-01-01T00:00:00Z",
   },
   {
-    id: 7,
-    title: "Parasite",
-    year: 2019,
-    rating: 8.5,
-    genre: ["Drama", "Thriller"],
-    director: "Bong Joon-ho",
-    poster: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300&h=450&fit=crop",
-    trailer: "https://www.youtube.com/embed/5xH0HfJHsaY",
-    watchlist: false,
-    notes: "Genre-bending Korean masterpiece",
-    dateAdded: "2024-03-10"
+    id: "2",
+    title: "Star Wars: Ep. V",
+    year: 1980,
+    director: "Irvin Kershner",
+    genre: "Sci-Fi, Adventure",
+    rating: 9,
+    watched: true,
+    watchedDate: "2024-02-15",
+    poster: "https://image.tmdb.org/t/p/w500/7BuH8S4Y02wYn5e0rsx0xKkH0b.jpg",
+    tmdbId: "1891",
+    notes: "Best of the original trilogy",
+    tags: ["sci-fi", "classic", "space-opera"],
+    favorite: true,
+    trailer: "https://www.youtube.com/embed/JNwNXF9Y6kY",
+    addedAt: "2024-02-01T00:00:00Z",
   },
   {
-    id: 8,
-    title: "Dune",
-    year: 2021,
-    rating: 8.1,
-    genre: ["Sci-Fi", "Adventure", "Drama"],
-    director: "Denis Villeneuve",
-    poster: "https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=300&h=450&fit=crop",
-    trailer: "https://www.youtube.com/embed/8g18jFHCLXk",
-    watchlist: true,
-    notes: "Stunning visuals and sound design",
-    dateAdded: "2024-04-01"
-  }
+    id: "3",
+    title: "Pulp Fiction",
+    year: 1994,
+    director: "Quentin Tarantino",
+    genre: "Crime, Drama",
+    rating: 9,
+    watched: true,
+    watchedDate: "2024-03-10",
+    poster: "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
+    tmdbId: "680",
+    notes: "Non-linear storytelling perfection",
+    tags: ["crime", "classic", "dialogue-heavy"],
+    favorite: false,
+    trailer: "https://www.youtube.com/embed/s7EdQ4FqbhY",
+    addedAt: "2024-03-01T00:00:00Z",
+  },
+  {
+    id: "4",
+    title: "Inception",
+    year: 2010,
+    director: "Christopher Nolan",
+    genre: "Sci-Fi, Action, Thriller",
+    rating: 8,
+    watched: true,
+    watchedDate: "2024-04-05",
+    poster: "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
+    tmdbId: "27205",
+    notes: "Dreams within dreams",
+    tags: ["sci-fi", "action", "mind-bending"],
+    favorite: false,
+    trailer: "https://www.youtube.com/embed/YoHD9XEInc0",
+    addedAt: "2024-04-01T00:00:00Z",
+  },
 ];
 
-// Use existing photos and convert to new format
-const mockPhotos: Photo[] = [
-  {
-    id: 1,
-    title: "Nature Landscape",
-    location: "Mountain Valley",
-    date: "2024-06-15",
-    url: photo1,
-    thumbnail: photo1,
-    tags: ["Nature", "Landscape"],
-    description: "sunset landscape shot on pixel 8"
-  },
-  {
-    id: 2,
-    title: "Modern Architecture",
-    location: "City Center",
-    date: "2024-05-20",
-    url: photo2,
-    thumbnail: photo2,
-    tags: ["Architecture", "Urban"],
-    description: "modern architecture shot on pixel 8"
-  },
-  {
-    id: 3,
-    title: "Abstract Tech",
-    location: "Studio",
-    date: "2024-07-10",
-    url: photo3,
-    thumbnail: photo3,
-    tags: ["Abstract", "Tech"],
-    description: "abstract tech visual"
-  },
-  {
-    id: 4,
-    title: "Nature Detail",
-    location: "Forest Path",
-    date: "2024-04-18",
-    url: photo1,
-    thumbnail: photo1,
-    tags: ["Nature", "Photography"],
-    description: "nature photography close-up"
-  },
-  {
-    id: 5,
-    title: "City Skyline",
-    location: "Downtown",
-    date: "2024-08-05",
-    url: photo2,
-    thumbnail: photo2,
-    tags: ["Urban", "Architecture"],
-    description: "city skyline at dusk"
-  },
-  {
-    id: 6,
-    title: "Geometric Patterns",
-    location: "Design Studio",
-    date: "2024-03-25",
-    url: photo3,
-    thumbnail: photo3,
-    tags: ["Abstract", "Design"],
-    description: "geometric patterns and shapes"
-  }
-];
+type ViewMode = "grid" | "list";
+type SortMode = "manual" | "rating" | "year" | "alphabetical";
 
 export default function Favorites() {
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [movies] = useState<Movie[]>(mockMovies);
-  const [photos] = useState<Photo[]>(mockPhotos);
-  const [sortBy, setSortBy] = useState<"rating" | "title" | "year" | "dateAdded">("rating");
-  const [filterGenre, setFilterGenre] = useState<string>("all");
-  const [filterTag, setFilterTag] = useState<string>("all");
+  const [movies, setMovies] = useState<Movie[]>(MOCK_MOVIES);
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [sortMode, setSortMode] = useState<SortMode>("manual");
   const [searchQuery, setSearchQuery] = useState("");
+  const [filterTag, setFilterTag] = useState<string | null>(null);
+  const [filterFavorite, setFilterFavorite] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
-  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const [editingNotes, setEditingNotes] = useState<string | null>(null);
+  const [noteText, setNoteText] = useState("");
+  
+  const trailerDialog = useRef<HTMLDialogElement>(null);
+  const { toast } = useToast();
 
-  // Get unique genres and tags
-  const allGenres = ["all", ...Array.from(new Set(movies.flatMap((m) => m.genre)))];
-  const allTags = ["all", ...Array.from(new Set(photos.flatMap((p) => p.tags)))];
+  // Get unique tags from all movies
+  const allTags = Array.from(
+    new Set(movies.flatMap((m) => m.tags))
+  ).sort();
 
   // Filter and sort movies
   const filteredMovies = movies
     .filter((movie) => {
-      const matchesGenre = filterGenre === "all" || movie.genre.includes(filterGenre);
-      const matchesSearch = movie.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           movie.director.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesGenre && matchesSearch;
+      const matchesSearch =
+        searchQuery === "" ||
+        movie.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        movie.director?.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesTag = !filterTag || movie.tags.includes(filterTag);
+      const matchesFavorite = !filterFavorite || movie.favorite;
+
+      return matchesSearch && matchesTag && matchesFavorite;
     })
     .sort((a, b) => {
-      if (sortBy === "rating") return b.rating - a.rating;
-      if (sortBy === "year") return b.year - a.year;
-      if (sortBy === "title") return a.title.localeCompare(b.title);
-      if (sortBy === "dateAdded") return new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime();
-      return 0;
+      switch (sortMode) {
+        case "rating":
+          return b.rating - a.rating;
+        case "year":
+          return b.year - a.year;
+        case "alphabetical":
+          return a.title.localeCompare(b.title);
+        case "manual":
+        default:
+          return new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime();
+      }
     });
 
-  // Filter photos
-  const filteredPhotos = photos.filter((photo) => {
-    const matchesTag = filterTag === "all" || photo.tags.includes(filterTag);
-    const matchesSearch = photo.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         photo.location.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesTag && matchesSearch;
-  });
-
-  // Export JSON
-  const handleExport = (type: "movies" | "photos") => {
-    const data = type === "movies" ? filteredMovies : filteredPhotos;
-    const json = JSON.stringify(data, null, 2);
-    const blob = new Blob([json], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
+  // Export to JSON (client-side download using data: URI)
+  const exportToJson = () => {
+    const dataStr = JSON.stringify(movies, null, 2);
+    const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
     const link = document.createElement("a");
-    link.href = url;
-    link.download = `favorites-${type}-${new Date().toISOString().split("T")[0]}.json`;
+    link.setAttribute("href", dataUri);
+    link.setAttribute("download", `favorites_movies_${new Date().toISOString().split('T')[0]}.json`);
+    document.body.appendChild(link);
     link.click();
-    URL.revokeObjectURL(url);
+    document.body.removeChild(link);
+    
+    toast({
+      title: "Exported successfully",
+      description: `Exported ${movies.length} movies to JSON`,
+    });
+  };
+
+  // Open trailer in native <dialog>
+  const openTrailer = (movie: Movie) => {
+    if (!movie.trailer) {
+      toast({
+        title: "No trailer available",
+        description: `Trailer not found for ${movie.title}`,
+        variant: "destructive",
+      });
+      return;
+    }
+    setSelectedMovie(movie);
+    trailerDialog.current?.showModal();
+  };
+
+  const closeTrailer = () => {
+    trailerDialog.current?.close();
+    setSelectedMovie(null);
+  };
+
+  // Toggle favorite
+  const toggleFavorite = (movieId: string) => {
+    setMovies((prev) =>
+      prev.map((m) =>
+        m.id === movieId ? { ...m, favorite: !m.favorite } : m
+      )
+    );
+  };
+
+  // Edit notes
+  const startEditingNotes = (movie: Movie) => {
+    setEditingNotes(movie.id);
+    setNoteText(movie.notes);
+  };
+
+  const saveNotes = (movieId: string) => {
+    setMovies((prev) =>
+      prev.map((m) => (m.id === movieId ? { ...m, notes: noteText } : m))
+    );
+    setEditingNotes(null);
+    toast({
+      title: "Notes saved",
+      description: "Movie notes updated successfully",
+    });
+  };
+
+  // Rate movie
+  const rateMovie = (movieId: string, rating: number) => {
+    setMovies((prev) =>
+      prev.map((m) => (m.id === movieId ? { ...m, rating } : m))
+    );
+  };
+
+  // Toggle watched
+  const toggleWatched = (movieId: string) => {
+    setMovies((prev) =>
+      prev.map((m) =>
+        m.id === movieId
+          ? {
+              ...m,
+              watched: !m.watched,
+              watchedDate: !m.watched ? new Date().toISOString() : null,
+            }
+          : m
+      )
+    );
   };
 
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && (selectedMovie || selectedPhoto)) {
-        setSelectedMovie(null);
-        setSelectedPhoto(null);
+      // Only handle shortcuts when not typing in an input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      // Toggle view mode: 'v'
+      if (e.key === "v") {
+        setViewMode((prev) => (prev === "grid" ? "list" : "grid"));
+      }
+
+      // Export: 'e'
+      if (e.key === "e" && e.ctrlKey) {
+        e.preventDefault();
+        exportToJson();
       }
     };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [selectedMovie, selectedPhoto]);
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
-    <div className="min-h-screen pt-24 pb-20 px-6 bg-terminal-bg text-terminal-text">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <header className="mb-8">
-          <h1 className="text-4xl font-mono font-bold text-terminal-accent-info mb-2">
-            <span className="text-terminal-muted">$</span> cat ./favorites.json
-          </h1>
-          <p className="text-sm font-mono text-terminal-muted">
-            # Personal collection of movies and photos I love
-          </p>
-        </header>
-
-        {/* Tabs */}
-        <Tabs defaultValue="movies" className="w-full" onValueChange={() => setSearchQuery("")}>
-          <TabsList className="bg-terminal-bg border border-terminal-muted mb-6">
-            <TabsTrigger 
-              value="movies" 
-              className="font-mono data-[state=active]:bg-terminal-accent-info/20 data-[state=active]:text-terminal-accent-info"
+    <div className="min-h-screen bg-terminal-bg text-terminal-text p-4 sm:p-6 lg:p-8 font-mono">
+      {/* Header */}
+      <div className="max-w-7xl mx-auto mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-3xl font-bold text-terminal-accent-blue mb-2">
+              <span className="text-terminal-accent-green">❯</span> Favorite Movies
+            </h1>
+            <p className="text-terminal-text-dim">
+              Curated collection • {filteredMovies.length} of {movies.length} movies
+            </p>
+          </div>
+          
+          {/* View Toggle */}
+          <div className="flex gap-2">
+            <Button
+              variant={viewMode === "grid" ? "default" : "outline"}
+              size="icon"
+              onClick={() => setViewMode("grid")}
+              className="terminal-card"
+              aria-label="Grid view"
             >
-              🎬 movies ({movies.length})
-            </TabsTrigger>
-            <TabsTrigger 
-              value="photos" 
-              className="font-mono data-[state=active]:bg-terminal-accent-info/20 data-[state=active]:text-terminal-accent-info"
+              <Grid3x3 className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewMode === "list" ? "default" : "outline"}
+              size="icon"
+              onClick={() => setViewMode("list")}
+              className="terminal-card"
+              aria-label="List view"
             >
-              📸 pics ({photos.length})
-            </TabsTrigger>
-          </TabsList>
+              <List className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
 
-          {/* Movies Tab */}
-          <TabsContent value="movies" className="space-y-6">
-            {/* Controls */}
-            <div className="flex flex-wrap gap-4 items-center justify-between">
-              <div className="flex gap-2">
-                <Button
-                  variant={viewMode === "grid" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setViewMode("grid")}
-                  aria-label="Grid view"
-                  className="font-mono"
-                >
-                  <LayoutGrid className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant={viewMode === "list" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setViewMode("list")}
-                  aria-label="List view"
-                  className="font-mono"
-                >
-                  <List className="w-4 h-4" />
-                </Button>
-              </div>
+        {/* Controls Bar */}
+        <div className="terminal-card p-4 space-y-4">
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-terminal-text-dim" />
+            <Input
+              type="text"
+              placeholder="Search by title or director..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 bg-terminal-bg-alt border-terminal-border"
+            />
+          </div>
 
-              <div className="flex gap-2 flex-wrap items-center">
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-terminal-muted" />
-                  <Input
-                    placeholder="search movies..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-8 w-64 font-mono bg-terminal-bg border-terminal-muted"
-                  />
-                </div>
-
-                <Select value={sortBy} onValueChange={(v: any) => setSortBy(v)}>
-                  <SelectTrigger className="w-40 font-mono bg-terminal-bg border-terminal-muted">
-                    <SelectValue placeholder="sort by" />
-                  </SelectTrigger>
-                  <SelectContent className="font-mono">
-                    <SelectItem value="rating">rating</SelectItem>
-                    <SelectItem value="title">title</SelectItem>
-                    <SelectItem value="year">year</SelectItem>
-                    <SelectItem value="dateAdded">date added</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <Select value={filterGenre} onValueChange={setFilterGenre}>
-                  <SelectTrigger className="w-40 font-mono bg-terminal-bg border-terminal-muted">
-                    <SelectValue placeholder="filter genre" />
-                  </SelectTrigger>
-                  <SelectContent className="font-mono">
-                    {allGenres.map((genre) => (
-                      <SelectItem key={genre} value={genre}>
-                        {genre === "all" ? "all genres" : genre.toLowerCase()}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleExport("movies")}
-                  aria-label="Export movies as JSON"
-                  className="font-mono border-terminal-muted"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  export
-                </Button>
-              </div>
+          {/* Filters and Sort */}
+          <div className="flex flex-wrap gap-3 items-center">
+            {/* Sort */}
+            <div className="flex items-center gap-2">
+              <ArrowUpDown className="h-4 w-4 text-terminal-text-dim" />
+              <Select value={sortMode} onValueChange={(v) => setSortMode(v as SortMode)}>
+                <SelectTrigger className="w-[180px] bg-terminal-bg-alt border-terminal-border">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="manual">Manual Order</SelectItem>
+                  <SelectItem value="rating">Rating (High-Low)</SelectItem>
+                  <SelectItem value="year">Year (Recent)</SelectItem>
+                  <SelectItem value="alphabetical">A-Z</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
-            {/* Movies Grid/List */}
-            <div
-              className={
-                viewMode === "grid"
-                  ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-                  : "space-y-4"
-              }
-              role="list"
-              aria-label="Movies list"
+            {/* Filter by Tag */}
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4 text-terminal-text-dim" />
+              <Select 
+                value={filterTag || "all"} 
+                onValueChange={(v) => setFilterTag(v === "all" ? null : v)}
+              >
+                <SelectTrigger className="w-[180px] bg-terminal-bg-alt border-terminal-border">
+                  <SelectValue placeholder="Filter by tag" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Tags</SelectItem>
+                  {allTags.map((tag) => (
+                    <SelectItem key={tag} value={tag}>
+                      {tag}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Favorite Filter */}
+            <Button
+              variant={filterFavorite ? "default" : "outline"}
+              size="sm"
+              onClick={() => setFilterFavorite(!filterFavorite)}
+              className={filterFavorite ? "bg-terminal-accent-yellow" : ""}
             >
-              {filteredMovies.map((movie) => (
-                <article
-                  key={movie.id}
-                  className={`border border-terminal-muted rounded-lg overflow-hidden hover:border-terminal-accent-info transition-all duration-200 ${
-                    viewMode === "list" ? "flex gap-4" : ""
-                  }`}
-                  role="listitem"
-                >
-                  <img
-                    src={movie.poster}
-                    alt={`${movie.title} poster`}
-                    loading="lazy"
-                    className={`object-cover ${
-                      viewMode === "grid" ? "w-full h-64" : "w-32 h-48"
-                    }`}
+              <Star className={`h-4 w-4 mr-2 ${filterFavorite ? "fill-current" : ""}`} />
+              Favorites Only
+            </Button>
+
+            {/* Export */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportToJson}
+              className="ml-auto"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export JSON
+            </Button>
+          </div>
+
+          {/* Active Filters */}
+          {(searchQuery || filterTag || filterFavorite) && (
+            <div className="flex flex-wrap gap-2 items-center">
+              <span className="text-sm text-terminal-text-dim">Active filters:</span>
+              {searchQuery && (
+                <Badge variant="secondary" className="gap-1">
+                  Search: {searchQuery}
+                  <X
+                    className="h-3 w-3 cursor-pointer"
+                    onClick={() => setSearchQuery("")}
                   />
-                  <div className="p-4 flex-1">
-                    <h3 className="text-lg font-mono font-bold text-terminal-accent-info mb-1">
+                </Badge>
+              )}
+              {filterTag && (
+                <Badge variant="secondary" className="gap-1">
+                  Tag: {filterTag}
+                  <X
+                    className="h-3 w-3 cursor-pointer"
+                    onClick={() => setFilterTag(null)}
+                  />
+                </Badge>
+              )}
+              {filterFavorite && (
+                <Badge variant="secondary" className="gap-1">
+                  Favorites
+                  <X
+                    className="h-3 w-3 cursor-pointer"
+                    onClick={() => setFilterFavorite(false)}
+                  />
+                </Badge>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Keyboard Hints */}
+        <div className="mt-4 text-sm text-terminal-text-dim">
+          <span className="mr-4">Press <kbd className="px-2 py-1 bg-terminal-bg-alt rounded border border-terminal-border">v</kbd> to toggle view</span>
+          <span>Press <kbd className="px-2 py-1 bg-terminal-bg-alt rounded border border-terminal-border">Ctrl+E</kbd> to export</span>
+        </div>
+      </div>
+
+      {/* Movies Display */}
+      <div className="max-w-7xl mx-auto">
+        {filteredMovies.length === 0 ? (
+          <div className="terminal-card p-12 text-center">
+            <p className="text-terminal-text-dim text-lg">No movies found matching your criteria</p>
+          </div>
+        ) : viewMode === "grid" ? (
+          /* Grid View */
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredMovies.map((movie) => (
+              <Card
+                key={movie.id}
+                className="terminal-card overflow-hidden group hover:border-terminal-accent-blue transition-colors"
+              >
+                {/* Poster */}
+                <div className="relative aspect-[2/3] overflow-hidden bg-terminal-bg-alt">
+                  {movie.poster ? (
+                    <img
+                      src={movie.poster}
+                      alt={movie.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-terminal-text-dim">
+                      No poster
+                    </div>
+                  )}
+                  
+                  {/* Favorite Star Overlay */}
+                  <button
+                    onClick={() => toggleFavorite(movie.id)}
+                    className="absolute top-2 right-2 p-2 bg-terminal-bg/80 backdrop-blur-sm rounded-full hover:bg-terminal-bg transition-colors"
+                    aria-label={movie.favorite ? "Remove from favorites" : "Add to favorites"}
+                  >
+                    <Star
+                      className={`h-5 w-5 ${
+                        movie.favorite
+                          ? "fill-terminal-accent-yellow text-terminal-accent-yellow"
+                          : "text-terminal-text-dim"
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {/* Content */}
+                <div className="p-4 space-y-3">
+                  <div>
+                    <h3 className="font-bold text-terminal-accent-blue mb-1 line-clamp-1">
                       {movie.title}
                     </h3>
-                    <p className="text-sm font-mono text-terminal-muted mb-2">
-                      {movie.year} • {movie.director}
+                    <p className="text-sm text-terminal-text-dim">
+                      {movie.year} • {movie.director || "Unknown"}
                     </p>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                      <span className="text-sm font-mono font-bold">{movie.rating}</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      {movie.genre.map((g) => (
-                        <Badge key={g} variant="secondary" className="text-xs font-mono">
-                          {g.toLowerCase()}
-                        </Badge>
+                  </div>
+
+                  {/* Rating */}
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-0.5">
+                      {Array.from({ length: 10 }).map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => rateMovie(movie.id, i + 1)}
+                          className="p-0"
+                          aria-label={`Rate ${i + 1} stars`}
+                        >
+                          <Star
+                            className={`h-3 w-3 ${
+                              i < movie.rating
+                                ? "fill-terminal-accent-yellow text-terminal-accent-yellow"
+                                : "text-terminal-text-dim"
+                            }`}
+                          />
+                        </button>
                       ))}
                     </div>
-                    {movie.notes && (
-                      <p className="text-xs font-mono text-terminal-muted mb-3 italic">
-                        # {movie.notes}
-                      </p>
+                    <span className="text-sm font-mono text-terminal-text-dim">
+                      {movie.rating}/10
+                    </span>
+                  </div>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-1">
+                    {movie.tags.slice(0, 3).map((tag) => (
+                      <Badge
+                        key={tag}
+                        variant="secondary"
+                        className="text-xs"
+                      >
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-2 pt-2">
+                    {movie.trailer && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => openTrailer(movie)}
+                        className="flex-1"
+                      >
+                        <Play className="h-3 w-3 mr-1" />
+                        Trailer
+                      </Button>
                     )}
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => setSelectedMovie(movie)}
-                      className="w-full font-mono border-terminal-muted hover:border-terminal-accent-action"
+                      onClick={() => startEditingNotes(movie)}
+                      className="flex-1"
                     >
-                      <Play className="w-4 h-4 mr-2" />
-                      watch trailer
+                      <Edit className="h-3 w-3 mr-1" />
+                      Notes
                     </Button>
                   </div>
-                </article>
-              ))}
-            </div>
 
-            {filteredMovies.length === 0 && (
-              <div className="text-center py-12 text-terminal-muted font-mono">
-                <p># no movies found matching your filters</p>
-              </div>
-            )}
-          </TabsContent>
+                  {/* Notes (if editing) */}
+                  {editingNotes === movie.id && (
+                    <div className="space-y-2 pt-2 border-t border-terminal-border">
+                      <Textarea
+                        value={noteText}
+                        onChange={(e) => setNoteText(e.target.value)}
+                        placeholder="Add your notes... (Markdown supported)"
+                        className="min-h-[80px] text-sm bg-terminal-bg-alt"
+                      />
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          onClick={() => saveNotes(movie.id)}
+                          className="flex-1"
+                        >
+                          <Check className="h-3 w-3 mr-1" />
+                          Save
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setEditingNotes(null)}
+                          className="flex-1"
+                        >
+                          <X className="h-3 w-3 mr-1" />
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  )}
 
-          {/* Photos Tab */}
-          <TabsContent value="photos" className="space-y-6">
-            {/* Controls */}
-            <div className="flex flex-wrap gap-4 items-center justify-between">
-              <div className="relative">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-terminal-muted" />
-                <Input
-                  placeholder="search pics..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-8 w-64 font-mono bg-terminal-bg border-terminal-muted"
-                />
-              </div>
-
-              <div className="flex gap-2">
-                <Select value={filterTag} onValueChange={setFilterTag}>
-                  <SelectTrigger className="w-40 font-mono bg-terminal-bg border-terminal-muted">
-                    <SelectValue placeholder="filter tag" />
-                  </SelectTrigger>
-                  <SelectContent className="font-mono">
-                    {allTags.map((tag) => (
-                      <SelectItem key={tag} value={tag}>
-                        {tag === "all" ? "all tags" : tag.toLowerCase()}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleExport("photos")}
-                  aria-label="Export photos as JSON"
-                  className="font-mono border-terminal-muted"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  export
-                </Button>
-              </div>
-            </div>
-
-            {/* Photos Grid */}
-            <div
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
-              role="list"
-              aria-label="Photos list"
-            >
-              {filteredPhotos.map((photo) => (
-                <article
-                  key={photo.id}
-                  className="border border-terminal-muted rounded-lg overflow-hidden hover:border-terminal-accent-info transition-all duration-200 cursor-pointer group"
-                  onClick={() => setSelectedPhoto(photo)}
-                  role="listitem"
-                >
-                  <div className="relative overflow-hidden">
-                    <img
-                      src={photo.thumbnail}
-                      alt={photo.title}
-                      loading="lazy"
-                      className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                  {/* Show notes preview if not editing */}
+                  {editingNotes !== movie.id && movie.notes && (
+                    <p className="text-sm text-terminal-text-dim line-clamp-2 pt-2 border-t border-terminal-border">
+                      {movie.notes}
+                    </p>
+                  )}
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          /* List View */
+          <div className="space-y-3">
+            {filteredMovies.map((movie) => (
+              <Card
+                key={movie.id}
+                className="terminal-card p-4 hover:border-terminal-accent-blue transition-colors"
+              >
+                <div className="flex gap-4">
+                  {/* Poster Thumbnail */}
+                  <div className="w-16 h-24 flex-shrink-0 bg-terminal-bg-alt rounded overflow-hidden">
+                    {movie.poster ? (
+                      <img
+                        src={movie.poster}
+                        alt={movie.title}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-xs text-terminal-text-dim">
+                        No poster
+                      </div>
+                    )}
                   </div>
-                  <div className="p-4">
-                    <h3 className="text-lg font-mono font-bold text-terminal-accent-info mb-2">
-                      {photo.title}
-                    </h3>
-                    <div className="flex items-center gap-2 text-sm font-mono text-terminal-muted mb-2">
-                      <MapPin className="w-4 h-4" />
-                      <span>{photo.location}</span>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <h3 className="font-bold text-terminal-accent-blue">
+                          {movie.title} <span className="text-terminal-text-dim font-normal">({movie.year})</span>
+                        </h3>
+                        <p className="text-sm text-terminal-text-dim">
+                          {movie.director && `Directed by ${movie.director} • `}
+                          {movie.genre}
+                        </p>
+                      </div>
+
+                      {/* Rating */}
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <span className="text-terminal-accent-yellow font-bold">{movie.rating}/10</span>
+                        <button
+                          onClick={() => toggleFavorite(movie.id)}
+                          aria-label={movie.favorite ? "Remove from favorites" : "Add to favorites"}
+                        >
+                          <Star
+                            className={`h-5 w-5 ${
+                              movie.favorite
+                                ? "fill-terminal-accent-yellow text-terminal-accent-yellow"
+                                : "text-terminal-text-dim"
+                            }`}
+                          />
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 text-sm font-mono text-terminal-muted mb-3">
-                      <Calendar className="w-4 h-4" />
-                      <span>{new Date(photo.date).toLocaleDateString()}</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {photo.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-xs font-mono">
-                          {tag.toLowerCase()}
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-1 mb-2">
+                      {movie.tags.map((tag) => (
+                        <Badge key={tag} variant="secondary" className="text-xs">
+                          {tag}
                         </Badge>
                       ))}
                     </div>
-                  </div>
-                </article>
-              ))}
-            </div>
 
-            {filteredPhotos.length === 0 && (
-              <div className="text-center py-12 text-terminal-muted font-mono">
-                <p># no pics found matching your filters</p>
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
+                    {/* Notes Preview */}
+                    {movie.notes && (
+                      <p className="text-sm text-terminal-text-dim mb-3 line-clamp-2">
+                        {movie.notes}
+                      </p>
+                    )}
 
-        {/* Movie Trailer Modal */}
-        {selectedMovie && (
-          <dialog
-            open
-            className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
-            onClick={() => setSelectedMovie(null)}
-          >
-            <div
-              className="bg-terminal-bg border-2 border-terminal-accent-info rounded-lg max-w-4xl w-full p-6"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-mono font-bold text-terminal-accent-info">
-                  {selectedMovie.title} ({selectedMovie.year})
-                </h2>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedMovie(null)}
-                  aria-label="Close trailer"
-                  className="font-mono"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
-              </div>
-              <div className="aspect-video bg-black rounded overflow-hidden">
-                <iframe
-                  src={selectedMovie.trailer}
-                  title={`${selectedMovie.title} trailer`}
-                  className="w-full h-full"
-                  allowFullScreen
-                />
-              </div>
-              <p className="text-sm font-mono text-terminal-muted mt-4">
-                Press <kbd className="px-2 py-1 bg-terminal-muted/20 rounded font-mono">[esc]</kbd> to close
-              </p>
-            </div>
-          </dialog>
-        )}
-
-        {/* Photo Lightbox */}
-        {selectedPhoto && (
-          <dialog
-            open
-            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-            onClick={() => setSelectedPhoto(null)}
-          >
-            <div
-              className="bg-terminal-bg border-2 border-terminal-accent-info rounded-lg max-w-6xl w-full p-6"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-center mb-4">
-                <div>
-                  <h2 className="text-2xl font-mono font-bold text-terminal-accent-info mb-2">
-                    {selectedPhoto.title}
-                  </h2>
-                  <div className="flex items-center gap-4 text-sm font-mono text-terminal-muted">
-                    <span>📍 {selectedPhoto.location}</span>
-                    <span>📅 {new Date(selectedPhoto.date).toLocaleDateString()}</span>
+                    {/* Actions */}
+                    <div className="flex gap-2">
+                      {movie.trailer && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => openTrailer(movie)}
+                        >
+                          <Play className="h-3 w-3 mr-1" />
+                          Trailer
+                        </Button>
+                      )}
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => startEditingNotes(movie)}
+                      >
+                        <Edit className="h-3 w-3 mr-1" />
+                        Edit Notes
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant={movie.watched ? "default" : "outline"}
+                        onClick={() => toggleWatched(movie.id)}
+                      >
+                        <Check className="h-3 w-3 mr-1" />
+                        {movie.watched ? "Watched" : "Mark Watched"}
+                      </Button>
+                      {movie.watched && movie.watchedDate && (
+                        <span className="text-xs text-terminal-text-dim flex items-center ml-auto">
+                          <Calendar className="h-3 w-3 mr-1" />
+                          {new Date(movie.watchedDate).toLocaleDateString()}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedPhoto(null)}
-                  aria-label="Close photo"
-                  className="font-mono"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
-              </div>
-              <img
-                src={selectedPhoto.url}
-                alt={selectedPhoto.title}
-                className="w-full h-auto max-h-[70vh] object-contain rounded mb-4"
-              />
-              <p className="font-mono text-terminal-text mb-4"># {selectedPhoto.description}</p>
-              <div className="flex flex-wrap gap-2">
-                {selectedPhoto.tags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="font-mono">
-                    {tag.toLowerCase()}
-                  </Badge>
-                ))}
-              </div>
-              <p className="text-sm font-mono text-terminal-muted mt-4">
-                Press <kbd className="px-2 py-1 bg-terminal-muted/20 rounded font-mono">[esc]</kbd> to close
-              </p>
-            </div>
-          </dialog>
+              </Card>
+            ))}
+          </div>
         )}
       </div>
+
+      {/* Native <dialog> Modal for Trailer */}
+      <dialog
+        ref={trailerDialog}
+        className="backdrop:bg-black/80 bg-terminal-bg border border-terminal-border rounded-lg p-0 max-w-4xl w-full"
+        onClick={(e) => {
+          // Close on backdrop click
+          if (e.target === trailerDialog.current) {
+            closeTrailer();
+          }
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            closeTrailer();
+          }
+        }}
+      >
+        {selectedMovie && (
+          <div className="p-6">
+            <div className="flex items-start justify-between mb-4">
+              <h2 id="dialog-title" className="text-xl font-bold text-terminal-accent-blue">
+                {selectedMovie.title} - Trailer
+              </h2>
+              <button
+                onClick={closeTrailer}
+                className="text-terminal-text-dim hover:text-terminal-text"
+                aria-label="Close"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            {selectedMovie.trailer && (
+              <div className="aspect-video w-full">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src={selectedMovie.trailer}
+                  title={`Trailer for ${selectedMovie.title}`}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="rounded"
+                />
+              </div>
+            )}
+
+            <div className="mt-4 flex justify-end">
+              <Button onClick={closeTrailer} autoFocus>
+                Close
+              </Button>
+            </div>
+          </div>
+        )}
+      </dialog>
     </div>
   );
 }
