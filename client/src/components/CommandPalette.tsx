@@ -14,6 +14,7 @@ import {
   FolderKanban, 
   BookOpen, 
   Camera, 
+  GitBranch,
   Mail, 
   MessageSquare,
   Download,
@@ -114,6 +115,11 @@ export default function CommandPalette() {
             <Camera className="mr-2 h-4 w-4" />
             <span>Favorites</span>
             <span className="ml-auto text-xs text-muted-foreground">/favorites</span>
+          </CommandItem>
+          <CommandItem onSelect={() => navigate("/git-timeline")} className="font-mono">
+            <GitBranch className="mr-2 h-4 w-4" />
+            <span>Git Timeline</span>
+            <span className="ml-auto text-xs text-muted-foreground">/git-timeline</span>
           </CommandItem>
           <CommandItem onSelect={() => navigate("/contact")} className="font-mono">
             <Mail className="mr-2 h-4 w-4" />
