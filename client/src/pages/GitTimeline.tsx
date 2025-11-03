@@ -118,11 +118,10 @@ export default function GitTimeline() {
   const [isLoadingGitHub, setIsLoadingGitHub] = useState(false);
   const [useRealData, setUseRealData] = useState(false);
   
-  // ⚠️ IMPORTANT: Configuration - Update with YOUR actual GitHub details
-  // Find your username at: https://github.com/settings/profile
-  const GITHUB_OWNER = "YOUR_GITHUB_USERNAME"; // ⚠️ TODO: Replace with your actual GitHub username
-  const GITHUB_REPO = "portfolio_dhanush"; // ⚠️ TODO: Update if your repo name is different
-  const GITHUB_BRANCH = "enhance/hybrid-terminal"; // ⚠️ TODO: Update to your primary branch (usually "main" or "master")
+  // GitHub Configuration
+  const GITHUB_OWNER = "Dhanushranga1"; // Your GitHub username
+  const GITHUB_REPO = "portfolio_dhanush"; // Repository name
+  const GITHUB_BRANCH = "main"; // Primary branch
   
   // Load GitHub data
   const loadGitHubData = useCallback(async () => {

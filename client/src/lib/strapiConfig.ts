@@ -1,22 +1,30 @@
 /**
- * Strapi CMS Configuration
+ * Strapi CMS Configuration (Strapi Cloud)
  * 
- * This file contains configuration for connecting to your Strapi headless CMS.
+ * This file contains configuration for connecting to your Strapi Cloud instance.
  * Strapi will manage: Movies, Photos, Blog Posts
  * 
- * Setup Instructions:
- * 1. Install Strapi: npx create-strapi-app@latest cms --quickstart
- * 2. Create content types (see docs/STRAPI_SETUP.md)
- * 3. Update STRAPI_URL below
- * 4. Generate API token in Strapi admin panel
- * 5. Add token to .env: VITE_STRAPI_TOKEN=your_token_here
+ * Strapi Cloud Setup Instructions:
+ * 1. Go to https://cloud.strapi.io/ and create account
+ * 2. Create a new project (automatically deploys)
+ * 3. Note your Strapi Cloud URL (e.g., https://your-project.strapiapp.com)
+ * 4. Create content types in Strapi admin (see docs/STRAPI_SETUP.md)
+ * 5. Generate API token: Settings → API Tokens → Create new token
+ * 6. Add environment variables to your hosting platform:
+ *    - VITE_STRAPI_URL=https://your-project.strapiapp.com
+ *    - VITE_STRAPI_TOKEN=your_api_token_here
+ * 
+ * Local Development:
+ * Create .env file in root with:
+ * VITE_STRAPI_URL=https://your-project.strapiapp.com
+ * VITE_STRAPI_TOKEN=your_api_token_here
  */
 
 export const STRAPI_CONFIG = {
-  // Strapi API URL (update this when you deploy Strapi)
-  API_URL: import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337',
+  // Strapi Cloud URL (set in .env file)
+  API_URL: import.meta.env.VITE_STRAPI_URL || '',
   
-  // API Token (set in .env file for security)
+  // API Token (set in .env file - NEVER commit this!)
   API_TOKEN: import.meta.env.VITE_STRAPI_TOKEN || '',
   
   // API Endpoints
