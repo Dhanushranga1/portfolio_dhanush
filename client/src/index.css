@@ -247,6 +247,15 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 
+  /* Terminal-style input with blinking caret */
+  .terminal-input:focus::after {
+    content: "▋";
+    display: inline-block;
+    margin-left: 2px;
+    animation: blink 1s step-end infinite;
+    color: hsl(var(--foreground));
+  }
+
   /* Respect prefers-reduced-motion */
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -255,6 +264,10 @@
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+    }
+    
+    .terminal-input:focus::after {
+      animation: none;
     }
   }
 }

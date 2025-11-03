@@ -27,13 +27,19 @@ export default function Navigation() {
             {navLinks.map((link) => (
               <Link key={link.path} href={link.path} data-testid={`link-${link.label}`}>
                 <span
-                  className={`text-sm font-mono cursor-pointer transition-colors ${
+                  className={`text-sm font-mono cursor-pointer transition-colors duration-150 group relative ${
                     location === link.path
-                      ? "text-foreground underline decoration-primary decoration-2 underline-offset-4"
+                      ? "text-foreground"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
+                  {location === link.path && (
+                    <span className="text-terminal-accent mr-1">&gt;</span>
+                  )}
                   /{link.label}
+                  {location !== link.path && (
+                    <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-terminal-accent group-hover:w-full transition-all duration-200" />
+                  )}
                 </span>
               </Link>
             ))}
