@@ -18,9 +18,9 @@ export default function FloatingDock() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100]">
-      <div className="bg-black/90 backdrop-blur-xl border-2 border-white/20 rounded-2xl shadow-2xl px-4 py-3">
-        <div className="flex items-center gap-3">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] pointer-events-auto">
+      <div className="bg-gray-900 backdrop-blur-xl border-2 border-gray-700 rounded-2xl shadow-2xl px-4 py-3 min-w-[500px]">
+        <div className="flex items-center justify-center gap-3">
           {navItems.map((item, index) => {
             const isActive = location === item.path;
             const Icon = item.icon;
@@ -48,8 +48,8 @@ export default function FloatingDock() {
                   <button
                     className={`relative w-14 h-14 flex items-center justify-center rounded-xl transition-all duration-300 ${
                       isActive
-                        ? "bg-blue-500/30 text-blue-400 scale-110 shadow-lg shadow-blue-500/50"
-                        : "text-gray-400 hover:text-white hover:bg-white/10 hover:scale-110"
+                        ? "bg-blue-600 text-white scale-110 shadow-lg shadow-blue-500/50"
+                        : "text-gray-300 hover:text-white hover:bg-gray-700 hover:scale-110"
                     }`}
                   >
                     <Icon
