@@ -4,7 +4,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import FloatingDock from "@/components/FloatingDock";
+import TerminalNavbar from "@/components/TerminalNavbar";
+import CommandHints from "@/components/CommandHints";
 import CommandPalette from "@/components/CommandPalette";
 import BootSequence from "@/components/BootSequence";
 import Home from "@/pages/Home";
@@ -44,7 +45,8 @@ function App() {
         <TooltipProvider>
           <BootSequence />
           <div className="min-h-screen flex flex-col bg-background text-foreground">
-            <FloatingDock />
+            <TerminalNavbar />
+            <CommandHints />
             <main className="flex-1 pb-24">
               <Router />
             </main>
