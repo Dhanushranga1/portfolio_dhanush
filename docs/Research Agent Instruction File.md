@@ -138,7 +138,6 @@ These 3 features will be developed into full prototype packs, separate from the 
 
 | ID | Candidate Idea | Impact (1-10) | Uniqueness (1-10) | Feasibility (1-10) | Priority Score (I×U×F) | LOE |
 | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
-| 1 | **Interactive Algorithm Playground** | 9 | 8 | 6 | **432** | L |
 | 2 | **Interactive 3D Keyboard Nav (Novel)** | 10 | 10 | 4 | **400** | L |
 | 3 | **Git Replay Timeline** | 8 | 8 | 6 | **384** | M |
 | 4 | **Command-driven Project Filters** | 7 | 6 | 9 | **378** | M |
@@ -157,13 +156,7 @@ These 3 features will be developed into full prototype packs, separate from the 
 
 ## **Candidate Idea Details**
 
-### **1\. Interactive Algorithm Playground**
 
-* **Description:** An embedded, interactive component where users can trigger and step through visualizations of common algorithms (e.g., sorting, pathfinding).1  
-* **Rationale:** Demonstrates deep understanding of data structures. This has a high "wow" factor for technical recruiters and is far superior to simply linking to an external tool.  
-* **Scoring:** (I:9, U:8, F:6). Impact is high. Uniqueness is high, as most portfolios just *link* to visualizers like algorithm-visualizer.org.2 Feasibility is medium; managing the state array and rendering for step-replay is complex but achievable in React.3  
-* **LOE:** L (3-7d)  
-* **References:** algorithm-visualizer.org 2, CodeSandbox 2D grid visualizer.1
 
 ### **2\. Interactive 3D Keyboard Navigator (Novel)**
 
