@@ -383,3 +383,58 @@
     inset: -1px;
   }
 }
+/* ============================================================================
+   MOTION SYSTEM - Refined motion tokens for hybrid terminal UI
+   ========================================================================= */
+:root {
+  --motion-fast: 120ms;
+  --motion-medium: 150ms;
+  --motion-long: 200ms;
+  --motion-ease: cubic-bezier(.2, .9, .25, 1);
+  --motion-translate-desktop: 10px;
+  --motion-translate-mobile: 6px;
+}
+
+/* Responsive motion translate values */
+@media (max-width: 640px) {
+  :root {
+    --motion-translate: var(--motion-translate-mobile);
+  }
+}
+
+@media (min-width: 641px) {
+  :root {
+    --motion-translate: var(--motion-translate-desktop);
+  }
+}
+
+/* ============================================================================
+   REFINED COLOR PALETTE - Vivid accent-info, distinct surface layers
+   ========================================================================= */
+.dark {
+  --surface: 210 14% 6%;              /* #0f1112 - deepest black-blue */
+  --surface-2: 210 14% 9%;            /* #121619 - elevated surface */
+  --surface-contrast: 210 14% 13%;    /* #202426 - border color */
+  
+  --accent-info: 171 66% 56%;         /* #36e0c7 - vivid mint (primary) */
+  --accent-info-muted: 168 44% 65%;   /* #7fd0bd - softer mint (fallback) */
+  --accent-action: 16 77% 54%;        /* #ea5c2a - rust orange (CTAs) */
+  --accent-warn: 353 97% 61%;         /* #fb3f58 - rose red (errors) */
+  
+  --text-primary: 171 23% 85%;        /* #d1e8e5 - off-white with teal tint */
+  --text-muted: 0 0% 43%;             /* #6e7374 - subtle grey */
+  
+  --glass: rgba(255, 255, 255, 0.02);
+  --focus-ring: rgba(54, 224, 199, 0.14);
+}
+
+/* ============================================================================
+   REDUCED MOTION GUARD - Respect user's motion preferences
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .motion-safe,
+  .motion-safe * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

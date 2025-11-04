@@ -16,7 +16,7 @@ export default function TerminalNavbar() {
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
-  // Keyboard navigation
+  // Keyboard navigation: Tab enters, Arrow keys move, Enter activates
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Only handle if focus is within navbar or no element focused
@@ -49,8 +49,8 @@ export default function TerminalNavbar() {
       aria-label="Primary navigation"
       className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[1000] pointer-events-auto"
     >
-      <div className="bg-surface/70 backdrop-blur-sm border border-surface-contrast rounded-xl px-3 py-2 shadow-lg">
-        <ul className="flex items-center gap-2" role="menubar">
+      <div className="relative bg-surface/70 backdrop-blur-sm border border-surface-contrast rounded-2xl px-4 py-2 shadow-[0_6px_18px_rgba(0,0,0,0.25)] transition-all duration-150 motion-safe">
+        <ul className="flex items-center gap-3" role="menubar">
           {NAV_ITEMS.map((item, index) => {
             const isActive = location === item.path;
             const Icon = item.icon;
@@ -66,7 +66,6 @@ export default function TerminalNavbar() {
                     aria-current={isActive ? "page" : undefined}
                     onFocus={() => setFocusedIndex(index)}
                     onBlur={() => {
-                      // Small delay to allow focus to move to another nav item
                       setTimeout(() => {
                         if (!itemRefs.current.some(ref => ref === document.activeElement)) {
                           setFocusedIndex(-1);
@@ -74,36 +73,46 @@ export default function TerminalNavbar() {
                       }, 50);
                     }}
                     className={`
-                      group relative flex items-center gap-2 px-3 py-2 rounded-lg
-                      font-mono text-sm transition-all duration-150 ease-out
-                      focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-info/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface
+                      group relative flex items-center gap-1.5 px-3 py-2 rounded-md
+                      font-mono text-sm tracking-wide transition-all duration-medium ease-motion-ease
+                      focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-info focus-visible:ring-offset-2 focus-visible:ring-offset-surface
                       ${
                         isActive
-                          ? "text-accent-info bg-accent-info/10"
-                          : "text-muted hover:text-text-primary hover:bg-surface-2/50"
+                          ? "text-accent-info bg-accent-info/8 shadow-[0_0_0_1px_rgba(127,208,189,0.3)]"
+                          : "text-muted/80 hover:text-accent-info hover:bg-surface-2/70"
                       }
                     `}
                   >
-                    {/* Active indicator */}
+                    {/* Active indicator - terminal prefix ">" */}
                     {isActive && (
-                      <span className="absolute -left-1 text-accent-info font-bold" aria-hidden="true">
+                      <span className="text-accent-info font-bold mr-0.5" aria-hidden="true">
                         &gt;
                       </span>
                     )}
 
-                    {/* Icon */}
+                    {/* Icon - stroke-only with slight vertical alignment */}
                     <Icon
-                      className={`w-4 h-4 transition-transform duration-150 ${
-                        isActive ? "scale-110" : "group-hover:scale-105"
+                      className={`w-4 h-4 translate-y-[1px] transition-all duration-medium ${
+                        isActive ? "opacity-100" : "opacity-80 group-hover:opacity-100"
                       }`}
+                      strokeWidth={1.5}
                       aria-hidden="true"
                     />
 
-                    {/* Label */}
-                    <span className="hidden sm:inline">{item.label}</span>
+                    {/* Label - desktop only */}
+                    <span className="hidden sm:inline transition-colors duration-medium">
+                      {item.label}
+                    </span>
 
-                    {/* Mobile: show label on hover/focus */}
-                    <span className="sm:hidden absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-black border border-surface-contrast rounded text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity pointer-events-none">
+                    {/* Mobile tooltip - appears on hover/focus */}
+                    <span 
+                      className="sm:hidden absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 
+                      bg-surface border border-surface-contrast rounded text-xs text-accent-info whitespace-nowrap 
+                      opacity-0 group-hover:opacity-100 group-focus:opacity-100 
+                      transition-opacity duration-medium pointer-events-none z-10
+                      shadow-lg backdrop-blur-sm"
+                      aria-hidden="true"
+                    >
                       {item.label}
                     </span>
                   </a>
@@ -114,9 +123,9 @@ export default function TerminalNavbar() {
         </ul>
       </div>
 
-      {/* Subtle glow effect */}
+      {/* Subtle glow effect under navbar */}
       <div 
-        className="absolute inset-0 -z-10 bg-accent-info/5 blur-xl rounded-2xl opacity-50"
+        className="absolute inset-0 -z-10 bg-accent-info/5 blur-xl rounded-2xl opacity-40"
         aria-hidden="true"
       />
     </nav>
