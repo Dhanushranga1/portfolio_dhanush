@@ -1,4 +1,10 @@
 import { FileText } from "lucide-react";
+import CardPrimitive, {
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/primitives/CardPrimitive";
 
 interface BlogCardProps {
   title: string;
@@ -13,23 +19,30 @@ export default function BlogCard({
   date,
 }: BlogCardProps) {
   return (
-    <div className="group cursor-pointer py-6 border-b border-border last:border-0" data-testid={`card-blog-${title.toLowerCase().replace(/\s+/g, '-')}`}>
-      <div className="space-y-3">
-        <div className="flex items-start gap-3">
-          <span className="text-xs font-mono text-muted-foreground mt-0.5">
+    <CardPrimitive
+      variant="default"
+      padding="md"
+      className="group cursor-pointer"
+      testId={`card-blog-${title.toLowerCase().replace(/\s+/g, '-')}`}
+    >
+      <CardContent spacing="md">
+        <CardHeader>
+          <span className="text-xs text-muted-foreground mt-0.5">
             {date}
           </span>
           <div className="flex-1 space-y-2">
-            <h3 className="text-base font-mono font-semibold group-hover:text-primary transition-colors flex items-center gap-2" data-testid={`text-blog-title-${title.toLowerCase().replace(/\s+/g, '-')}`}>
+            <CardTitle
+              level={3}
+              className="text-base group-hover:text-accent-info flex items-center gap-2"
+              data-testid={`text-blog-title-${title.toLowerCase().replace(/\s+/g, '-')}`}
+            >
               <FileText className="h-4 w-4" />
               {title}
-            </h3>
-            <p className="text-sm font-mono text-muted-foreground leading-relaxed">
-              {excerpt}
-            </p>
+            </CardTitle>
+            <CardDescription>{excerpt}</CardDescription>
           </div>
-        </div>
-      </div>
-    </div>
+        </CardHeader>
+      </CardContent>
+    </CardPrimitive>
   );
 }

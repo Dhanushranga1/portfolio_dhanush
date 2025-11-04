@@ -1,5 +1,12 @@
 import { forwardRef } from "react";
 import { ExternalLink, Github } from "lucide-react";
+import CardPrimitive, {
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from "@/components/primitives/CardPrimitive";
 
 interface ProjectCardProps {
   title: string;
@@ -48,102 +55,99 @@ const ProjectCard = forwardRef<HTMLLIElement, ProjectCardProps>(
     };
 
     return (
-      <li
-        ref={ref}
-        className={`group font-mono text-sm border-l-4 transition-all duration-200 pl-6 py-4 rounded-r-md ${
-          isFocused
-            ? "border-accent-action bg-accent-action/5 shadow-lg"
-            : "border-transparent hover:border-accent-info hover:bg-surface-2"
-        }`}
-        aria-current={isFocused ? "location" : undefined}
-      >
-        <div className="space-y-3">
-          {/* Status, Number, and Title */}
-          <div className="flex items-start gap-3 flex-wrap">
-            {projectNumber && (
-              <span className="text-muted-foreground font-bold min-w-[2ch] text-right">
-                {projectNumber}.
-              </span>
-            )}
-            <span
-              className={`inline-flex items-center gap-1.5 px-2 py-1 text-xs font-bold border rounded ${statusColors[status]}`}
-            >
-              <span>{statusIcons[status]}</span>
-              <span>{statusLabels[status]}</span>
-            </span>
-            <h3
-              className="text-lg font-bold text-foreground flex-1 min-w-[200px]"
-              data-testid={`text-project-title-${title
-                .toLowerCase()
-                .replace(/\s+/g, "-")}`}
-            >
-              {title}
-            </h3>
-          </div>
-
-          {/* Impact Statement as Comment */}
-          {impact && (
-            <p className="text-accent-info pl-8 leading-relaxed">
-              <span className="text-muted-foreground"># </span>
-              {impact}
-            </p>
-          )}
-
-          {/* Description */}
-          <p className="text-muted-foreground leading-relaxed pl-8">
-            {description}
-          </p>
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 pl-8">
-            {tags.map((tag) => (
+      <li ref={ref} aria-current={isFocused ? "location" : undefined}>
+        <CardPrimitive
+          variant={isFocused ? "focused" : "accent"}
+          padding="md"
+          className="group text-sm pl-6"
+        >
+          <CardContent spacing="md">
+            {/* Status, Number, and Title */}
+            <CardHeader>
+              {projectNumber && (
+                <span className="text-muted-foreground font-bold min-w-[2ch] text-right">
+                  {projectNumber}.
+                </span>
+              )}
               <span
-                key={tag}
-                className="text-xs text-accent-info border border-accent-info/30 bg-accent-info/5 px-2 py-1 rounded font-medium"
+                className={`inline-flex items-center gap-1.5 px-2 py-1 text-xs font-bold border rounded ${statusColors[status]}`}
               >
-                {tag}
+                <span>{statusIcons[status]}</span>
+                <span>{statusLabels[status]}</span>
               </span>
-            ))}
-          </div>
+              <CardTitle
+                level={3}
+                className="text-lg flex-1 min-w-[200px]"
+                data-testid={`text-project-title-${title
+                  .toLowerCase()
+                  .replace(/\s+/g, "-")}`}
+              >
+                {title}
+              </CardTitle>
+            </CardHeader>
 
-          {/* Links */}
-          <div className="flex items-center gap-4 pl-8 pt-2">
-            {liveUrl && (
-              <a
-                href={liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-accent-info hover:text-accent-action transition-colors inline-flex items-center gap-1.5 group/link"
-                aria-label={`Open live demo of ${title}`}
-              >
-                <span className="group-hover/link:translate-x-0.5 transition-transform">
-                  →
-                </span>
-                <span className="underline decoration-dotted underline-offset-4">
-                  [live]
-                </span>
-                <ExternalLink className="h-3.5 w-3.5 opacity-70" />
-              </a>
+            {/* Impact Statement as Comment */}
+            {impact && (
+              <p className="text-accent-info pl-8 leading-relaxed">
+                <span className="text-muted-foreground"># </span>
+                {impact}
+              </p>
             )}
-            {githubUrl && (
-              <a
-                href={githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-accent-info hover:text-accent-action transition-colors inline-flex items-center gap-1.5 group/link"
-                aria-label={`View source code of ${title} on GitHub`}
-              >
-                <span className="group-hover/link:translate-x-0.5 transition-transform">
-                  →
+
+            {/* Description */}
+            <CardDescription className="pl-8">{description}</CardDescription>
+
+            {/* Tags */}
+            <div className="flex flex-wrap gap-2 pl-8">
+              {tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="text-xs text-accent-info border border-accent-info/30 bg-accent-info/5 px-2 py-1 rounded font-medium"
+                >
+                  {tag}
                 </span>
-                <span className="underline decoration-dotted underline-offset-4">
-                  [source]
-                </span>
-                <Github className="h-3.5 w-3.5 opacity-70" />
-              </a>
-            )}
-          </div>
-        </div>
+              ))}
+            </div>
+
+            {/* Links */}
+            <CardFooter className="pl-8">
+              {liveUrl && (
+                <a
+                  href={liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent-info hover:text-accent-action transition-colors inline-flex items-center gap-1.5 group/link"
+                  aria-label={`Open live demo of ${title}`}
+                >
+                  <span className="group-hover/link:translate-x-0.5 transition-transform">
+                    →
+                  </span>
+                  <span className="underline decoration-dotted underline-offset-4">
+                    [live]
+                  </span>
+                  <ExternalLink className="h-3.5 w-3.5 opacity-70" />
+                </a>
+              )}
+              {githubUrl && (
+                <a
+                  href={githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent-info hover:text-accent-action transition-colors inline-flex items-center gap-1.5 group/link"
+                  aria-label={`View source code of ${title} on GitHub`}
+                >
+                  <span className="group-hover/link:translate-x-0.5 transition-transform">
+                    →
+                  </span>
+                  <span className="underline decoration-dotted underline-offset-4">
+                    [source]
+                  </span>
+                  <Github className="h-3.5 w-3.5 opacity-70" />
+                </a>
+              )}
+            </CardFooter>
+          </CardContent>
+        </CardPrimitive>
       </li>
     );
   }
