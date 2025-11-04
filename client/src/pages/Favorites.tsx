@@ -251,33 +251,81 @@ export default function Favorites() {
         return;
       }
 
-      // Toggle view mode: 'v'
-      if (e.key === "v") {
+      // Toggle view mode: 'v' or 'V'
+      if (e.key === "v" || e.key === "V") {
+        e.preventDefault();
         setViewMode((prev) => (prev === "grid" ? "list" : "grid"));
+        toast({
+          title: `Switched to ${viewMode === "grid" ? "list" : "grid"} view`,
+          description: `Press 'V' to toggle back`,
+        });
       }
 
-      // Export: 'e'
-      if (e.key === "e" && e.ctrlKey) {
+      // Export: Ctrl/Cmd + E
+      if (e.key === "e" && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         exportToJson();
+      }
+
+      // Escape to close trailer
+      if (e.key === "Escape" && trailerDialog.current?.open) {
+        closeTrailer();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [viewMode]); // Added viewMode to dependencies for toast message
+
+  // JSON-LD structured data for SEO
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Favorite Movies Collection",
+    "description": "Curated list of favorite movies",
+    "numberOfItems": movies.length,
+    "itemListElement": movies.map((movie, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "item": {
+        "@type": "Movie",
+        "name": movie.title,
+        "dateCreated": movie.year.toString(),
+        "director": movie.director ? {
+          "@type": "Person",
+          "name": movie.director
+        } : undefined,
+        "genre": movie.genre.split(",").map(g => g.trim()),
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": movie.rating,
+          "bestRating": 10,
+          "worstRating": 1
+        }
+      }
+    }))
+  };
 
   return (
-    <div className="min-h-screen bg-terminal-bg text-terminal-text p-4 sm:p-6 lg:p-8 font-mono">
+    <>
+      {/* JSON-LD structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      
+      <div className="min-h-screen bg-background text-foreground p-4 sm:p-6 lg:p-8 font-mono pb-32">
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-terminal-accent-blue mb-2">
-              <span className="text-terminal-accent-green">❯</span> Favorite Movies
+            <h1 className="text-3xl font-bold text-accent-info mb-2">
+              <span className="text-accent-action">$</span> ls ~/favorites/movies
             </h1>
-            <p className="text-terminal-text-dim">
-              Curated collection • {filteredMovies.length} of {movies.length} movies
+            <p className="text-muted-foreground text-sm">
+              {filteredMovies.length} of {movies.length} movies
+              <span className="ml-2 text-accent-info">•</span>
+              <span className="ml-2">Press <kbd className="px-1.5 py-0.5 bg-surface-2 border border-surface-contrast rounded text-xs">V</kbd> to toggle view</span>
             </p>
           </div>
           
@@ -287,8 +335,9 @@ export default function Favorites() {
               variant={viewMode === "grid" ? "default" : "outline"}
               size="icon"
               onClick={() => setViewMode("grid")}
-              className="terminal-card"
-              aria-label="Grid view"
+              className={`font-mono ${viewMode === "grid" ? "bg-accent-info text-surface" : "hover:bg-surface-2"}`}
+              aria-label="Grid view (press V to toggle)"
+              title="Grid view"
             >
               <Grid3x3 className="h-4 w-4" />
             </Button>
@@ -296,10 +345,24 @@ export default function Favorites() {
               variant={viewMode === "list" ? "default" : "outline"}
               size="icon"
               onClick={() => setViewMode("list")}
-              className="terminal-card"
-              aria-label="List view"
+              className={`font-mono ${viewMode === "list" ? "bg-accent-info text-surface" : "hover:bg-surface-2"}`}
+              aria-label="List view (press V to toggle)"
+              title="List view"
             >
               <List className="h-4 w-4" />
+            </Button>
+            
+            {/* Export Button */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportToJson}
+              className="font-mono hover:bg-surface-2 ml-2"
+              aria-label="Export to JSON (Ctrl/Cmd+E)"
+              title="Export to JSON"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export
             </Button>
           </div>
         </div>
@@ -750,5 +813,6 @@ export default function Favorites() {
         )}
       </dialog>
     </div>
+    </>
   );
 }
