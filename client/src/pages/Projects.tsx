@@ -184,6 +184,7 @@ export default function Projects() {
         </div>
 
         {/* Projects as terminal list */}
+        <h2 className="sr-only">Project List</h2>
         {filteredProjects.length > 0 ? (
           <ul className="space-y-8" role="list" aria-label="Projects list">
             {filteredProjects.map((project, index) => (

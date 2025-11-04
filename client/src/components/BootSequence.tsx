@@ -128,7 +128,7 @@ export default function BootSequence() {
         {/* Skip button */}
         <button
           onClick={handleSkip}
-          className="absolute bottom-8 right-8 font-mono text-xs text-terminal-muted hover:text-terminal-accent transition-colors border border-terminal-muted hover:border-terminal-accent px-3 py-1 rounded"
+          className="absolute bottom-8 right-8 font-mono text-xs text-text-muted hover:text-terminal-accent transition-colors border border-text-muted hover:border-terminal-accent px-3 py-1 rounded"
         >
           skip [esc]
         </button>

@@ -32,20 +32,20 @@ export default function CommandHints() {
       <div className="bg-surface-2/90 backdrop-blur-sm border border-surface-contrast rounded-lg px-4 py-2 shadow-lg max-w-2xl">
         <div className="flex items-center gap-4">
           {/* Hints */}
-          <div className="flex items-center gap-4 text-xs font-mono text-muted">
-            <span className="hidden sm:inline">
-              Press <kbd className="px-1.5 py-0.5 bg-surface border border-surface-contrast rounded text-text-primary">/</kbd> to search
+          <div className="flex items-center gap-4 text-xs font-mono">
+            <span className="hidden sm:inline text-text-primary">
+              Press <kbd className="px-1.5 py-0.5 bg-surface border border-surface-contrast rounded">/</kbd> to search
             </span>
-            <span className="hidden md:inline">•</span>
-            <span>
-              <kbd className="px-1.5 py-0.5 bg-surface border border-surface-contrast rounded text-text-primary">
+            <span className="hidden md:inline text-muted" aria-hidden="true">•</span>
+            <span className="text-text-primary">
+              <kbd className="px-1.5 py-0.5 bg-surface border border-surface-contrast rounded">
                 {navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}+K
               </kbd>{" "}
               Command Palette
             </span>
-            <span className="hidden lg:inline">•</span>
-            <span className="hidden lg:inline">
-              <kbd className="px-1.5 py-0.5 bg-surface border border-surface-contrast rounded text-text-primary">V</kbd> Toggle view
+            <span className="hidden lg:inline text-muted" aria-hidden="true">•</span>
+            <span className="hidden lg:inline text-text-primary">
+              <kbd className="px-1.5 py-0.5 bg-surface border border-surface-contrast rounded">V</kbd> Toggle view
             </span>
           </div>
 

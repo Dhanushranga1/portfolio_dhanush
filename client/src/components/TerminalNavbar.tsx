@@ -45,22 +45,20 @@ export default function TerminalNavbar() {
 
   return (
     <nav
-      role="navigation"
       aria-label="Primary navigation"
       className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[1000] pointer-events-auto"
     >
       <div className="relative bg-surface/70 backdrop-blur-sm border border-surface-contrast rounded-2xl px-4 py-2 shadow-[0_6px_18px_rgba(0,0,0,0.25)] transition-all duration-150 motion-safe">
-        <ul className="flex items-center gap-3" role="menubar">
+        <ul className="flex items-center gap-3">
           {NAV_ITEMS.map((item, index) => {
             const isActive = location === item.path;
             const Icon = item.icon;
 
             return (
-              <li key={item.path} role="none">
+              <li key={item.path}>
                 <Link href={item.path}>
                   <a
                     ref={(el) => (itemRefs.current[index] = el)}
-                    role="menuitem"
                     tabIndex={0}
                     aria-label={`Navigate to ${item.label}`}
                     aria-current={isActive ? "page" : undefined}
@@ -79,7 +77,7 @@ export default function TerminalNavbar() {
                       ${
                         isActive
                           ? "text-accent-info bg-accent-info/8 shadow-[0_0_0_1px_rgba(127,208,189,0.3)]"
-                          : "text-muted/80 hover:text-accent-info hover:bg-surface-2/70"
+                          : "text-text-muted hover:text-accent-info hover:bg-surface-2/70"
                       }
                     `}
                   >
