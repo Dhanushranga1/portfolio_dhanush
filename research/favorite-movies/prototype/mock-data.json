@@ -1,0 +1,170 @@
+{
+  "movies": [
+    {
+      "id": 1,
+      "title": "The Shawshank Redemption",
+      "year": 1994,
+      "rating": 9.3,
+      "genre": ["Drama", "Crime"],
+      "director": "Frank Darabont",
+      "poster": "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300&h=450&fit=crop",
+      "trailer": "https://www.youtube.com/embed/6hB3S9bIaco",
+      "watchlist": true,
+      "notes": "All-time favorite. The ending is perfect.",
+      "dateAdded": "2024-01-15"
+    },
+    {
+      "id": 2,
+      "title": "Inception",
+      "year": 2010,
+      "rating": 8.8,
+      "genre": ["Sci-Fi", "Thriller", "Action"],
+      "director": "Christopher Nolan",
+      "poster": "https://images.unsplash.com/photo-1594908900066-3f47337549d8?w=300&h=450&fit=crop",
+      "trailer": "https://www.youtube.com/embed/YoHD9XEInc0",
+      "watchlist": false,
+      "notes": "Mind-bending masterpiece",
+      "dateAdded": "2024-02-20"
+    },
+    {
+      "id": 3,
+      "title": "The Dark Knight",
+      "year": 2008,
+      "rating": 9.0,
+      "genre": ["Action", "Crime", "Drama"],
+      "director": "Christopher Nolan",
+      "poster": "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=300&h=450&fit=crop",
+      "trailer": "https://www.youtube.com/embed/EXeTwQWrcwY",
+      "watchlist": false,
+      "notes": "Ledger's performance is unforgettable",
+      "dateAdded": "2024-01-10"
+    },
+    {
+      "id": 4,
+      "title": "Pulp Fiction",
+      "year": 1994,
+      "rating": 8.9,
+      "genre": ["Crime", "Drama"],
+      "director": "Quentin Tarantino",
+      "poster": "https://images.unsplash.com/photo-1574267432644-f610f5c0d258?w=300&h=450&fit=crop",
+      "trailer": "https://www.youtube.com/embed/s7EdQ4FqbhY",
+      "watchlist": true,
+      "notes": "Non-linear storytelling at its best",
+      "dateAdded": "2024-03-05"
+    },
+    {
+      "id": 5,
+      "title": "Interstellar",
+      "year": 2014,
+      "rating": 8.7,
+      "genre": ["Sci-Fi", "Drama", "Adventure"],
+      "director": "Christopher Nolan",
+      "poster": "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=300&h=450&fit=crop",
+      "trailer": "https://www.youtube.com/embed/zSWdZVtXT7E",
+      "watchlist": false,
+      "notes": "Beautiful score, emotional journey",
+      "dateAdded": "2024-02-28"
+    },
+    {
+      "id": 6,
+      "title": "The Matrix",
+      "year": 1999,
+      "rating": 8.7,
+      "genre": ["Sci-Fi", "Action"],
+      "director": "Wachowskis",
+      "poster": "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=300&h=450&fit=crop",
+      "trailer": "https://www.youtube.com/embed/vKQi3bBA1y8",
+      "watchlist": true,
+      "notes": "Revolutionary action sequences",
+      "dateAdded": "2024-01-25"
+    },
+    {
+      "id": 7,
+      "title": "Parasite",
+      "year": 2019,
+      "rating": 8.5,
+      "genre": ["Drama", "Thriller"],
+      "director": "Bong Joon-ho",
+      "poster": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300&h=450&fit=crop",
+      "trailer": "https://www.youtube.com/embed/5xH0HfJHsaY",
+      "watchlist": false,
+      "notes": "Genre-bending Korean masterpiece",
+      "dateAdded": "2024-03-10"
+    },
+    {
+      "id": 8,
+      "title": "Dune",
+      "year": 2021,
+      "rating": 8.1,
+      "genre": ["Sci-Fi", "Adventure", "Drama"],
+      "director": "Denis Villeneuve",
+      "poster": "https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=300&h=450&fit=crop",
+      "trailer": "https://www.youtube.com/embed/8g18jFHCLXk",
+      "watchlist": true,
+      "notes": "Stunning visuals and sound design",
+      "dateAdded": "2024-04-01"
+    }
+  ],
+  "photos": [
+    {
+      "id": 1,
+      "title": "Golden Gate Bridge",
+      "location": "San Francisco, CA",
+      "date": "2024-06-15",
+      "url": "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=800&h=600&fit=crop",
+      "thumbnail": "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=400&h=300&fit=crop",
+      "tags": ["Travel", "Architecture", "Sunset"],
+      "description": "Beautiful sunset over the iconic bridge"
+    },
+    {
+      "id": 2,
+      "title": "Mountain Peak",
+      "location": "Swiss Alps",
+      "date": "2024-05-20",
+      "url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
+      "tags": ["Nature", "Mountains", "Travel"],
+      "description": "Snow-capped peaks in the Swiss Alps"
+    },
+    {
+      "id": 3,
+      "title": "City Lights",
+      "location": "Tokyo, Japan",
+      "date": "2024-07-10",
+      "url": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&h=600&fit=crop",
+      "thumbnail": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=300&fit=crop",
+      "tags": ["Urban", "Night", "Travel"],
+      "description": "Neon-lit streets of Shibuya at night"
+    },
+    {
+      "id": 4,
+      "title": "Desert Dunes",
+      "location": "Sahara Desert",
+      "date": "2024-03-25",
+      "url": "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?w=800&h=600&fit=crop",
+      "thumbnail": "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?w=400&h=300&fit=crop",
+      "tags": ["Nature", "Desert", "Travel"],
+      "description": "Endless sand dunes under the golden hour"
+    },
+    {
+      "id": 5,
+      "title": "Ocean Waves",
+      "location": "Maldives",
+      "date": "2024-08-05",
+      "url": "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop",
+      "thumbnail": "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=300&fit=crop",
+      "tags": ["Nature", "Ocean", "Beach"],
+      "description": "Crystal clear turquoise waters"
+    },
+    {
+      "id": 6,
+      "title": "Forest Path",
+      "location": "Redwood National Park",
+      "date": "2024-04-18",
+      "url": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop",
+      "thumbnail": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop",
+      "tags": ["Nature", "Forest", "Trees"],
+      "description": "Towering redwoods on a misty morning"
+    }
+  ]
+}

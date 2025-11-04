@@ -1,0 +1,23 @@
+{
+  "skills": [
+    { "label": "React", "percentage": 90, "category": "frontend" },
+    { "label": "TypeScript", "percentage": 85, "category": "language" },
+    { "label": "FastAPI", "percentage": 80, "category": "backend" },
+    { "label": "Python", "percentage": 95, "category": "language" },
+    { "label": "Node.js", "percentage": 75, "category": "backend" },
+    { "label": "Tailwind CSS", "percentage": 90, "category": "frontend" },
+    { "label": "PostgreSQL", "percentage": 70, "category": "database" },
+    { "label": "Docker", "percentage": 65, "category": "devops" }
+  ],
+  "metrics": [
+    { "label": "projects", "value": 12 },
+    { "label": "tech stacks", "value": 8 },
+    { "label": "years exp", "value": 3 },
+    { "label": "commits", "value": "2.4k" }
+  ],
+  "activity": {
+    "project": "TicketPilot v2.1",
+    "status": "building",
+    "lastUpdated": "2025-11-04T10:30:00Z"
+  }
+}
