@@ -129,50 +129,35 @@ export default function Hero() {
           {showCursor && <span className="animate-pulse">_</span>}
         </p>
 
-        {/* Quick links */}
+        {/* Quick links with underline reveal effect */}
         <div 
           className="flex items-center justify-center gap-6 text-sm font-mono animate-in fade-in slide-in-from-bottom-4 duration-500"
           style={{ animationDelay: "300ms" }}
         >
           <Link href="/about" data-testid="link-about">
-            <span className="text-muted-foreground hover:text-accent-info cursor-pointer transition-colors duration-150">
+            <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
               /about
             </span>
           </Link>
           <Link href="/projects" data-testid="link-projects">
-            <span className="text-muted-foreground hover:text-accent-info cursor-pointer transition-colors duration-150">
+            <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
               /projects
             </span>
           </Link>
           <Link href="/blog" data-testid="link-blog">
-            <span className="text-muted-foreground hover:text-accent-info cursor-pointer transition-colors duration-150">
+            <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
               /blog
             </span>
           </Link>
           <Link href="/photos" data-testid="link-pics">
-            <span className="text-muted-foreground hover:text-accent-info cursor-pointer transition-colors duration-150">
+            <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
               /pics
             </span>
           </Link>
           <Link href="/contact" data-testid="link-contact">
-            <span className="text-muted-foreground hover:text-accent-info cursor-pointer transition-colors duration-150">
+            <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
               /contact
             </span>
-          </Link>
-        </div>
-
-        {/* Recruiter Snapshot CTA */}
-        <div 
-          className="pt-8 animate-in fade-in slide-in-from-bottom-5 duration-500"
-          style={{ animationDelay: "500ms" }}
-        >
-          <Link href="/recruiter">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-surface-2/50 border border-surface-contrast rounded-lg hover:border-accent-info/50 hover:bg-accent-info/5 transition-all duration-200 cursor-pointer group">
-              <span className="text-xs font-mono text-muted group-hover:text-accent-info transition-colors">
-                📋 recruiter snapshot
-              </span>
-              <span className="text-muted-foreground group-hover:text-accent-info transition-colors">→</span>
-            </div>
           </Link>
         </div>
       </div>
