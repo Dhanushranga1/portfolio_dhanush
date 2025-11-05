@@ -1,38 +1,69 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { submitContactForm } from "@/lib/formspree";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
+    _gotcha: "", // honeypot field
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
+  // Keyboard shortcut: Cmd/Ctrl + Enter to submit
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        const form = document.getElementById('contact-form') as HTMLFormElement;
+        if (form && !isSubmitting) {
+          form.requestSubmit();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isSubmitting]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Disable button during submission to prevent double-submit
+    // Prevent double-submit
+    if (isSubmitting) return;
     setIsSubmitting(true);
     
     try {
-      // Simulate API call (replace with actual submission)
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      console.log("Form submitted:", formData);
-      toast({
-        title: "message sent",
-        description: "thanks for reaching out. i'll get back to you soon!",
+      const result = await submitContactForm({
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+        _gotcha: formData._gotcha,
+        _subject: "New contact form submission from portfolio",
       });
-      setFormData({ name: "", email: "", message: "" });
+
+      if (result.ok) {
+        toast({
+          title: "message sent",
+          description: "thanks for reaching out. i'll get back to you soon!",
+        });
+        setFormData({ name: "", email: "", message: "", _gotcha: "" });
+      } else {
+        toast({
+          title: "error sending message",
+          description: result.error || "something went wrong. please try again.",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       toast({
         title: "error sending message",
-        description: "something went wrong. please try again.",
+        description: error instanceof Error ? error.message : "something went wrong. please try again.",
         variant: "destructive",
       });
     } finally {
@@ -41,7 +72,19 @@ export default function ContactForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 font-mono" data-testid="form-contact">
+    <form id="contact-form" onSubmit={handleSubmit} className="space-y-6 font-mono" data-testid="form-contact">
+      {/* Honeypot field - hidden from users, catches bots */}
+      <input
+        type="text"
+        name="_gotcha"
+        value={formData._gotcha}
+        onChange={(e) => setFormData({ ...formData, _gotcha: e.target.value })}
+        className="hidden"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+      />
+
       <div className="space-y-2">
         <label htmlFor="name" className="text-sm text-muted-foreground">
           name
@@ -55,14 +98,14 @@ export default function ContactForm() {
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           required
           disabled={isSubmitting}
-          className="font-mono border-border"
+          className="font-mono border-border focus:ring-2 focus:ring-accent-info/20 focus:border-accent-info/50"
           data-testid="input-name"
         />
       </div>
 
       <div className="space-y-2">
         <label htmlFor="email" className="text-sm text-muted-foreground">
-          email (if you want a reply)
+          email <span className="font-normal">(if you want a reply)</span>
         </label>
         <Input
           id="email"
@@ -75,7 +118,7 @@ export default function ContactForm() {
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           disabled={isSubmitting}
-          className="font-mono border-border"
+          className="font-mono border-border focus:ring-2 focus:ring-accent-info/20 focus:border-accent-info/50"
           data-testid="input-email"
         />
       </div>
@@ -90,13 +133,13 @@ export default function ContactForm() {
           placeholder="tell me what's on your mind..."
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-          className="min-h-[150px] resize-none font-mono border-border"
+          className="min-h-[150px] resize-vertical font-mono border-border focus:ring-2 focus:ring-accent-info/20 focus:border-accent-info/50"
           required
           disabled={isSubmitting}
           data-testid="input-message"
         />
         <p className="text-xs text-muted-foreground">
-          tip: press <kbd className="px-1 py-0.5 rounded bg-muted text-muted-foreground">⌘</kbd> + <kbd className="px-1 py-0.5 rounded bg-muted text-muted-foreground">Enter</kbd> to submit
+          tip: press <kbd className="px-1.5 py-0.5 rounded-md bg-card border border-border text-muted-foreground">⌘</kbd> + <kbd className="px-1.5 py-0.5 rounded-md bg-card border border-border text-muted-foreground">Enter</kbd> (mac) or <kbd className="px-1.5 py-0.5 rounded-md bg-card border border-border text-muted-foreground">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 rounded-md bg-card border border-border text-muted-foreground">Enter</kbd> to submit
         </p>
       </div>
 

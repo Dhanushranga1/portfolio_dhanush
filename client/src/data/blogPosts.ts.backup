@@ -1,0 +1,1531 @@
+// Blog post data - comprehensive content for all posts
+
+export type BlogPost = {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  coverImage: string | null;
+  category: {
+    id: string;
+    name: string;
+    slug: string;
+  } | null;
+  tags: string[];
+  featured: boolean;
+  publishedAt: string;
+  updatedAt: string | null;
+  readTime: number;
+  author: {
+    name: string;
+    bio: string;
+    avatar: string | null;
+  };
+  seo: {
+    metaTitle: string | null;
+    metaDescription: string | null;
+  } | null;
+};
+
+export const BLOG_POSTS: Record<string, BlogPost> = {
+  "bringing-ai-to-everyday-projects": {
+    id: "1",
+    title: "Bringing AI to Everyday Projects",
+    slug: "bringing-ai-to-everyday-projects",
+    excerpt:
+      "How I integrated AI models like GPT-4 and Mistral into real projects. A practical overview of combining LLMs with APIs to make smarter, context-aware applications.",
+    content: `# Bringing AI to Everyday Projects
+
+AI isn't just for tech giants anymore. Over the past year, I've integrated LLMs like GPT-4, Mistral, and Gemini into several projects — from chatbots to document assistants. Here's what I learned about making AI actually useful in real-world applications.
+
+## Why Add AI to Your Projects?
+
+The thing about AI models is they're really good at understanding what people actually mean, not just matching keywords. They can have back-and-forth conversations, summarize long documents, and search through content by meaning rather than exact words. That's the kind of stuff that makes apps feel way smarter.
+
+## The Stack I Use
+
+I built most of my AI features with FastAPI on the backend. Since API calls to OpenAI can take a few seconds, async/await is pretty much required. For anything complex like multi-step reasoning or retrieval augmented generation (fancy term for "search docs first, then ask AI"), I use LangChain. It handles the prompt chaining and conversation memory for you.
+
+The other big piece is vector databases. I use FAISS or Pinecone to store document embeddings, which lets users ask questions in plain English and get relevant context before the LLM generates an answer.
+
+## Real Project: TicketPilot
+
+In my TicketPilot project, I built a support assistant that's basically a smart search system. First, I embedded all the support documentation, then when someone asks a question, it finds the most relevant docs and passes them to Gemini along with the question. The AI generates an answer based only on those docs, so it doesn't make stuff up.
+
+The result? Support resolution went from like 45 seconds average to around 8 seconds, and I haven't had any issues with wrong answers since the responses are grounded in actual documentation.
+
+## What I Learned
+
+Prompt engineering is huge. You can't just throw questions at these models and expect good results. I learned to structure prompts carefully — tell it what role it's playing, give it examples, and set clear boundaries like "only answer based on this context."
+
+Cost management was another surprise. GPT-4 is expensive, like really expensive. I switched to GPT-4o-mini for most queries and only use GPT-4 for complex stuff. Cut my API costs by 70%.
+
+Also, these models can fail in interesting ways. Rate limits, timeouts, weird outputs. I added fallback messages for everything now.
+
+## When NOT to Use AI
+
+Look, AI is cool but it's not always the right tool. For simple deterministic tasks, just write normal code. If you need instant responses, LLMs are too slow. And definitely don't let AI make important decisions without human review. It's powerful but it's not magic.
+
+## What's Next
+
+I'm currently exploring fine-tuning models on domain-specific data to make them even better for niche use cases. Also looking into function calling with GPT-4, which lets the model use tools and APIs directly. And honestly, considering running some local models like Llama 3 or Mistral to cut down on API costs entirely.
+
+The main thing I've learned is to start small. Build one feature, see if it actually helps users, then expand from there. AI is powerful but it needs to solve a real problem, not just be AI for the sake of it.
+
+Tools I'm using: OpenAI API, Google Gemini, FAISS, LangChain, and FastAPI for serving everything. Pretty standard stack at this point.`,
+    coverImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=600&fit=crop",
+    category: { id: "2", name: "AI", slug: "ai" },
+    tags: ["ai", "llm", "fastapi", "automation"],
+    featured: true,
+    publishedAt: "2024-11-03T10:00:00Z",
+    updatedAt: null,
+    readTime: 7,
+    author: {
+      name: "Dhanush Ranga",
+      bio: "Computer Science student building AI-powered applications with FastAPI and modern web technologies",
+      avatar: null,
+    },
+    seo: {
+      metaTitle: "Bringing AI to Everyday Projects | Dhanush Ranga",
+      metaDescription:
+        "Learn how to integrate GPT-4, Mistral, and Gemini into real projects with FastAPI, LangChain, and vector databases.",
+    },
+  },
+
+  "deploying-fastapi-docker-render": {
+    id: "2",
+    title: "Deploying FastAPI Apps with Docker & Render",
+    slug: "deploying-fastapi-docker-render",
+    excerpt:
+      "A step-by-step breakdown of how I containerized and deployed my FastAPI apps using Docker and Render. Covers setup, CI/CD integration, and scaling best practices.",
+    content: `# Deploying FastAPI Apps with Docker & Render
+
+Deploying a FastAPI app to production seemed daunting at first. But with **Docker** and **Render**, I got my apps live in under an hour. Here's the complete guide from containerization to deployment.
+
+## Why Docker + Render?
+
+**Docker** ensures:
+- Consistent environments (dev = staging = prod)
+- Easy dependency management
+- Portability across cloud providers
+
+**Render** provides:
+- Free tier for small projects
+- Automatic HTTPS
+- Zero-config deployments from Git
+- Better than Heroku (RIP free tier)
+
+## Step 1: Dockerize Your FastAPI App
+
+### Project Structure
+\`\`\`
+project/
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   └── routes/
+├── Dockerfile
+├── requirements.txt
+└── .dockerignore
+\`\`\`
+
+### Dockerfile
+\`\`\`dockerfile
+FROM python:3.11-slim
+
+WORKDIR /code
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application
+COPY ./app /code/app
+
+# Expose port
+EXPOSE 8000
+
+# Run with Uvicorn
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+\`\`\`
+
+### requirements.txt
+\`\`\`
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+pydantic==2.8.0
+python-dotenv==1.0.0
+\`\`\`
+
+### .dockerignore
+Exclude unnecessary files:
+\`\`\`
+__pycache__
+*.pyc
+.env
+.git
+.venv
+*.md
+\`\`\`
+
+## Step 2: Test Locally
+
+Build the image:
+\`\`\`bash
+docker build -t my-fastapi-app .
+\`\`\`
+
+Run the container:
+\`\`\`bash
+docker run -d -p 8000:8000 --name fastapi my-fastapi-app
+\`\`\`
+
+Visit \`http://localhost:8000/docs\` to confirm it works.
+
+## Step 3: Push to GitHub
+
+Render deploys directly from Git repos.
+
+\`\`\`bash
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/username/my-fastapi-app.git
+git push -u origin main
+\`\`\`
+
+## Step 4: Deploy on Render
+
+1. Go to [Render Dashboard](https://dashboard.render.com/)
+2. Click **New +** → **Web Service**
+3. Connect your GitHub repo
+4. Configure:
+   - **Name:** my-fastapi-app
+   - **Environment:** Docker
+   - **Branch:** main
+   - **Dockerfile Path:** ./Dockerfile (default)
+5. Click **Create Web Service**
+
+Render automatically:
+- Builds your Docker image
+- Deploys to a \`.onrender.com\` domain
+- Provisions SSL certificates
+- Sets up health checks
+
+## Step 5: Environment Variables
+
+For secrets (API keys, DB URLs):
+1. Go to **Environment** tab in Render
+2. Add variables:
+   \`\`\`
+   DATABASE_URL=postgresql://...
+   SECRET_KEY=your-secret-key
+   \`\`\`
+3. Redeploy (Render auto-redeploys on env changes)
+
+Access in your app:
+\`\`\`python
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")
+\`\`\`
+
+## Step 6: CI/CD with Render
+
+Render auto-deploys on every push to \`main\`. For more control:
+
+### Deploy on Tag
+In Render settings:
+- **Auto-Deploy:** No
+- Use Render's CLI or API to trigger deploys on release tags
+
+\`\`\`bash
+git tag v1.0.0
+git push origin v1.0.0
+# Manually trigger deploy via Render dashboard
+\`\`\`
+
+## Production Best Practices
+
+### 1. **Health Checks**
+Add a health endpoint:
+\`\`\`python
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+\`\`\`
+
+### 2. **Logging**
+Use structured logs:
+\`\`\`python
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+@app.get("/")
+def root():
+    logger.info("Root endpoint accessed")
+    return {"message": "Hello World"}
+\`\`\`
+
+### 3. **Gunicorn for Production**
+For better performance, use Gunicorn with Uvicorn workers:
+
+\`\`\`dockerfile
+CMD ["gunicorn", "app.main:app", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
+\`\`\`
+
+Update requirements.txt:
+\`\`\`
+gunicorn==21.2.0
+\`\`\`
+
+### 4. **Database Migrations**
+Use Alembic for schema changes:
+\`\`\`bash
+alembic upgrade head
+\`\`\`
+
+Run in Dockerfile:
+\`\`\`dockerfile
+RUN alembic upgrade head
+\`\`\`
+
+## Scaling on Render
+
+Render offers:
+- **Horizontal scaling** — add more instances
+- **Vertical scaling** — upgrade to larger instances
+
+For my TicketPilot app (1K req/day), the free tier suffices. For production loads, I use the \$7/month Starter plan.
+
+## Cost Comparison
+
+| Service | Free Tier | Paid |
+|---------|-----------|------|
+| Render | 750 hrs/month | \$7/month |
+| Railway | \$5 credit | \$0.000463/GB-hr |
+| Fly.io | 3 VMs | \$1.94/month/VM |
+
+Render wins for simplicity and generous free tier.
+
+## Lessons Learned
+
+1. **Start with Docker** — even if you deploy elsewhere later
+2. **Use .env files locally**, environment variables in prod
+3. **Automate deployments** — manual deploys = human error
+4. **Monitor logs** — Render's built-in logs are good enough
+5. **Don't over-optimize early** — free tier is fine for MVPs
+
+## Next Steps
+
+I'm exploring:
+- **AWS ECS** for larger-scale deployments
+- **Kubernetes** (overkill for now, but learning)
+- **Database connection pooling** with PgBouncer
+
+Happy deploying! 🚢`,
+    coverImage: "https://images.unsplash.com/photo-1605745341112-85968b19335b?w=1200&h=600&fit=crop",
+    category: { id: "1", name: "Development", slug: "development" },
+    tags: ["fastapi", "docker", "backend", "deployment"],
+    featured: true,
+    publishedAt: "2024-11-06T14:30:00Z",
+    updatedAt: null,
+    readTime: 9,
+    author: {
+      name: "Dhanush Ranga",
+      bio: "Computer Science student building AI-powered applications with FastAPI and modern web technologies",
+      avatar: null,
+    },
+    seo: {
+      metaTitle: "Deploying FastAPI Apps with Docker & Render | Dhanush Ranga",
+      metaDescription:
+        "Complete guide to containerizing and deploying FastAPI applications with Docker and Render, including CI/CD and production best practices.",
+    },
+  },
+
+  "how-i-built-scrubpy": {
+    id: "3",
+    title: "How I Built ScrubPy — A Data Cleaning Library in Python",
+    slug: "how-i-built-scrubpy",
+    excerpt:
+      "A behind-the-scenes look at ScrubPy — my open-source Python package for quick data cleaning. The motivation, design choices, and lessons from publishing to PyPI.",
+    content: `# How I Built ScrubPy
+
+**ScrubPy** is my open-source Python library for data cleaning. It handles common pandas tasks (missing values, duplicates, outliers) with a single function call. Here's why I built it and what I learned from publishing to PyPI.
+
+🔗 [**PyPI Package**](https://pypi.org/project/scrubpy/)
+🔗 [**GitHub Repo**](https://github.com/Dhanushranga1/scrubpy)
+
+## The Problem
+
+Data cleaning is repetitive. Every project starts the same way:
+
+\`\`\`python
+import pandas as pd
+
+df = pd.read_csv("data.csv")
+df.drop_duplicates(inplace=True)
+df.fillna(df.mean(), inplace=True)
+# ... 20 more lines of boilerplate
+\`\`\`
+
+I wanted **one function** that does all of this:
+\`\`\`python
+from scrubpy import clean
+
+df = clean(df)  # Done.
+\`\`\`
+
+## Design Principles
+
+### 1. **Sensible Defaults**
+ScrubPy assumes you want:
+- Drop duplicate rows
+- Fill missing values (mean for numeric, mode for categorical)
+- Remove outliers (IQR method)
+- Strip whitespace from strings
+
+But everything is configurable:
+\`\`\`python
+df = clean(df, remove_duplicates=False, fill_method="median")
+\`\`\`
+
+### 2. **Composability**
+Each operation is a separate function:
+\`\`\`python
+from scrubpy import remove_outliers, fill_missing
+
+df = df.pipe(remove_outliers).pipe(fill_missing)
+\`\`\`
+
+### 3. **Non-Destructive by Default**
+Operations return a copy unless \`inplace=True\`:
+\`\`\`python
+clean_df = clean(df)  # Original df unchanged
+\`\`\`
+
+## Implementation Highlights
+
+### Handling Missing Values
+\`\`\`python
+def fill_missing(df, strategy="auto", inplace=False):
+    """
+    Fill missing values.
+    
+    strategy: 'auto', 'mean', 'median', 'mode', or a scalar value
+    """
+    if not inplace:
+        df = df.copy()
+    
+    for col in df.columns:
+        if df[col].isnull().any():
+            if strategy == "auto":
+                if pd.api.types.is_numeric_dtype(df[col]):
+                    df[col].fillna(df[col].mean(), inplace=True)
+                else:
+                    df[col].fillna(df[col].mode()[0], inplace=True)
+            elif strategy == "mean":
+                df[col].fillna(df[col].mean(), inplace=True)
+            # ... other strategies
+    
+    return df
+\`\`\`
+
+### Outlier Detection (IQR Method)
+\`\`\`python
+def remove_outliers(df, threshold=1.5, inplace=False):
+    """Remove outliers using Interquartile Range method."""
+    if not inplace:
+        df = df.copy()
+    
+    for col in df.select_dtypes(include=['number']).columns:
+        Q1 = df[col].quantile(0.25)
+        Q3 = df[col].quantile(0.75)
+        IQR = Q3 - Q1
+        lower_bound = Q1 - threshold * IQR
+        upper_bound = Q3 + threshold * IQR
+        df = df[(df[col] >= lower_bound) & (df[col] <= upper_bound)]
+    
+    return df
+\`\`\`
+
+## Publishing to PyPI
+
+### 1. **Project Structure**
+\`\`\`
+scrubpy/
+├── scrubpy/
+│   ├── __init__.py
+│   ├── core.py
+│   └── utils.py
+├── tests/
+│   └── test_core.py
+├── setup.py
+├── README.md
+├── LICENSE
+└── .gitignore
+\`\`\`
+
+### 2. **setup.py**
+\`\`\`python
+from setuptools import setup, find_packages
+
+setup(
+    name="scrubpy",
+    version="0.1.0",
+    author="Dhanush Ranga",
+    description="Quick data cleaning for pandas DataFrames",
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
+    url="https://github.com/Dhanushranga1/scrubpy",
+    packages=find_packages(),
+    install_requires=["pandas>=1.3.0"],
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+    ],
+    python_requires=">=3.8",
+)
+\`\`\`
+
+### 3. **Build and Upload**
+\`\`\`bash
+# Build distribution files
+python setup.py sdist bdist_wheel
+
+# Upload to PyPI
+pip install twine
+twine upload dist/*
+\`\`\`
+
+### 4. **Testing with pytest**
+\`\`\`python
+import pandas as pd
+from scrubpy import clean
+
+def test_remove_duplicates():
+    df = pd.DataFrame({"A": [1, 1, 2], "B": [3, 3, 4]})
+    result = clean(df)
+    assert len(result) == 2
+\`\`\`
+
+Run tests:
+\`\`\`bash
+pytest tests/
+\`\`\`
+
+## Usage Examples
+
+### Basic Cleaning
+\`\`\`python
+import pandas as pd
+from scrubpy import clean
+
+df = pd.read_csv("messy_data.csv")
+df = clean(df)
+\`\`\`
+
+### Custom Configuration
+\`\`\`python
+df = clean(
+    df,
+    remove_duplicates=True,
+    fill_method="median",
+    outlier_threshold=2.0,
+    strip_whitespace=True
+)
+\`\`\`
+
+## Lessons Learned
+
+### 1. **Documentation is Key**
+Good docstrings + README = more users. I spent 40% of my time on docs.
+
+### 2. **Version Pinning**
+Specify minimum versions in \`install_requires\`:
+\`\`\`python
+install_requires=["pandas>=1.3.0", "numpy>=1.21.0"]
+\`\`\`
+
+### 3. **CI/CD with GitHub Actions**
+Automate testing and publishing:
+\`\`\`.yaml
+name: Test and Publish
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run: pip install -r requirements.txt
+      - run: pytest
+\`\`\`
+
+### 4. **Semantic Versioning**
+Follow [SemVer](https://semver.org/):
+- \`0.1.0\` → Initial release
+- \`0.1.1\` → Bug fix
+- \`0.2.0\` → New feature
+- \`1.0.0\` → Stable API
+
+### 5. **User Feedback is Gold**
+I got feature requests via GitHub Issues. Users wanted:
+- Column-specific cleaning
+- Custom fill values
+- Export cleaned data stats
+
+All added in v0.2.0.
+
+## What's Next?
+
+Future features:
+- **Schema validation** (enforce dtypes)
+- **Automated reports** (summary of cleaning operations)
+- **CLI tool** (\`scrubpy clean data.csv --output clean.csv\`)
+
+## Try It Out
+
+Install:
+\`\`\`bash
+pip install scrubpy
+\`\`\`
+
+Basic usage:
+\`\`\`python
+from scrubpy import clean
+import pandas as pd
+
+df = pd.read_csv("your_data.csv")
+df = clean(df)
+\`\`\`
+
+Star the repo if you find it useful! ⭐
+
+---
+
+Building an open-source library taught me more than any tutorial. Start small, solve your own problem, and ship it.`,
+    coverImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=600&fit=crop",
+    category: { id: "4", name: "Tech", slug: "tech" },
+    tags: ["python", "pandas", "data-cleaning", "pypi"],
+    featured: true,
+    publishedAt: "2024-11-10T09:00:00Z",
+    updatedAt: null,
+    readTime: 8,
+    author: {
+      name: "Dhanush Ranga",
+      bio: "Computer Science student building AI-powered applications with FastAPI and modern web technologies",
+      avatar: null,
+    },
+    seo: {
+      metaTitle: "How I Built ScrubPy — A Python Data Cleaning Library | Dhanush Ranga",
+      metaDescription:
+        "Behind-the-scenes look at building and publishing ScrubPy, an open-source Python library for pandas data cleaning, to PyPI.",
+    },
+  },
+
+  "my-journey-cloud-devops": {
+    id: "4",
+    title: "My Journey into Cloud & DevOps",
+    slug: "my-journey-cloud-devops",
+    excerpt:
+      "Reflecting on my first real experience with AWS, Terraform, and Kubernetes. From setting up EC2 and RDS to automating deployments — lessons I learned while building CineReads.",
+    content: `# My Journey into Cloud & DevOps
+
+Six months ago, I knew **nothing** about cloud infrastructure. Today, I'm managing AWS services, writing Terraform configs, and automating deployments. Here's what I learned building [CineReads](https://cinereads.dhanushranga1.dev/) — my full-stack movie recommendation app.
+
+## Why I Dove Into DevOps
+
+As a CS student, I'd always deployed to free platforms (Vercel, Render). But for CineReads, I needed:
+- **PostgreSQL database** (too large for free tiers)
+- **Background jobs** (for data processing)
+- **Full control** (custom domains, env configs)
+
+AWS was intimidating, but I committed to learning it properly.
+
+## The Stack
+
+### **AWS Services Used**
+- **EC2** — Application servers
+- **RDS (PostgreSQL)** — Database
+- **S3** — Static assets (movie posters)
+- **Route 53** — DNS management
+- **CloudFront** — CDN for faster delivery
+- **IAM** — Access control
+
+### **Infrastructure as Code**
+- **Terraform** — Manage all resources as code
+- **Docker** — Containerize the app
+- **GitHub Actions** — CI/CD pipeline
+
+## Phase 1: Manual Setup (The Hard Way)
+
+I started by clicking through the AWS Console. Bad idea.
+
+### EC2 Instance
+1. Launch Ubuntu 22.04 instance (\`t2.micro\` for free tier)
+2. SSH in: \`ssh -i key.pem ubuntu@ec2-ip\`
+3. Install dependencies:
+   \`\`\`bash
+   sudo apt update
+   sudo apt install python3-pip postgresql-client
+   pip install -r requirements.txt
+   \`\`\`
+4. Run app: \`uvicorn main:app --host 0.0.0.0\`
+
+**Problems:**
+- Instance state not reproducible
+- Manual updates = downtime
+- No version control for infra
+
+## Phase 2: Dockerize Everything
+
+Created a \`Dockerfile\`:
+\`\`\`dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+
+EXPOSE 8000
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0"]
+\`\`\`
+
+Build and push to Docker Hub:
+\`\`\`bash
+docker build -t dhanush/cinereads:latest .
+docker push dhanush/cinereads:latest
+\`\`\`
+
+On EC2, just run:
+\`\`\`bash
+docker pull dhanush/cinereads:latest
+docker run -d -p 80:8000 dhanush/cinereads:latest
+\`\`\`
+
+**Benefits:**
+- Consistent environment
+- Easy rollbacks (\`docker pull dhanush/cinereads:v1.2\`)
+- Faster deployments
+
+## Phase 3: Infrastructure as Code with Terraform
+
+Hand-managing AWS resources was error-prone. Enter **Terraform**.
+
+### \`main.tf\` (simplified)
+\`\`\`hcl
+provider "aws" {
+  region = "us-east-1"
+}
+
+# EC2 Instance
+resource "aws_instance" "app_server" {
+  ami           = "ami-0c55b159cbfafe1f0"  # Ubuntu 22.04
+  instance_type = "t2.micro"
+  
+  tags = {
+    Name = "CineReads-App"
+  }
+}
+
+# RDS Database
+resource "aws_db_instance" "postgres" {
+  allocated_storage = 20
+  engine            = "postgres"
+  engine_version    = "15.3"
+  instance_class    = "db.t3.micro"
+  username          = var.db_username
+  password          = var.db_password
+  
+  tags = {
+    Name = "CineReads-DB"
+  }
+}
+
+# S3 Bucket for static assets
+resource "aws_s3_bucket" "assets" {
+  bucket = "cinereads-assets"
+}
+\`\`\`
+
+Deploy with:
+\`\`\`bash
+terraform init
+terraform plan
+terraform apply
+\`\`\`
+
+**Why Terraform Rocks:**
+- Version control for infrastructure
+- Preview changes before applying
+- Destroy resources cleanly: \`terraform destroy\`
+
+## Phase 4: CI/CD with GitHub Actions
+
+Manual deployments are tedious. I automated with GitHub Actions.
+
+### \`.github/workflows/deploy.yml\`
+\`\`\`yaml
+name: Deploy to AWS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Build Docker image
+        run: docker build -t dhanush/cinereads:latest .
+      
+      - name: Push to Docker Hub
+        run: |
+          echo \${{ secrets.DOCKER_PASSWORD }} | docker login -u dhanush --password-stdin
+          docker push dhanush/cinereads:latest
+      
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: \${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: \${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull dhanush/cinereads:latest
+            docker stop cinereads || true
+            docker rm cinereads || true
+            docker run -d --name cinereads -p 80:8000 dhanush/cinereads:latest
+\`\`\`
+
+Now every push to \`main\` triggers an automatic deployment. 🎉
+
+## Phase 5: Monitoring & Logging
+
+Running in production means things will break. I added:
+
+### **CloudWatch Logs**
+Ship container logs to AWS CloudWatch:
+\`\`\`bash
+docker run -d --log-driver=awslogs --log-opt awslogs-group=cinereads ...
+\`\`\`
+
+### **Health Checks**
+Added a \`/health\` endpoint:
+\`\`\`python
+@app.get("/health")
+def health_check():
+    return {"status": "ok", "db": check_db_connection()}
+\`\`\`
+
+Set up AWS Route 53 health checks to monitor uptime.
+
+## Lessons Learned
+
+### 1. **Start Small**
+Don't jump to Kubernetes on day one. EC2 + Docker is fine for most projects.
+
+### 2. **Automate Early**
+Manual deployments = bugs. Set up CI/CD from the start.
+
+### 3. **Use Free Tiers Wisely**
+AWS free tier includes:
+- 750 hrs/month of EC2 (\`t2.micro\`)
+- 20 GB of RDS storage
+- 5 GB of S3
+
+### 4. **Security Matters**
+- **Never commit secrets** (use AWS Secrets Manager or GitHub Secrets)
+- **Use IAM roles** instead of hardcoding credentials
+- **Enable MFA** on root account
+
+### 5. **Cost Monitoring**
+Set up billing alerts! I got a \$30 surprise bill because I forgot to stop an RDS instance.
+
+### 6. **Documentation is Your Friend**
+AWS docs are dense but comprehensive. Also useful:
+- [Terraform AWS Provider Docs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
+- [DigitalOcean's DevOps Tutorials](https://www.digitalocean.com/community/tutorials)
+
+## What's Next?
+
+I'm exploring:
+- **Kubernetes** (EKS) for container orchestration
+- **Terraform modules** for reusable infra
+- **AWS Lambda** for serverless functions
+- **Monitoring with Prometheus + Grafana**
+
+## Resources I Used
+
+**Books:**
+- *The Phoenix Project* (DevOps fundamentals)
+- *Terraform: Up & Running* by Yevgeniy Brikman
+
+**Courses:**
+- AWS Cloud Practitioner (free)
+- Terraform Associate Certification
+
+**Communities:**
+- r/devops on Reddit
+- DevOps Discord servers
+
+---
+
+DevOps felt overwhelming at first, but breaking it into phases (manual → Docker → IaC → CI/CD) made it manageable. Start with one project and build from there.
+
+You've got this! 🚀`,
+    coverImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=600&fit=crop",
+    category: { id: "3", name: "Career", slug: "career" },
+    tags: ["cloud", "aws", "devops", "infrastructure"],
+    featured: false,
+    publishedAt: "2024-11-13T11:00:00Z",
+    updatedAt: null,
+    readTime: 10,
+    author: {
+      name: "Dhanush Ranga",
+      bio: "Computer Science student building AI-powered applications with FastAPI and modern web technologies",
+      avatar: null,
+    },
+    seo: {
+      metaTitle: "My Journey into Cloud & DevOps with AWS and Terraform | Dhanush Ranga",
+      metaDescription:
+        "Learn how I went from zero to deploying production apps on AWS using EC2, RDS, Docker, Terraform, and GitHub Actions CI/CD.",
+    },
+  },
+
+  "building-smarter-search-faiss-gemini": {
+    id: "5",
+    title: "Building Smarter Search with FAISS and Gemini",
+    slug: "building-smarter-search-faiss-gemini",
+    excerpt:
+      "Explaining how I used FAISS for semantic search and combined it with Gemini LLM to build a context-aware retrieval system in TicketPilot. Includes architecture and tuning notes.",
+    content: `# Building Smarter Search with FAISS and Gemini
+
+Traditional keyword search fails when users ask questions like:
+> "How do I reset my password?"
+
+A keyword search for "reset password" might miss documents titled "Account Recovery Guide" or "Authentication Troubleshooting."
+
+**Semantic search** solves this by understanding meaning, not just matching words. Here's how I built a context-aware search system for **TicketPilot** using **FAISS** and **Gemini**.
+
+## The Architecture
+
+\`\`\`
+User Query → Embed Query → Search FAISS Index → Retrieve Top K Docs → Pass to Gemini → Return Answer
+\`\`\`
+
+### Components
+1. **FAISS** — Vector database for fast similarity search
+2. **Gemini** — LLM for generating answers from context
+3. **Embeddings** — Convert text to vectors (using \`text-embedding-ada-002\`)
+
+## Step 1: Creating Embeddings
+
+### Install Dependencies
+\`\`\`bash
+pip install faiss-cpu openai google-generativeai
+\`\`\`
+
+### Embed Documents
+\`\`\`python
+import openai
+import faiss
+import numpy as np
+
+openai.api_key = "your-openai-key"
+
+def embed_text(text):
+    """Generate embeddings using OpenAI's ada-002 model."""
+    response = openai.Embedding.create(
+        input=text,
+        model="text-embedding-ada-002"
+    )
+    return response['data'][0]['embedding']
+
+# Example documents
+docs = [
+    "To reset your password, go to Settings > Security.",
+    "Contact support for account recovery assistance.",
+    "Authentication issues can be resolved in the Help Center."
+]
+
+# Embed all documents
+embeddings = [embed_text(doc) for doc in docs]
+embeddings = np.array(embeddings).astype('float32')
+\`\`\`
+
+## Step 2: Building the FAISS Index
+
+FAISS requires a matrix of embeddings and supports multiple index types. For small datasets (<1M vectors), \`IndexFlatL2\` is fine. For larger datasets, use \`IndexIVFFlat\`.
+
+\`\`\`python
+# Create FAISS index
+dimension = len(embeddings[0])  # 1536 for ada-002
+index = faiss.IndexFlatL2(dimension)
+
+# Add embeddings to index
+index.add(embeddings)
+
+print(f"Indexed {index.ntotal} documents")
+\`\`\`
+
+## Step 3: Querying the Index
+
+\`\`\`python
+def search(query, k=3):
+    """Search for top K most similar documents."""
+    query_embedding = embed_text(query)
+    query_embedding = np.array([query_embedding]).astype('float32')
+    
+    distances, indices = index.search(query_embedding, k)
+    
+    results = []
+    for i, idx in enumerate(indices[0]):
+        results.append({
+            "doc": docs[idx],
+            "score": distances[0][i]
+        })
+    return results
+
+# Test query
+results = search("How do I recover my account?", k=3)
+for r in results:
+    print(f"[Score: {r['score']:.2f}] {r['doc']}")
+\`\`\`
+
+**Output:**
+\`\`\`
+[Score: 0.32] Contact support for account recovery assistance.
+[Score: 0.45] To reset your password, go to Settings > Security.
+[Score: 0.58] Authentication issues can be resolved in the Help Center.
+\`\`\`
+
+## Step 4: Integrating with Gemini
+
+Now we pass the retrieved documents to Gemini for a natural language answer.
+
+\`\`\`python
+import google.generativeai as genai
+
+genai.configure(api_key="your-gemini-key")
+model = genai.GenerativeModel('gemini-pro')
+
+def answer_query(query):
+    # Step 1: Retrieve relevant docs
+    results = search(query, k=3)
+    context = "\\n".join([r['doc'] for r in results])
+    
+    # Step 2: Generate answer with Gemini
+    prompt = f"""
+Based on the following context, answer the user's question.
+
+Context:
+{context}
+
+Question: {query}
+
+Answer:
+"""
+    response = model.generate_content(prompt)
+    return response.text
+
+# Example usage
+answer = answer_query("How do I recover my account?")
+print(answer)
+\`\`\`
+
+**Output:**
+\`\`\`
+To recover your account, you should contact support for assistance. 
+You can also try resetting your password in Settings > Security.
+\`\`\`
+
+## Step 5: Performance Optimization
+
+### 1. **Batch Embedding**
+Embed multiple documents at once:
+\`\`\`python
+def batch_embed(texts, batch_size=100):
+    embeddings = []
+    for i in range(0, len(texts), batch_size):
+        batch = texts[i:i+batch_size]
+        response = openai.Embedding.create(input=batch, model="text-embedding-ada-002")
+        embeddings.extend([r['embedding'] for r in response['data']])
+    return np.array(embeddings).astype('float32')
+\`\`\`
+
+### 2. **Use GPU for FAISS**
+For large indexes (>100K docs), use GPU:
+\`\`\`bash
+pip install faiss-gpu
+\`\`\`
+
+\`\`\`python
+import faiss
+res = faiss.StandardGpuResources()
+index_flat = faiss.IndexFlatL2(dimension)
+index = faiss.index_cpu_to_gpu(res, 0, index_flat)
+\`\`\`
+
+### 3. **Caching Embeddings**
+Store embeddings in a file to avoid re-computing:
+\`\`\`python
+np.save("embeddings.npy", embeddings)
+embeddings = np.load("embeddings.npy")
+\`\`\`
+
+### 4. **Approximate Search**
+For >1M documents, use \`IndexIVFFlat\` (faster but approximate):
+\`\`\`python
+quantizer = faiss.IndexFlatL2(dimension)
+index = faiss.IndexIVFFlat(quantizer, dimension, 100)  # 100 clusters
+index.train(embeddings)
+index.add(embeddings)
+\`\`\`
+
+## Step 6: Production Considerations
+
+### API Structure
+\`\`\`python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.post("/search")
+async def search_endpoint(query: str):
+    answer = answer_query(query)
+    return {"answer": answer}
+\`\`\`
+
+### Error Handling
+\`\`\`python
+def answer_query(query):
+    try:
+        results = search(query, k=3)
+        if not results:
+            return "I couldn't find relevant information."
+        # ... rest of code
+    except Exception as e:
+        return "An error occurred. Please try again."
+\`\`\`
+
+### Rate Limiting
+Gemini has rate limits (15 req/min on free tier). Implement caching:
+\`\`\`python
+from functools import lru_cache
+
+@lru_cache(maxsize=100)
+def answer_query(query):
+    # ... same code
+\`\`\`
+
+## Results in TicketPilot
+
+After implementing semantic search:
+- **User satisfaction:** 78% → 92%
+- **Query resolution time:** 45s → 8s
+- **Support ticket reduction:** 30%
+
+Users could ask questions naturally instead of keyword hunting.
+
+## Lessons Learned
+
+### 1. **Embedding Quality Matters**
+I started with \`all-MiniLM-L6-v2\` (free, local). Switching to OpenAI's \`ada-002\` improved relevance by 40%.
+
+### 2. **Context Window Limits**
+Gemini has a 32K token limit. Truncate context if needed:
+\`\`\`python
+context = "\\n".join([r['doc'] for r in results[:5]])  # Top 5 only
+\`\`\`
+
+### 3. **Hybrid Search Works Best**
+Combine semantic + keyword search for best results:
+\`\`\`python
+semantic_results = faiss_search(query)
+keyword_results = elasticsearch_search(query)
+final_results = merge_and_rerank(semantic_results, keyword_results)
+\`\`\`
+
+### 4. **Monitor Costs**
+- OpenAI embeddings: \$0.0001/1K tokens
+- Gemini API: Free tier = 60 req/min
+
+For high traffic, consider self-hosted models (Llama 3, Mistral).
+
+## Alternative Approaches
+
+### Vector Databases
+Instead of FAISS, consider:
+- **Pinecone** (managed, scales easily)
+- **Weaviate** (open-source, GraphQL)
+- **Qdrant** (Rust-based, fast)
+
+### Local LLMs
+For cost savings:
+- **Llama 3** (via Ollama)
+- **Mistral 7B**
+- **Gemma 2B**
+
+## Next Steps
+
+I'm exploring:
+- **Reranking models** (Cohere Rerank, BGE)
+- **Multi-vector search** (combining text + image embeddings)
+- **Hybrid search** (FAISS + Elasticsearch)
+
+## Resources
+
+- [FAISS Documentation](https://github.com/facebookresearch/faiss/wiki)
+- [OpenAI Embeddings Guide](https://platform.openai.com/docs/guides/embeddings)
+- [Gemini API Docs](https://ai.google.dev/docs)
+
+---
+
+Semantic search transforms how users interact with your app. Start with FAISS + an LLM, then optimize based on usage patterns.
+
+Happy building! 🚀`,
+    coverImage: "https://images.unsplash.com/photo-1523961131990-5ea7c61b2107?w=1200&h=600&fit=crop",
+    category: { id: "2", name: "AI", slug: "ai" },
+    tags: ["faiss", "gemini", "rag", "search"],
+    featured: false,
+    publishedAt: "2024-11-17T16:00:00Z",
+    updatedAt: null,
+    readTime: 9,
+    author: {
+      name: "Dhanush Ranga",
+      bio: "Computer Science student building AI-powered applications with FastAPI and modern web technologies",
+      avatar: null,
+    },
+    seo: {
+      metaTitle: "Building Smarter Search with FAISS and Gemini LLM | Dhanush Ranga",
+      metaDescription:
+        "Complete guide to building semantic search with FAISS vector database and Gemini LLM for context-aware question answering.",
+    },
+  },
+
+  "balancing-studies-real-projects": {
+    id: "6",
+    title: "Balancing Studies and Real Projects",
+    slug: "balancing-studies-real-projects",
+    excerpt:
+      "As a Computer Science student, managing academic load and real-world projects is tricky. Here's how I balance both — planning, learning from mentors, and turning coursework into portfolio-ready work.",
+    content: `# Balancing Studies and Real Projects
+
+Being a Computer Science student while building real projects is hard. There's coursework, exams, assignments — and then the projects you actually want to build. Here's how I manage both without burning out.
+
+## The Challenge
+
+### Academic Workload
+- Lectures (20 hrs/week)
+- Assignments (10 hrs/week)
+- Exam prep (varies)
+- Group projects (unpredictable)
+
+### Personal Projects
+- TicketPilot (AI support assistant)
+- CineReads (movie recommendation app)
+- ScrubPy (data cleaning library)
+- This portfolio site
+
+**Total:** 50–60 hrs/week if I'm not careful.
+
+## My System
+
+### 1. **Time Blocking**
+
+I use Google Calendar religiously:
+
+**Weekdays:**
+- 9 AM – 1 PM: Classes
+- 2 PM – 4 PM: Assignments/coursework
+- 7 PM – 10 PM: Personal projects
+
+**Weekends:**
+- Saturday: Deep work on one big project
+- Sunday: Buffer for catch-up + rest
+
+**Rules:**
+- No project work during exam weeks
+- One "project-free" day per week (usually Sunday afternoon)
+
+### 2. **Align Projects with Coursework**
+
+This is the secret. When possible, I turn assignments into portfolio pieces.
+
+**Examples:**
+- **Database Systems course** → Built the backend for CineReads (PostgreSQL, indexing, query optimization)
+- **Web Development course** → Submitted this portfolio as my final project
+- **Machine Learning course** → Used the concepts to build TicketPilot's AI features
+
+**Benefits:**
+- Double ROI on your time
+- Better grades (you're motivated to do good work)
+- Professors love real-world applications
+
+**How to pitch it:**
+> "For my final project, I'd like to build a full-stack app that demonstrates the concepts we've learned. Can I document the process as my submission?"
+
+Most professors say yes.
+
+### 3. **Prioritize Ruthlessly**
+
+Not every idea needs to be built. I use this framework:
+
+| Priority | Criteria | Examples |
+|----------|----------|----------|
+| **High** | Aligns with career goals | FastAPI apps, AI projects |
+| **Medium** | Interesting but not urgent | Experimental tech (Rust, Go) |
+| **Low** | "Cool idea" but no clear benefit | Yet another todo app |
+
+I only work on High priority projects during the semester. Medium/Low go on a backlog for summer break.
+
+### 4. **Leverage Downtime**
+
+**Commuting (1 hr/day):**
+- Listen to tech podcasts (Syntax.fm, The Changelog)
+- Watch YouTube tutorials (2x speed)
+- Read docs on my phone
+
+**Waiting (between classes):**
+- Review Anki flashcards (for interviews)
+- Skim Hacker News / dev.to
+- Outline blog posts in Notes app
+
+**Before bed (30 min):**
+- Read technical books (currently: *Designing Data-Intensive Applications*)
+
+### 5. **Learning from Mentors**
+
+I reached out to 3 senior developers on LinkedIn. Two responded. We chat monthly.
+
+**What I ask:**
+- Code reviews for my projects
+- Career advice (internships, resume)
+- Which technologies to focus on
+
+**How I found them:**
+- LinkedIn (search "Software Engineer" + my city)
+- GitHub (contributors to projects I use)
+- Meetups and hackathons
+
+**Tip:** Don't just ask for help. Offer value:
+> "I noticed you're working on [project]. I'm learning [tech]. Happy to help with documentation or testing."
+
+### 6. **Ship Small, Iterate**
+
+I used to start projects and never finish them. Now I follow the **80/20 rule**:
+
+**First version:**
+- Core feature only
+- Basic UI (Tailwind + shadcn/ui)
+- Deploy to Vercel/Render
+- Ship in 1–2 weeks
+
+**Then iterate:**
+- Add features based on feedback
+- Improve UI/UX
+- Optimize performance
+
+**Examples:**
+- TicketPilot v1: Just a chatbot (no search, no embeddings)
+- ScrubPy v1: One function (\`clean()\`), no config options
+
+Shipping fast keeps me motivated. Perfection is the enemy of progress.
+
+### 7. **Avoid Burnout**
+
+**Warning signs I watch for:**
+- Staring at code without making progress
+- Dreading opening my laptop
+- Ignoring friends/hobbies
+
+**When I hit burnout:**
+- Take 2–3 days completely off
+- Go for walks, read fiction, hang out with non-tech friends
+- Come back with a smaller goal ("just fix this bug")
+
+**What works for me:**
+- Exercise 3x/week (gym or running)
+- One "no laptop" day per week
+- Sleep 7–8 hours (non-negotiable)
+
+### 8. **Document Everything**
+
+I keep a **project journal** in Notion:
+
+**Weekly log:**
+- What I built
+- What I learned
+- Blockers I hit
+- Next week's goals
+
+**Benefits:**
+- Track progress (motivating)
+- Debugging (when did X break?)
+- Interview prep (stories for behavioral questions)
+
+**Example entry:**
+> **Nov 3, 2024:** Integrated FAISS into TicketPilot. Learned about vector embeddings and similarity search. Got stuck on indexing large datasets — fixed by switching to \`IndexIVFFlat\`. Next: tune search parameters for better relevance.
+
+### 9. **Use AI Wisely**
+
+GitHub Copilot and ChatGPT are game-changers, but:
+
+**✅ Use for:**
+- Boilerplate code
+- Debugging syntax errors
+- Explaining complex concepts
+
+**❌ Don't use for:**
+- Learning fundamentals (write DSA from scratch)
+- Exams (obviously)
+- Understanding *why* code works
+
+### 10. **Measure Progress, Not Perfection**
+
+Instead of "I want to be a senior engineer," I track:
+
+**Measurable goals:**
+- Ship 1 project per quarter
+- Write 1 blog post per month
+- Contribute to 2 open-source repos this year
+
+**Wins this year:**
+- ✅ Published ScrubPy to PyPI (1.2K downloads)
+- ✅ Deployed 3 full-stack apps
+- ✅ Landed a summer internship
+
+## What I'm Still Learning
+
+**Struggles:**
+- Saying "no" to interesting side projects
+- Avoiding scope creep (features keep expanding)
+- Balancing social life (working on this)
+
+**Next experiments:**
+- Pomodoro technique (25 min focus, 5 min break)
+- Pair programming with classmates
+- Blogging publicly (forces me to clarify my thinking)
+
+## My Advice to Other Students
+
+### 1. **Start Small**
+Don't build the next Instagram. Build:
+- A todo app (seriously)
+- A personal site
+- A CLI tool you'd use
+
+### 2. **Pick One Stack**
+Don't learn React, Vue, Angular, and Svelte simultaneously. Master one first.
+
+My stack:
+- **Frontend:** React + TypeScript
+- **Backend:** FastAPI + PostgreSQL
+- **Deployment:** Docker + Render/Vercel
+
+### 3. **Build in Public**
+Tweet your progress. Write blog posts. Share on LinkedIn.
+
+**Benefits:**
+- Accountability
+- Feedback from others
+- Portfolio for recruiters
+
+### 4. **Join Communities**
+- Discord servers (The Primeagen, Theo, etc.)
+- Reddit (r/webdev, r/cscareerquestions)
+- Local meetups
+
+### 5. **Internships > Grades**
+A 3.5 GPA + 2 internships > 4.0 GPA + 0 experience.
+
+Grades matter for first internship, but after that, projects and experience win.
+
+## Resources I Use
+
+**Productivity:**
+- Notion (project tracking)
+- Google Calendar (time blocking)
+- Pomodoro timers (Forest app)
+
+**Learning:**
+- freeCodeCamp (project-based)
+- Frontend Masters (deep dives)
+- YouTube (Fireship, Web Dev Simplified)
+
+**Community:**
+- Dev.to (reading/writing)
+- Hacker News (industry news)
+- Twitter (tech threads)
+
+## Final Thoughts
+
+You don't need to sacrifice your grades or your projects. With intentional time management and smart prioritization, you can do both.
+
+**Key takeaways:**
+1. Align projects with coursework
+2. Ship small, iterate fast
+3. Prioritize ruthlessly
+4. Avoid burnout
+5. Measure progress
+
+You've got this! 🚀
+
+---
+
+*What works for you? I'd love to hear your strategies. Hit me up on [LinkedIn](https://www.linkedin.com/in/dhanush-ranga-gopisetty-0a910b123/)!*`,
+    coverImage: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&h=600&fit=crop",
+    category: { id: "3", name: "Career", slug: "career" },
+    tags: ["student-life", "projects", "productivity", "learning"],
+    featured: false,
+    publishedAt: "2024-11-20T13:00:00Z",
+    updatedAt: null,
+    readTime: 6,
+    author: {
+      name: "Dhanush Ranga",
+      bio: "Computer Science student building AI-powered applications with FastAPI and modern web technologies",
+      avatar: null,
+    },
+    seo: {
+      metaTitle: "Balancing CS Studies and Real Projects | Dhanush Ranga",
+      metaDescription:
+        "Practical strategies for managing academic coursework while building real-world software projects as a Computer Science student.",
+    },
+  },
+};
+
+export const RELATED_POSTS = [
+  {
+    id: "2",
+    title: "Deploying FastAPI Apps with Docker & Render",
+    slug: "deploying-fastapi-docker-render",
+    excerpt: "A step-by-step breakdown of containerizing and deploying FastAPI apps...",
+    coverImage: "https://images.unsplash.com/photo-1605745341112-85968b19335b?w=400&h=200&fit=crop",
+  },
+  {
+    id: "3",
+    title: "How I Built ScrubPy",
+    slug: "how-i-built-scrubpy",
+    excerpt: "Behind-the-scenes look at my open-source Python data cleaning library...",
+    coverImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=200&fit=crop",
+  },
+  {
+    id: "5",
+    title: "Building Smarter Search with FAISS and Gemini",
+    slug: "building-smarter-search-faiss-gemini",
+    excerpt: "How I built semantic search with vector databases and LLMs...",
+    coverImage: "https://images.unsplash.com/photo-1523961131990-5ea7c61b2107?w=400&h=200&fit=crop",
+  },
+];

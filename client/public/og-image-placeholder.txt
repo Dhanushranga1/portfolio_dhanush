@@ -1,0 +1,10 @@
+<!-- Placeholder for OG image - Replace this with your actual og-image.png -->
+<!-- Recommended size: 1200x630px -->
+<!-- Generate at: https://www.canva.com/create/open-graph/ -->
+<!--
+  Your OG image should include:
+  - Your name: Dhanush Ranga Gopisetty
+  - Title: Full-Stack Developer & AI Engineer
+  - Your domain: dhanushranga.dev
+  - Clean, professional design matching your terminal aesthetic
+-->

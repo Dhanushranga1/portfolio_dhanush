@@ -5,30 +5,273 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { BLOG_POSTS as MOCK_POSTS, RELATED_POSTS, type BlogPost } from "@/data/blogPosts";
-import { SEO } from "@/components/SEO";
-import { BlogPostStructuredData } from "@/components/StructuredData";
 
 // For production, replace with: import { useBlogPost } from "@/hooks/useStrapi";
 
 export default function BlogPost() {
+    slug: "bringing-ai-to-everyday-projects",
+    excerpt:
+      "A comprehensive guide to building a developer portfolio using React 18, TypeScript, and modern tooling. Learn best practices for structure, performance, and SEO.",
+    content: `# Introduction
+
+Building a portfolio website is a rite of passage for developers. It's your digital handshake, your first impression, and often the deciding factor in landing your next opportunity. In this comprehensive guide, I'll walk you through building a modern, performant portfolio using React 18 and TypeScript.
+
+## Why React and TypeScript?
+
+**React** remains the most popular UI library, with a vast ecosystem and excellent tooling. **TypeScript** adds type safety, better IDE support, and catches bugs before they reach production.
+
+\`\`\`typescript
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  technologies: string[];
+  liveUrl?: string;
+  githubUrl?: string;
+}
+\`\`\`
+
+## Project Structure
+
+A well-organized project structure is crucial for maintainability:
+
+\`\`\`
+src/
+├── components/      # Reusable UI components
+│   ├── ui/         # shadcn/ui components
+│   └── ...
+├── pages/          # Page components
+├── lib/            # Utilities and helpers
+├── hooks/          # Custom React hooks
+└── assets/         # Images, fonts, etc.
+\`\`\`
+
+## Key Features
+
+### 1. **Component Architecture**
+
+Build reusable components with clear prop types:
+
+\`\`\`tsx
+interface ProjectCardProps {
+  project: Project;
+  variant?: "default" | "featured";
+}
+
+export function ProjectCard({ project, variant = "default" }: ProjectCardProps) {
+  return (
+    <Card className={variant === "featured" ? "border-accent" : ""}>
+      <h3>{project.title}</h3>
+      <p>{project.description}</p>
+    </Card>
+  );
+}
+\`\`\`
+
+### 2. **Performance Optimization**
+
+- Use \`React.lazy()\` for code splitting
+- Implement image lazy loading
+- Optimize bundle size with tree shaking
+- Use \`useMemo\` and \`useCallback\` judiciously
+
+### 3. **SEO Considerations**
+
+Even for a single-page app, SEO matters:
+
+- Add meta tags for social sharing
+- Use semantic HTML
+- Implement proper heading hierarchy
+- Add structured data (JSON-LD)
+
+## Styling Approach
+
+I recommend **Tailwind CSS** with **shadcn/ui** components:
+
+\`\`\`tsx
+<div className="container mx-auto px-4 py-8">
+  <h1 className="text-4xl font-bold mb-4">
+    Welcome to my portfolio
+  </h1>
+</div>
+\`\`\`
+
+## Deployment
+
+Deploy to **Vercel** or **Netlify** for:
+- Automatic HTTPS
+- CDN distribution
+- Easy CI/CD integration
+- Preview deployments
+
+## Conclusion
+
+Building a portfolio is an ongoing process. Start simple, iterate, and always showcase your best work. Remember: your portfolio itself is a project that demonstrates your skills.
+
+Happy coding! 🚀`,
+    coverImage: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=600&fit=crop",
+    category: { id: "1", name: "Development", slug: "development" },
+    tags: ["react", "typescript", "portfolio", "web-development"],
+    featured: true,
+    publishedAt: "2024-10-15T10:00:00Z",
+    updatedAt: "2024-10-16T08:00:00Z",
+    readTime: 12,
+    author: {
+      name: "Dhanush",
+      bio: "Full-stack developer passionate about building great user experiences",
+      avatar: null,
+    },
+    seo: {
+      metaTitle: "Building a Modern Portfolio with React and TypeScript | Dhanush",
+      metaDescription:
+        "Learn how to build a modern, performant developer portfolio using React 18, TypeScript, and best practices for structure, performance, and SEO.",
+    },
+  },
+  "terminal-aesthetic-developer-ui": {
+    id: "2",
+    title: "The Terminal Aesthetic: Designing Developer-First UIs",
+    slug: "terminal-aesthetic-developer-ui",
+    excerpt:
+      "Exploring the terminal-inspired design trend. Why developers love terminal UIs and how to implement them effectively in modern web applications.",
+    content: `# The Terminal Aesthetic
+
+There's a growing trend in developer tools and portfolios: the **terminal aesthetic**. Clean monospace fonts, dark backgrounds, command-line interfaces, and ASCII art. But why?
+
+## Why Developers Love Terminal UIs
+
+### 1. **Familiarity**
+Developers spend hours in terminals. A terminal-inspired UI feels like home.
+
+### 2. **Efficiency**
+Command-line interfaces prioritize function over form. Every element has purpose.
+
+### 3. **Personality**
+In a world of Material Design and iOS-style interfaces, terminal UIs stand out.
+
+## Design Principles
+
+### Color Palette
+\`\`\`css
+:root {
+  --terminal-bg: #0d1117;
+  --terminal-text: #c9d1d9;
+  --terminal-accent: #58a6ff;
+  --terminal-success: #3fb950;
+  --terminal-error: #f85149;
+}
+\`\`\`
+
+### Typography
+Use monospace fonts like:
+- **Fira Code** (with ligatures)
+- **JetBrains Mono**
+- **Cascadia Code**
+- **SF Mono** (macOS)
+
+### Motion
+Keep animations subtle:
+- Cursor blinks
+- Text typewriter effects
+- Smooth fades (not slides)
+
+## Implementation Tips
+
+### 1. Command Palette
+Implement a searchable command palette (Cmd+K):
+
+\`\`\`tsx
+<Command>
+  <CommandInput placeholder="Type a command..." />
+  <CommandList>
+    <CommandGroup heading="Navigation">
+      <CommandItem>Projects</CommandItem>
+      <CommandItem>About</CommandItem>
+      <CommandItem>Contact</CommandItem>
+    </CommandGroup>
+  </CommandList>
+</Command>
+\`\`\`
+
+### 2. ASCII Art
+Use ASCII art sparingly for visual interest.
+
+### 3. Accessibility
+Don't sacrifice accessibility for aesthetics:
+- Ensure sufficient color contrast
+- Provide alternative navigation
+- Support keyboard shortcuts
+- Respect \`prefers-reduced-motion\`
+
+## When to Use (and Not Use)
+
+**✅ Good for:**
+- Developer portfolios
+- CLI tools
+- Developer-focused products
+- Technical documentation sites
+
+**❌ Avoid for:**
+- E-commerce
+- Content-heavy sites
+- Non-technical audiences
+- Accessibility-critical applications
+
+## Conclusion
+
+The terminal aesthetic isn't just a trend—it's a celebration of developer culture. When done right, it creates memorable, efficient interfaces that developers love to use.`,
+    coverImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&h=600&fit=crop",
+    category: { id: "2", name: "Design", slug: "design" },
+    tags: ["design", "ui-ux", "terminal", "developer-tools"],
+    featured: true,
+    publishedAt: "2024-10-10T14:30:00Z",
+    updatedAt: null,
+    readTime: 8,
+    author: {
+      name: "Dhanush",
+      bio: "Full-stack developer passionate about building great user experiences",
+      avatar: null,
+    },
+    seo: null,
+  },
+};
+
+// Mock related posts
+const RELATED_POSTS = [
+  {
+    id: "3",
+    title: "From Bootcamp to Senior Developer: My 5-Year Journey",
+    slug: "bootcamp-to-senior-developer",
+    excerpt: "Reflections on my journey from coding bootcamp graduate to senior developer...",
+    coverImage: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=200&fit=crop",
+  },
+  {
+    id: "4",
+    title: "API Design Best Practices: Building RESTful Services",
+    slug: "api-design-best-practices",
+    excerpt: "A deep dive into REST API design patterns, versioning strategies...",
+    coverImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&h=200&fit=crop",
+  },
+];
+
+export default function BlogPost() {
   const [, params] = useRoute("/blog/:slug");
   const { toast } = useToast();
-
+  
   const post = params?.slug ? MOCK_POSTS[params.slug] : null;
 
   if (!post) {
     return (
       <div className="min-h-screen bg-terminal-bg text-terminal-text p-4 sm:p-6 lg:p-8 font-mono">
         <div className="max-w-4xl mx-auto">
-          <div className="terminal-card p-8 text-center">
-            <h1 className="text-2xl font-bold text-terminal-accent-red mb-4">
-              404: Post Not Found
+          <div className="terminal-card p-12 text-center">
+            <h1 className="text-2xl font-bold text-terminal-accent-blue mb-4">
+              Post Not Found
             </h1>
             <p className="text-terminal-text-dim mb-6">
               The blog post you're looking for doesn't exist.
             </p>
             <Link href="/blog">
-              <Button variant="outline">
+              <Button>
                 <ChevronLeft className="h-4 w-4 mr-2" />
                 Back to Blog
               </Button>
@@ -65,25 +308,7 @@ export default function BlogPost() {
   };
 
   return (
-    <>
-      <SEO
-        title={`${post.title} | Dhanush Ranga Gopisetty`}
-        description={post.seo?.metaDescription || post.excerpt}
-        keywords={post.tags.join(", ")}
-        ogImage={post.coverImage || "https://dhanushranga.dev/og-image.png"}
-        ogType="article"
-        canonicalUrl={`https://dhanushranga.dev/blog/${post.slug}`}
-      />
-      <BlogPostStructuredData
-        title={post.title}
-        description={post.excerpt}
-        publishedAt={post.publishedAt}
-        updatedAt={post.updatedAt}
-        author={post.author.name}
-        image={post.coverImage}
-        url={`https://dhanushranga.dev/blog/${post.slug}`}
-      />
-      <div className="min-h-screen bg-terminal-bg text-terminal-text font-mono">
+    <div className="min-h-screen bg-terminal-bg text-terminal-text font-mono">
       {/* Cover Image */}
       {post.coverImage && (
         <div className="w-full aspect-[21/9] bg-terminal-bg-alt relative overflow-hidden">
@@ -257,6 +482,5 @@ export default function BlogPost() {
         )}
       </div>
     </div>
-    </>
   );
 }

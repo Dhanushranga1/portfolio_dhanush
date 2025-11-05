@@ -9,8 +9,8 @@ const allProjects = [
     description: "ai-powered multi-tenant support platform built with a rag pipeline and vector search, reducing response latency and manual intervention by 60%.",
     impact: "reduced customer query resolution time by 60% across 50+ monthly tickets",
     tags: ["FastAPI", "Next.js", "PostgreSQL", "Supabase", "FAISS", "Gemini LLM"],
-    liveUrl: "https://ticketpilot.demo", // Update with actual URL
-    githubUrl: "https://github.com/dhanushranga1/ticketpilot", // Update with actual URL
+    liveUrl: "https://ticketpilot.vercel.app/",
+    githubUrl: "https://github.com/Dhanushranga1/ticketpilot",
     status: "deployed" as const,
   },
   {
@@ -18,9 +18,18 @@ const allProjects = [
     description: "movie-to-book recommendation system integrating gpt-4 with hardcover and tmdb apis, achieving high availability and cache optimization across deployments.",
     impact: "85% cache hit rate saving $200/month in api costs, 1,000+ monthly active users",
     tags: ["FastAPI", "Docker", "Kubernetes", "Terraform", "Prometheus", "GPT-4"],
-    liveUrl: "https://cinereads.demo", // Update with actual URL
-    githubUrl: "https://github.com/dhanushranga1/cinereads", // Update with actual URL
+    liveUrl: "https://cinereads.dhanushranga1.dev/",
+    githubUrl: "https://github.com/Dhanushranga1/CineReads",
     status: "deployed" as const,
+  },
+  {
+    title: "mesh3",
+    description: "merkle-enforced secure handshake - decentralized p2p chat with end-to-end encryption, metamask authentication, and webrtc data channels for zero-trust messaging.",
+    impact: "zero server-side storage, ephemeral key exchange, wallet-based identity verification",
+    tags: ["Next.js", "FastAPI", "WebRTC", "MetaMask", "AES-GCM", "TURN/STUN"],
+    liveUrl: undefined,
+    githubUrl: "https://github.com/Dhanushranga1/mesh3",
+    status: "active" as const,
   },
   {
     title: "scrubpy",
@@ -28,7 +37,7 @@ const allProjects = [
     impact: "30+ downloads in first month, 40% reduction in manual data cleaning effort",
     tags: ["Python", "pandas", "scikit-learn", "Mistral LLM"],
     liveUrl: "https://pypi.org/project/scrubpy/",
-    githubUrl: "https://github.com/dhanushranga1/scrubpy", // Update with actual URL
+    githubUrl: "https://github.com/Dhanushranga1/scrubpy",
     status: "active" as const,
   },
 ];

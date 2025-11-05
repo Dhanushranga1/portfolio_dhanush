@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { motion } from "framer-motion";
 import { Calendar, Clock, Tag, Search, Filter, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SEO, seoConfigs } from "@/components/SEO";
 
 // For production, replace with: import { useBlogPosts, useBlogCategories } from "@/hooks/useStrapi";
 // For now, we'll use mock data since Strapi isn't set up yet
@@ -52,138 +54,138 @@ const MOCK_CATEGORIES: BlogCategory[] = [
     id: "1",
     name: "Development",
     slug: "development",
-    description: "Software development, coding tutorials, and best practices",
-    postCount: 12,
+    description: "Web frameworks, APIs, and best practices",
+    postCount: 2,
   },
   {
     id: "2",
-    name: "Design",
-    slug: "design",
-    description: "UI/UX design, visual design, and design systems",
-    postCount: 8,
+    name: "AI",
+    slug: "ai",
+    description: "Machine Learning, LLMs, and applied AI workflows",
+    postCount: 2,
   },
   {
     id: "3",
     name: "Career",
     slug: "career",
-    description: "Career advice, job hunting, and professional growth",
-    postCount: 6,
+    description: "Personal growth, DevOps journey, student life",
+    postCount: 1,
   },
   {
     id: "4",
     name: "Tech",
     slug: "tech",
-    description: "Technology trends, tools, and industry insights",
-    postCount: 10,
+    description: "Open-source tools, utilities, and experiments",
+    postCount: 1,
   },
 ];
 
 const MOCK_POSTS: BlogPost[] = [
   {
     id: "1",
-    title: "Building a Modern Portfolio with React and TypeScript",
-    slug: "modern-portfolio-react-typescript",
+    title: "Bringing AI to Everyday Projects",
+    slug: "bringing-ai-to-everyday-projects",
     excerpt:
-      "A comprehensive guide to building a developer portfolio using React 18, TypeScript, and modern tooling. Learn best practices for structure, performance, and SEO.",
+      "How I integrated AI models like GPT-4 and Mistral into real projects. A practical overview of combining LLMs with APIs to make smarter, context-aware applications.",
     content: "Full content would be here...",
-    coverImage: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=600&fit=crop",
-    category: { id: "1", name: "Development", slug: "development" },
-    tags: ["react", "typescript", "portfolio", "web-development"],
+    coverImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=600&fit=crop",
+    category: { id: "2", name: "AI", slug: "ai" },
+    tags: ["ai", "llm", "fastapi", "automation"],
     featured: true,
-    publishedAt: "2024-10-15T10:00:00Z",
-    readTime: 12,
+    publishedAt: "2024-11-03T10:00:00Z",
+    readTime: 7,
     author: {
-      name: "Dhanush",
+      name: "Dhanush Ranga",
       avatar: null,
     },
   },
   {
     id: "2",
-    title: "The Terminal Aesthetic: Designing Developer-First UIs",
-    slug: "terminal-aesthetic-developer-ui",
+    title: "Deploying FastAPI Apps with Docker & Render",
+    slug: "deploying-fastapi-docker-render",
     excerpt:
-      "Exploring the terminal-inspired design trend. Why developers love terminal UIs and how to implement them effectively in modern web applications.",
+      "A step-by-step breakdown of how I containerized and deployed my FastAPI apps using Docker and Render. Covers setup, CI/CD integration, and scaling best practices.",
     content: "Full content would be here...",
-    coverImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&h=600&fit=crop",
-    category: { id: "2", name: "Design", slug: "design" },
-    tags: ["design", "ui-ux", "terminal", "developer-tools"],
+    coverImage: "https://images.unsplash.com/photo-1605745341112-85968b19335b?w=1200&h=600&fit=crop",
+    category: { id: "1", name: "Development", slug: "development" },
+    tags: ["fastapi", "docker", "backend", "deployment"],
     featured: true,
-    publishedAt: "2024-10-10T14:30:00Z",
-    readTime: 8,
+    publishedAt: "2024-11-06T14:30:00Z",
+    readTime: 9,
     author: {
-      name: "Dhanush",
+      name: "Dhanush Ranga",
       avatar: null,
     },
   },
   {
     id: "3",
-    title: "From Bootcamp to Senior Developer: My 5-Year Journey",
-    slug: "bootcamp-to-senior-developer",
+    title: "How I Built ScrubPy — A Data Cleaning Library in Python",
+    slug: "how-i-built-scrubpy",
     excerpt:
-      "Reflections on my journey from coding bootcamp graduate to senior developer. Lessons learned, mistakes made, and advice for aspiring developers.",
+      "A behind-the-scenes look at ScrubPy — my open-source Python package for quick data cleaning. The motivation, design choices, and lessons from publishing to PyPI.",
     content: "Full content would be here...",
-    coverImage: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=600&fit=crop",
-    category: { id: "3", name: "Career", slug: "career" },
-    tags: ["career", "bootcamp", "learning", "advice"],
-    featured: false,
-    publishedAt: "2024-10-05T09:00:00Z",
-    readTime: 15,
+    coverImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=600&fit=crop",
+    category: { id: "4", name: "Tech", slug: "tech" },
+    tags: ["python", "pandas", "data-cleaning", "pypi"],
+    featured: true,
+    publishedAt: "2024-11-10T09:00:00Z",
+    readTime: 8,
     author: {
-      name: "Dhanush",
+      name: "Dhanush Ranga",
       avatar: null,
     },
   },
   {
     id: "4",
-    title: "API Design Best Practices: Building RESTful Services",
-    slug: "api-design-best-practices",
+    title: "My Journey into Cloud & DevOps",
+    slug: "my-journey-cloud-devops",
     excerpt:
-      "A deep dive into REST API design patterns, versioning strategies, authentication, and documentation. Learn how to build APIs that developers love.",
+      "Reflecting on my first real experience with AWS, Terraform, and Kubernetes. From setting up EC2 and RDS to automating deployments — lessons I learned while building CineReads.",
     content: "Full content would be here...",
-    coverImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=600&fit=crop",
-    category: { id: "1", name: "Development", slug: "development" },
-    tags: ["api", "rest", "backend", "best-practices"],
-    featured: true,
-    publishedAt: "2024-09-28T11:00:00Z",
+    coverImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=600&fit=crop",
+    category: { id: "3", name: "Career", slug: "career" },
+    tags: ["cloud", "aws", "devops", "infrastructure"],
+    featured: false,
+    publishedAt: "2024-11-13T11:00:00Z",
     readTime: 10,
     author: {
-      name: "Dhanush",
+      name: "Dhanush Ranga",
       avatar: null,
     },
   },
   {
     id: "5",
-    title: "The Rise of AI-Assisted Development",
-    slug: "ai-assisted-development",
+    title: "Building Smarter Search with FAISS and Gemini",
+    slug: "building-smarter-search-faiss-gemini",
     excerpt:
-      "How AI tools like GitHub Copilot and ChatGPT are changing software development. Practical tips for integrating AI into your workflow.",
+      "Explaining how I used FAISS for semantic search and combined it with Gemini LLM to build a context-aware retrieval system in TicketPilot. Includes architecture and tuning notes.",
     content: "Full content would be here...",
-    coverImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=600&fit=crop",
-    category: { id: "4", name: "Tech", slug: "tech" },
-    tags: ["ai", "copilot", "productivity", "tools"],
+    coverImage: "https://images.unsplash.com/photo-1523961131990-5ea7c61b2107?w=1200&h=600&fit=crop",
+    category: { id: "2", name: "AI", slug: "ai" },
+    tags: ["faiss", "gemini", "rag", "search"],
     featured: false,
-    publishedAt: "2024-09-20T16:00:00Z",
-    readTime: 7,
+    publishedAt: "2024-11-17T16:00:00Z",
+    readTime: 9,
     author: {
-      name: "Dhanush",
+      name: "Dhanush Ranga",
       avatar: null,
     },
   },
   {
     id: "6",
-    title: "Mastering CSS Grid and Flexbox",
-    slug: "mastering-css-grid-flexbox",
+    title: "Balancing Studies and Real Projects",
+    slug: "balancing-studies-real-projects",
     excerpt:
-      "A practical guide to modern CSS layouts. When to use Grid vs Flexbox, common patterns, and real-world examples from production applications.",
+      "As a Computer Science student, managing academic load and real-world projects is tricky. Here's how I balance both — planning, learning from mentors, and turning coursework into portfolio-ready work.",
     content: "Full content would be here...",
-    coverImage: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=1200&h=600&fit=crop",
-    category: { id: "2", name: "Design", slug: "design" },
-    tags: ["css", "grid", "flexbox", "layout"],
+    coverImage: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&h=600&fit=crop",
+    category: { id: "3", name: "Career", slug: "career" },
+    tags: ["student-life", "projects", "productivity", "learning"],
     featured: false,
-    publishedAt: "2024-09-15T13:00:00Z",
-    readTime: 9,
+    publishedAt: "2024-11-20T13:00:00Z",
+    readTime: 6,
     author: {
-      name: "Dhanush",
+      name: "Dhanush Ranga",
       avatar: null,
     },
   },
@@ -211,110 +213,150 @@ export default function Blog() {
   const featuredPosts = MOCK_POSTS.filter((p) => p.featured).slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-terminal-bg text-terminal-text p-4 sm:p-6 lg:p-8 font-mono">
-      <div className="max-w-7xl mx-auto">
+    <>
+      <SEO {...seoConfigs.blog} />
+      <div className="min-h-screen bg-terminal-bg text-terminal-text pt-24 pb-16">
+      <div className="container mx-auto px-4 max-w-6xl space-y-12">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-terminal-accent-blue mb-2">
-            <span className="text-terminal-accent-green">❯</span> Blog
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="text-3xl md:text-4xl font-bold text-accent-info mb-3">
+            <span className="text-accent-info/70">$</span> cat ~/blog
           </h1>
-          <p className="text-terminal-text-dim">
-            Thoughts on development, design, and technology • {filteredPosts.length} posts
+          <p className="text-terminal-text-dim text-base md:text-lg max-w-[65ch]" style={{ lineHeight: '1.6' }}>
+            thoughts on development, design, and technology —{" "}
+            <span className="text-accent-info/80">
+              {filteredPosts.length} {filteredPosts.length === 1 ? "entry" : "entries"}
+            </span>
           </p>
-        </div>
+        </motion.div>
 
         {/* Featured Posts */}
         {!searchQuery && !selectedCategory && !filterFeatured && featuredPosts.length > 0 && (
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold text-terminal-accent-blue mb-6">
-              Featured Posts
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="space-y-6"
+          >
+            <h2 className="text-2xl font-semibold text-accent-info">
+              <span className="text-accent-info/70">$</span> ls -la featured/
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {featuredPosts.map((post) => (
-                <Link key={post.id} href={`/blog/${post.slug}`}>
-                  <Card className="terminal-card overflow-hidden cursor-pointer group hover:border-terminal-accent-blue transition-colors h-full">
-                    <div className="aspect-video relative overflow-hidden bg-terminal-bg-alt">
-                      {post.coverImage ? (
-                        <img
-                          src={post.coverImage}
-                          alt={post.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-terminal-text-dim">
-                          No cover image
-                        </div>
-                      )}
-                      <Badge
-                        variant="secondary"
-                        className="absolute top-3 right-3 bg-terminal-accent-yellow text-terminal-bg"
-                      >
-                        Featured
-                      </Badge>
-                    </div>
-                    <div className="p-6 space-y-3">
-                      {post.category && (
-                        <Badge variant="secondary" className="text-xs">
-                          {post.category.name}
+              {featuredPosts.map((post, idx) => (
+                <motion.div
+                  key={post.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.2 + idx * 0.1 }}
+                >
+                  <Link href={`/blog/${post.slug}`}>
+                    <Card className="terminal-card h-full overflow-hidden cursor-pointer group hover:border-accent-info/50 hover:bg-surface-2/30 transition-all duration-200">
+                      <div className="aspect-video relative overflow-hidden bg-terminal-bg-alt border-b border-border/30">
+                        {post.coverImage ? (
+                          <img
+                            src={post.coverImage}
+                            alt={post.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-terminal-text-dim">
+                            No cover image
+                          </div>
+                        )}
+                        <Badge
+                          variant="secondary"
+                          className="absolute top-3 right-3 uppercase tracking-wider bg-amber-950/50 text-amber-400 border-amber-400/30 font-medium backdrop-blur-sm"
+                        >
+                          Featured
                         </Badge>
-                      )}
-                      <h3 className="font-bold text-terminal-accent-blue text-lg line-clamp-2">
-                        {post.title}
-                      </h3>
-                      <p className="text-sm text-terminal-text-dim line-clamp-3">
-                        {post.excerpt}
-                      </p>
-                      <div className="flex items-center gap-4 text-xs text-terminal-text-dim pt-2">
-                        <span className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
-                          {new Date(post.publishedAt).toLocaleDateString()}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          {post.readTime} min read
-                        </span>
                       </div>
-                    </div>
-                  </Card>
-                </Link>
+                      <div className="p-5 space-y-3">
+                        {post.category && (
+                          <Badge variant="secondary" className="text-xs uppercase tracking-wider bg-[#064E3B] text-[#10B981] border-[#10B981]/30 font-medium">
+                            {post.category.name}
+                          </Badge>
+                        )}
+                        <h3 className="text-xl font-semibold text-accent-info group-hover:text-accent-info/80 transition-colors line-clamp-2" style={{ lineHeight: '1.4' }}>
+                          {post.title}
+                        </h3>
+                        <p className="text-[0.95rem] text-terminal-text-dim/90 line-clamp-3" style={{ lineHeight: '1.6' }}>
+                          {post.excerpt}
+                        </p>
+                        <div className="flex items-center gap-3 text-xs text-terminal-text-dim/80 pt-3 border-t border-border/30">
+                          <span className="flex items-center gap-1.5">
+                            <Clock className="h-3.5 w-3.5" />
+                            {post.readTime} min
+                          </span>
+                          <span className="flex items-center gap-1.5">
+                            <Calendar className="h-3.5 w-3.5" />
+                            {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                            })}
+                          </span>
+                        </div>
+                      </div>
+                    </Card>
+                  </Link>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Categories */}
         {!searchQuery && !selectedCategory && !filterFeatured && (
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold text-terminal-accent-blue mb-6">
-              Browse by Category
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="space-y-6"
+          >
+            <h2 className="text-2xl font-semibold text-accent-info">
+              <span className="text-accent-info/70">$</span> ls categories/
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {MOCK_CATEGORIES.map((category) => (
-                <Card
+              {MOCK_CATEGORIES.map((category, idx) => (
+                <motion.div
                   key={category.id}
-                  className="terminal-card p-4 cursor-pointer hover:border-terminal-accent-blue transition-colors"
-                  onClick={() => setSelectedCategory(category.slug)}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.4 + idx * 0.1 }}
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-bold text-terminal-accent-blue">
-                      {category.name}
-                    </h3>
-                    <Badge variant="secondary" className="text-xs">
-                      {category.postCount}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-terminal-text-dim line-clamp-2">
-                    {category.description}
-                  </p>
-                </Card>
+                  <Link href={`/blog?category=${category.slug}`}>
+                    <Card className="terminal-card p-5 cursor-pointer group hover:border-accent-info/50 hover:bg-surface-2/30 transition-all duration-200 h-full">
+                      <div className="flex items-start justify-between mb-3">
+                        <Tag className="h-5 w-5 text-accent-info/70 group-hover:text-accent-info transition-colors" />
+                        <Badge variant="secondary" className="text-xs bg-surface-2 text-accent-info/80 border border-border/50 font-medium">
+                          {category.postCount}
+                        </Badge>
+                      </div>
+                      <h3 className="font-bold text-lg text-accent-info group-hover:text-accent-info/80 transition-colors mb-2">
+                        {category.name}
+                      </h3>
+                      <p className="text-sm text-terminal-text-dim/90 line-clamp-2" style={{ lineHeight: '1.6' }}>
+                        {category.description}
+                      </p>
+                    </Card>
+                  </Link>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Search and Filters */}
-        <div className="terminal-card p-4 mb-8 space-y-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="terminal-card p-5 mb-8 space-y-4"
+        >
           {/* Search */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-terminal-text-dim" />
@@ -323,7 +365,7 @@ export default function Blog() {
               placeholder="Search posts by title, content, or tags..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-terminal-bg-alt border-terminal-border"
+              className="pl-10 bg-terminal-bg-alt border-terminal-border focus:border-accent-info/50 focus:ring-2 focus:ring-accent-info/20 transition-all duration-200"
             />
           </div>
 
@@ -386,100 +428,116 @@ export default function Blog() {
               </Badge>
             </div>
           )}
-        </div>
+        </motion.div>
 
         {/* Posts List */}
         {filteredPosts.length === 0 ? (
-          <div className="terminal-card p-12 text-center">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="terminal-card p-12 text-center"
+          >
             <p className="text-terminal-text-dim text-lg">
               No posts found matching your criteria
             </p>
-          </div>
+          </motion.div>
         ) : (
-          <div className="space-y-6">
-            {filteredPosts.map((post) => (
-              <Link key={post.id} href={`/blog/${post.slug}`}>
-                <Card className="terminal-card overflow-hidden cursor-pointer group hover:border-terminal-accent-blue transition-colors">
-                  <div className="flex flex-col md:flex-row gap-6 p-6">
-                    {/* Cover Image */}
-                    {post.coverImage && (
-                      <div className="md:w-64 flex-shrink-0">
-                        <div className="aspect-video relative overflow-hidden bg-terminal-bg-alt rounded">
-                          <img
-                            src={post.coverImage}
-                            alt={post.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            loading="lazy"
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Content */}
-                    <div className="flex-1 space-y-3">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            {post.category && (
-                              <Badge variant="secondary" className="text-xs">
-                                {post.category.name}
-                              </Badge>
-                            )}
-                            {post.featured && (
-                              <Badge
-                                variant="secondary"
-                                className="text-xs bg-terminal-accent-yellow text-terminal-bg"
-                              >
-                                Featured
-                              </Badge>
-                            )}
+          <div className="space-y-5">
+            {filteredPosts.map((post, idx) => (
+              <motion.div
+                key={post.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: Math.min(0.6 + idx * 0.1, 1.2) }}
+              >
+                <Link href={`/blog/${post.slug}`}>
+                  <Card className="terminal-card overflow-hidden cursor-pointer group hover:border-l-4 hover:border-l-accent-info hover:border-accent-info/50 hover:bg-surface-2/30 transition-all duration-200">
+                    <div className="flex flex-col md:flex-row gap-6 p-6">
+                      {/* Cover Image */}
+                      {post.coverImage && (
+                        <div className="md:w-64 flex-shrink-0">
+                          <div className="aspect-video relative overflow-hidden bg-terminal-bg-alt rounded border border-border/30">
+                            <img
+                              src={post.coverImage}
+                              alt={post.title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              loading="lazy"
+                            />
                           </div>
-                          <h2 className="text-xl font-bold text-terminal-accent-blue mb-2 group-hover:text-terminal-accent-green transition-colors">
-                            {post.title}
-                          </h2>
-                          <p className="text-terminal-text-dim mb-3 line-clamp-2">
-                            {post.excerpt}
-                          </p>
                         </div>
-                        <ChevronRight className="h-5 w-5 text-terminal-text-dim group-hover:text-terminal-accent-blue transition-colors flex-shrink-0" />
-                      </div>
+                      )}
 
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-2">
-                        {post.tags.map((tag) => (
-                          <Badge key={tag} variant="outline" className="text-xs">
-                            <Tag className="h-3 w-3 mr-1" />
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
+                      {/* Content */}
+                      <div className="flex-1 space-y-3">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-3">
+                              {post.category && (
+                                <Badge 
+                                  variant="secondary" 
+                                  className="text-xs uppercase tracking-wider bg-[#064E3B] text-[#10B981] border-[#10B981]/30 font-medium"
+                                >
+                                  {post.category.name}
+                                </Badge>
+                              )}
+                              {post.featured && (
+                                <Badge
+                                  variant="secondary"
+                                  className="text-xs uppercase tracking-wider bg-amber-950/50 text-amber-400 border-amber-400/30 font-medium"
+                                >
+                                  Featured
+                                </Badge>
+                              )}
+                            </div>
+                            <h2 className="text-xl md:text-2xl font-semibold text-accent-info mb-3 group-hover:text-accent-info/80 transition-colors" style={{ lineHeight: '1.4' }}>
+                              {post.title}
+                            </h2>
+                            <p className="text-[0.95rem] text-terminal-text-dim/90 mb-4 line-clamp-2" style={{ lineHeight: '1.6' }}>
+                              {post.excerpt}
+                            </p>
+                          </div>
+                          <ChevronRight className="h-5 w-5 text-terminal-text-dim group-hover:text-accent-info transition-colors flex-shrink-0 mt-1" />
+                        </div>
 
-                      {/* Meta */}
-                      <div className="flex items-center gap-4 text-xs text-terminal-text-dim pt-2 border-t border-terminal-border">
-                        <span className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
-                          {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          {post.readTime} min read
-                        </span>
-                        <span className="ml-auto text-terminal-accent-blue group-hover:underline">
-                          Read more →
-                        </span>
+                        {/* Tags */}
+                        <div className="flex flex-wrap gap-2">
+                          {post.tags.map((tag) => (
+                            <Badge key={tag} variant="outline" className="text-xs bg-surface-2 text-terminal-text-dim/80 border-border/50 hover:border-accent-info/50 transition-colors">
+                              <Tag className="h-3 w-3 mr-1" />
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+
+                        {/* Meta */}
+                        <div className="flex items-center gap-4 text-xs text-terminal-text-dim/80 pt-3 border-t border-border/30">
+                          <span className="flex items-center gap-1.5">
+                            <Calendar className="h-3.5 w-3.5" />
+                            {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
+                          </span>
+                          <span className="flex items-center gap-1.5">
+                            <Clock className="h-3.5 w-3.5" />
+                            {post.readTime} min read
+                          </span>
+                          <span className="ml-auto text-accent-info/80 group-hover:text-accent-info group-hover:underline transition-colors">
+                            Read more →
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Card>
-              </Link>
+                  </Card>
+                </Link>
+              </motion.div>
             ))}
           </div>
         )}
       </div>
     </div>
+    </>
   );
 }

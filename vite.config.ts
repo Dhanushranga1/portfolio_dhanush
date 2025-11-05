@@ -4,6 +4,8 @@ import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 export default defineConfig({
+  // Point to project root for .env file loading
+  envDir: path.resolve(import.meta.dirname),
   plugins: [
     react(),
     runtimeErrorOverlay(),

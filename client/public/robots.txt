@@ -1,0 +1,10 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow admin/private pages if any
+Disallow: /api/
+Disallow: /messages
+
+# Sitemap
+Sitemap: https://dhanushranga.dev/sitemap.xml

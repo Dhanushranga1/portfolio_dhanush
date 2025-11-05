@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Home Page -->
+  <url>
+    <loc>https://dhanushranga.dev/</loc>
+    <lastmod>2025-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- About Page -->
+  <url>
+    <loc>https://dhanushranga.dev/about</loc>
+    <lastmod>2025-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Projects Page -->
+  <url>
+    <loc>https://dhanushranga.dev/projects</loc>
+    <lastmod>2025-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Blog Page -->
+  <url>
+    <loc>https://dhanushranga.dev/blog</loc>
+    <lastmod>2025-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Blog Posts -->
+  <url>
+    <loc>https://dhanushranga.dev/blog/bringing-ai-to-everyday-projects</loc>
+    <lastmod>2024-11-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://dhanushranga.dev/blog/deploying-fastapi-docker-render</loc>
+    <lastmod>2024-11-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://dhanushranga.dev/blog/how-i-built-scrubpy</loc>
+    <lastmod>2024-11-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://dhanushranga.dev/blog/my-journey-cloud-devops</loc>
+    <lastmod>2024-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://dhanushranga.dev/blog/building-smarter-search-faiss-gemini</loc>
+    <lastmod>2024-11-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://dhanushranga.dev/blog/balancing-studies-real-projects</loc>
+    <lastmod>2024-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Photos Page -->
+  <url>
+    <loc>https://dhanushranga.dev/photos</loc>
+    <lastmod>2025-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Favorites Page -->
+  <url>
+    <loc>https://dhanushranga.dev/favorites</loc>
+    <lastmod>2025-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Git Timeline Page -->
+  <url>
+    <loc>https://dhanushranga.dev/git-timeline</loc>
+    <lastmod>2025-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Contact Page -->
+  <url>
+    <loc>https://dhanushranga.dev/contact</loc>
+    <lastmod>2025-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
