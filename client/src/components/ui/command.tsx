@@ -26,7 +26,7 @@ const CommandDialog = ({ children, ...props }: DialogProps) => {
     <Dialog {...props}>
       <DialogContent 
         hideClose
-        className="overflow-hidden p-0 rounded-xl max-w-2xl"
+        className="overflow-hidden p-0 rounded-xl max-w-2xl w-[min(800px,92vw)]"
         style={{
           // Enhanced glassmorphism following NN/g best practices
           // Higher opacity for better text contrast (80% vs 90%)
@@ -49,8 +49,6 @@ const CommandDialog = ({ children, ...props }: DialogProps) => {
             '0 20px 60px -10px rgba(0, 0, 0, 0.6), ' +
             // Ambient glow
             '0 0 100px rgba(127, 208, 189, 0.1)',
-          // Pseudo-element for gradient border effect
-          position: 'relative' as const,
         }}
       >
         {/* Gradient border overlay for frosted glass edge */}

@@ -44,7 +44,7 @@ const DialogContent = React.forwardRef<
         className
       )}
       style={{
-        maxHeight: '70vh',
+        maxHeight: '80vh',
       }}
       {...props}
     >
