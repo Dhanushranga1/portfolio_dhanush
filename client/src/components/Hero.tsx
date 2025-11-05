@@ -1,7 +1,11 @@
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import TextAnim from "./animations/TextAnim";
+import CursorBlinker from "./animations/CursorBlinker";
 
 export default function Hero() {
+  const shouldReduceMotion = useReducedMotion();
   const [bootComplete, setBootComplete] = useState(false);
   const [showSkip, setShowSkip] = useState(false);
   const [typedText, setTypedText] = useState("");
@@ -118,48 +122,106 @@ export default function Hero() {
   return (
     <section className="min-h-screen flex items-center justify-center px-6">
       <div className="max-w-2xl text-center space-y-8">
-        {/* Username/Title */}
-        <h1 className="text-4xl md:text-5xl font-mono font-bold tracking-tight animate-in fade-in slide-in-from-bottom-3 duration-500">
-          <span className="text-accent-info">$</span> dhanushranga1
+        {/* Username/Title with typing animation */}
+        <h1 className="text-4xl md:text-5xl font-mono font-bold tracking-tight">
+          <span className="text-accent-info">$ </span>
+          {shouldReduceMotion ? (
+            <>dhanushranga1</>
+          ) : (
+            <>
+              <TextAnim text="dhanushranga1" delay={0.2} duration={1} />
+              <CursorBlinker className="ml-1" />
+            </>
+          )}
         </h1>
         
-        {/* Bio with typing effect */}
-        <p className="text-base md:text-lg font-mono text-muted-foreground leading-relaxed min-h-[2rem]">
+        {/* Bio with typing effect - staggered entry */}
+        <motion.p 
+          className="text-base md:text-lg font-mono text-muted-foreground leading-relaxed min-h-[2rem]"
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.4, duration: 0.15 }}
+        >
           <span className="text-text-primary">~</span> hey there! i'm dhanush, {typedText}
           {showCursor && <span className="animate-pulse">_</span>}
-        </p>
+        </motion.p>
 
-        {/* Quick links with underline reveal effect */}
-        <div 
-          className="flex items-center justify-center gap-6 text-sm font-mono animate-in fade-in slide-in-from-bottom-4 duration-500"
-          style={{ animationDelay: "300ms" }}
+        {/* Quick links with underline reveal effect - staggered entry */}
+        <motion.div 
+          className="flex items-center justify-center gap-6 text-sm font-mono"
+          initial={shouldReduceMotion ? false : "hidden"}
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.08, // 80ms stagger
+                delayChildren: 1.6, // Start after tagline
+              }
+            }
+          }}
         >
-          <Link href="/about" data-testid="link-about">
-            <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
-              /about
-            </span>
-          </Link>
-          <Link href="/projects" data-testid="link-projects">
-            <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
-              /projects
-            </span>
-          </Link>
-          <Link href="/blog" data-testid="link-blog">
-            <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
-              /blog
-            </span>
-          </Link>
-          <Link href="/photos" data-testid="link-pics">
-            <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
-              /pics
-            </span>
-          </Link>
-          <Link href="/contact" data-testid="link-contact">
-            <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
-              /contact
-            </span>
-          </Link>
-        </div>
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 6 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.15 } }
+            }}
+          >
+            <Link href="/about" data-testid="link-about">
+              <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
+                /about
+              </span>
+            </Link>
+          </motion.div>
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 6 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.15 } }
+            }}
+          >
+            <Link href="/projects" data-testid="link-projects">
+              <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
+                /projects
+              </span>
+            </Link>
+          </motion.div>
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 6 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.15 } }
+            }}
+          >
+            <Link href="/blog" data-testid="link-blog">
+              <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
+                /blog
+              </span>
+            </Link>
+          </motion.div>
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 6 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.15 } }
+            }}
+          >
+            <Link href="/photos" data-testid="link-pics">
+              <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
+                /pics
+              </span>
+            </Link>
+          </motion.div>
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 6 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.15 } }
+            }}
+          >
+            <Link href="/contact" data-testid="link-contact">
+              <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
+                /contact
+              </span>
+            </Link>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
