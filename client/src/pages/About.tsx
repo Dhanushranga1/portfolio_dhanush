@@ -5,35 +5,38 @@ export default function About() {
     <div className="min-h-screen pt-24 pb-20 px-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="mb-16">
+        <div className="mb-16 animate-in fade-in slide-in-from-top-2 duration-700">
           <h1 className="text-4xl md:text-5xl font-mono font-bold mb-4">
             <span className="text-accent-info">$</span> about
           </h1>
-          <p className="text-muted-foreground font-mono text-sm">
+          <p className="text-muted-foreground font-mono text-sm opacity-80 terminal-prompt">
             whoami && cat bio.txt
           </p>
         </div>
 
         {/* Bio */}
-        <div className="space-y-6 font-mono text-sm leading-relaxed text-foreground mb-16">
-          <p className="text-base md:text-lg">
-            hey there! i'm <span className="text-accent-info font-semibold">dhanush ranga gopisetty</span>, a computer science student at srm institute of science and technology with a passion for ai/ml and full-stack development.
+        <div className="space-y-5 font-mono text-sm md:text-base leading-[1.6] text-foreground mb-16 max-w-[65ch]">
+          <p className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+            hey there! i'm <span className="text-accent-info font-medium">dhanush ranga gopisetty</span> — a computer science student at srm institute of science and technology with a deep interest in ai/ml, system design, and full-stack engineering.
           </p>
-          <p>
-            currently maintaining a <span className="text-accent-info">9.06/10.0 cgpa</span> while building production-level projects that solve real-world problems. i've worked as an artificial intelligence intern at deep algorithms solutions, where i engineered fastapi endpoints for document qa systems and implemented neural architectures for image segmentation.
+          <p className="animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100">
+            currently maintaining a <span className="text-accent-info">9.06/10 cgpa</span> while building production-grade systems that bridge modern web technologies with intelligent automation. as an ai intern at deep algorithms solutions, i engineered fastapi endpoints for document-qa workflows and implemented neural architectures for medical image segmentation.
           </p>
-          <p>
-            i'm passionate about creating intelligent systems that combine modern web technologies with machine learning. my projects include ai-powered support platforms, movie-to-book recommendation engines, and data preprocessing libraries published on pypi.
+          <p className="animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200">
+            i enjoy creating intelligent platforms that blend data-driven reasoning with seamless user experiences. some of my projects include ai-powered support agents, movie-to-book recommendation systems, and open-source preprocessing libraries published on pypi.
           </p>
-          <p>
-            when i'm not coding, you'll find me contributing to open source (fosshack 2024 & 2025), exploring cloud architecture patterns, or learning about the latest in llms and vector databases.
+          <p className="animate-in fade-in slide-in-from-bottom-2 duration-500 delay-300">
+            outside code, you'll find me exploring cloud infrastructure patterns, contributing to fosshack 2024 & 2025, or studying how llms and vector databases shape the next generation of ai systems.
           </p>
         </div>
 
         {/* Content Sections */}
-        <div className="space-y-12 font-mono text-sm">
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold">experience</h2>
+        <div className="space-y-16 font-mono text-sm">
+          {/* Experience Section */}
+          <div className="space-y-4 border-t border-border/30 pt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-accent-info flex items-center gap-2">
+              <span className="text-muted-foreground">$</span> experience
+            </h2>
             <div className="space-y-6">
               <div className="space-y-2">
                 <div className="flex justify-between items-start">
@@ -53,9 +56,9 @@ export default function About() {
           </div>
 
           {/* Tech Stack - Clean Categorized View */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-mono font-bold flex items-center gap-2">
-              <span className="text-accent-info">$</span> tech stack
+          <div className="space-y-4 border-t border-border/30 pt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-accent-info flex items-center gap-2">
+              <span className="text-muted-foreground">$</span> tech stack
             </h2>
             
             <div className="grid md:grid-cols-2 gap-6">
@@ -109,8 +112,11 @@ export default function About() {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold">education</h2>
+          {/* Education Section */}
+          <div className="space-y-4 border-t border-border/30 pt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-accent-info flex items-center gap-2">
+              <span className="text-muted-foreground">$</span> education
+            </h2>
             <div className="space-y-2">
               <div className="flex justify-between items-start">
                 <div>
@@ -123,8 +129,11 @@ export default function About() {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold">achievements</h2>
+          {/* Achievements Section */}
+          <div className="space-y-4 border-t border-border/30 pt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-accent-info flex items-center gap-2">
+              <span className="text-muted-foreground">$</span> achievements
+            </h2>
             <ul className="list-disc list-inside space-y-1 text-muted-foreground">
               <li>aws academy graduate – cloud foundations (2024)</li>
               <li>open source contributor – fosshack 2024 & 2025</li>
@@ -133,36 +142,39 @@ export default function About() {
             </ul>
           </div>
 
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold">links</h2>
+          {/* Links Section */}
+          <div className="space-y-4 border-t border-border/30 pt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-accent-info flex items-center gap-2">
+              <span className="text-muted-foreground">$</span> links
+            </h2>
             <div className="space-y-2">
               <a
                 href="https://github.com/dhanushranga1"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-muted-foreground hover:text-accent-info transition-colors duration-200 group"
                 data-testid="link-github"
               >
-                <Github className="h-4 w-4" />
-                <span>github <ExternalLink className="inline h-3 w-3 ml-1" /></span>
+                <Github className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                <span className="group-hover:underline">github <ExternalLink className="inline h-3 w-3 ml-1" /></span>
               </a>
               <a
                 href="https://linkedin.com/in/dhanush-ranga"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-muted-foreground hover:text-accent-info transition-colors duration-200 group"
                 data-testid="link-linkedin"
               >
-                <Linkedin className="h-4 w-4" />
-                <span>linkedin <ExternalLink className="inline h-3 w-3 ml-1" /></span>
+                <Linkedin className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                <span className="group-hover:underline">linkedin <ExternalLink className="inline h-3 w-3 ml-1" /></span>
               </a>
               <a
                 href="mailto:dhanushrangag@gmail.com"
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-muted-foreground hover:text-accent-info transition-colors duration-200 group"
                 data-testid="link-email"
               >
-                <Mail className="h-4 w-4" />
-                <span>email <ExternalLink className="inline h-3 w-3 ml-1" /></span>
+                <Mail className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                <span className="group-hover:underline">email <ExternalLink className="inline h-3 w-3 ml-1" /></span>
               </a>
             </div>
           </div>
