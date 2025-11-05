@@ -25,13 +25,14 @@ const CommandDialog = ({ children, ...props }: DialogProps) => {
   return (
     <Dialog {...props}>
       <DialogContent 
-        className="overflow-hidden p-0 border-[#202425] bg-[#0f1112]/90 backdrop-blur-xl"
+        hideClose
+        className="overflow-hidden p-0 border-white/10 bg-[#0f1112]/90 backdrop-blur-xl rounded-xl max-w-2xl"
         style={{
           boxShadow: 
             'inset 0 1px 0 rgba(127, 208, 189, 0.1), ' +
-            '0 0 0 1px rgba(32, 36, 37, 0.5), ' +
-            '0 20px 40px rgba(0, 0, 0, 0.4), ' +
-            '0 0 60px rgba(127, 208, 189, 0.05)'
+            '0 0 0 1px rgba(32, 36, 37, 0.8), ' +
+            '0 20px 50px rgba(0, 0, 0, 0.5), ' +
+            '0 0 80px rgba(127, 208, 189, 0.08)'
         }}
       >
         <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-[#6b6f70] [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-4 [&_[cmdk-input-wrapper]_svg]:w-4 [&_[cmdk-input-wrapper]_svg]:text-[#7fd0bd] [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-2.5 [&_[cmdk-item]_svg]:h-4 [&_[cmdk-item]_svg]:w-4">
