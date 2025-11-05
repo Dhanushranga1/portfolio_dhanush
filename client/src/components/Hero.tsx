@@ -222,6 +222,22 @@ export default function Hero() {
             </Link>
           </motion.div>
         </motion.div>
+
+        {/* Command Palette Hint - Phase 4 */}
+        <motion.div
+          className="pt-4"
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.2, duration: 0.15 }}
+        >
+          <p className="type-label-small text-muted-foreground/70">
+            press{" "}
+            <kbd className="px-1.5 py-0.5 bg-surface-2 border border-surface-contrast rounded font-mono text-accent-info-muted">
+              ⌘K
+            </kbd>{" "}
+            for quick navigation
+          </p>
+        </motion.div>
       </div>
     </section>
   );
