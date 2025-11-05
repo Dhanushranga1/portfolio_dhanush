@@ -6,8 +6,8 @@ import { useToast } from "@/hooks/use-toast";
 const allProjects = [
   {
     title: "ticketpilot",
-    description: "ai-powered multi-tenant support platform with rag pipeline and vector search, reducing query resolution time by 60%",
-    impact: "Reduced customer query resolution time by 60% across 50+ monthly support tickets",
+    description: "ai-powered multi-tenant support platform built with a rag pipeline and vector search, reducing response latency and manual intervention by 60%.",
+    impact: "reduced customer query resolution time by 60% across 50+ monthly tickets",
     tags: ["FastAPI", "Next.js", "PostgreSQL", "Supabase", "FAISS", "Gemini LLM"],
     liveUrl: "https://ticketpilot.demo", // Update with actual URL
     githubUrl: "https://github.com/dhanushranga1/ticketpilot", // Update with actual URL
@@ -15,8 +15,8 @@ const allProjects = [
   },
   {
     title: "cinereads",
-    description: "movie-to-book recommendation platform integrating gpt-4 with hardcover and tmdb apis, serving 1,000+ monthly users",
-    impact: "85% cache hit rate saving $200/month in API costs, 1,000+ monthly active users",
+    description: "movie-to-book recommendation system integrating gpt-4 with hardcover and tmdb apis, achieving high availability and cache optimization across deployments.",
+    impact: "85% cache hit rate saving $200/month in api costs, 1,000+ monthly active users",
     tags: ["FastAPI", "Docker", "Kubernetes", "Terraform", "Prometheus", "GPT-4"],
     liveUrl: "https://cinereads.demo", // Update with actual URL
     githubUrl: "https://github.com/dhanushranga1/cinereads", // Update with actual URL
@@ -24,7 +24,7 @@ const allProjects = [
   },
   {
     title: "scrubpy",
-    description: "python library automating csv preprocessing with mistral llm integration for conversational data queries",
+    description: "python library for automated csv preprocessing with mistral-llm integration for conversational data queries.",
     impact: "30+ downloads in first month, 40% reduction in manual data cleaning effort",
     tags: ["Python", "pandas", "scikit-learn", "Mistral LLM"],
     liveUrl: "https://pypi.org/project/scrubpy/",
@@ -128,14 +128,14 @@ export default function Projects() {
     <div className="min-h-screen pt-24 pb-32 px-6">
       <div className="max-w-4xl mx-auto">
         {/* Terminal-style header */}
-        <div className="mb-8 font-mono">
-          <h1 className="text-3xl font-bold mb-2 text-accent-info">
+        <div className="mb-10 font-mono animate-in fade-in slide-in-from-top-2 duration-700">
+          <h1 className="text-3xl md:text-4xl font-semibold mb-3 text-accent-info">
             <span className="text-muted-foreground">$</span> ls --impact ~/projects
             {statusFilter !== "all" && (
               <span className="text-accent-action"> --status={statusFilter}</span>
             )}
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground opacity-80">
             showing {filteredProjects.length} of {allProjects.length} items •
             sorted by impact
           </p>
@@ -186,7 +186,7 @@ export default function Projects() {
         {/* Projects as terminal list */}
         <h2 className="sr-only">Project List</h2>
         {filteredProjects.length > 0 ? (
-          <ul className="space-y-8" role="list" aria-label="Projects list">
+          <ul className="space-y-6" role="list" aria-label="Projects list">
             {filteredProjects.map((project, index) => (
               <ProjectCard
                 key={project.title}
