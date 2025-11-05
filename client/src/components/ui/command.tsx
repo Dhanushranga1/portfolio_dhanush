@@ -26,15 +26,49 @@ const CommandDialog = ({ children, ...props }: DialogProps) => {
     <Dialog {...props}>
       <DialogContent 
         hideClose
-        className="overflow-hidden p-0 border-white/10 bg-[#0f1112]/90 backdrop-blur-xl rounded-xl max-w-2xl"
+        className="overflow-hidden p-0 rounded-xl max-w-2xl"
         style={{
+          // Enhanced glassmorphism following NN/g best practices
+          // Higher opacity for better text contrast (80% vs 90%)
+          background: 'linear-gradient(135deg, rgba(15, 17, 18, 0.85) 0%, rgba(15, 17, 18, 0.75) 100%)',
+          // Increased blur for better background distortion (40px)
+          backdropFilter: 'blur(40px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+          // Gradient border for depth and light reflection
+          border: '1px solid transparent',
+          backgroundClip: 'padding-box',
+          // Multi-layer shadow system for depth
           boxShadow: 
-            'inset 0 1px 0 rgba(127, 208, 189, 0.1), ' +
-            '0 0 0 1px rgba(32, 36, 37, 0.8), ' +
-            '0 20px 50px rgba(0, 0, 0, 0.5), ' +
-            '0 0 80px rgba(127, 208, 189, 0.08)'
+            // Inner glow (top light reflection)
+            'inset 0 1px 1px 0 rgba(127, 208, 189, 0.15), ' +
+            // Inner shadow (depth)
+            'inset 0 -1px 2px 0 rgba(0, 0, 0, 0.2), ' +
+            // Outer border highlight
+            '0 0 0 1px rgba(127, 208, 189, 0.1), ' +
+            // Main shadow (elevation)
+            '0 20px 60px -10px rgba(0, 0, 0, 0.6), ' +
+            // Ambient glow
+            '0 0 100px rgba(127, 208, 189, 0.1)',
+          // Pseudo-element for gradient border effect
+          position: 'relative' as const,
         }}
       >
+        {/* Gradient border overlay for frosted glass edge */}
+        <div 
+          style={{
+            position: 'absolute',
+            inset: 0,
+            borderRadius: 'inherit',
+            padding: '1px',
+            background: 'linear-gradient(135deg, rgba(127, 208, 189, 0.2) 0%, rgba(127, 208, 189, 0.05) 50%, rgba(127, 208, 189, 0.1) 100%)',
+            WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+            WebkitMaskComposite: 'xor',
+            maskComposite: 'exclude',
+            pointerEvents: 'none',
+            zIndex: 1,
+          }}
+          aria-hidden="true"
+        />
         <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-[#6b6f70] [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-4 [&_[cmdk-input-wrapper]_svg]:w-4 [&_[cmdk-input-wrapper]_svg]:text-[#7fd0bd] [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-2.5 [&_[cmdk-item]_svg]:h-4 [&_[cmdk-item]_svg]:w-4">
           {children}
         </Command>
@@ -47,7 +81,17 @@ const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
-  <div className="flex items-center border-b border-[#202425] px-3 bg-[#0f1112]" cmdk-input-wrapper="">
+  <div 
+    className="flex items-center border-b px-3" 
+    cmdk-input-wrapper=""
+    style={{
+      // Subtle gradient for depth
+      background: 'linear-gradient(180deg, rgba(15, 17, 18, 0.6) 0%, rgba(15, 17, 18, 0.4) 100%)',
+      // Improved border with gradient for glass edge
+      borderImage: 'linear-gradient(90deg, rgba(127, 208, 189, 0.2), rgba(127, 208, 189, 0.05), rgba(127, 208, 189, 0.2)) 1',
+      borderBottom: '1px solid rgba(127, 208, 189, 0.15)',
+    }}
+  >
     <span className="mr-2 text-[#7fd0bd] font-mono text-sm shrink-0" aria-hidden="true">$</span>
     <CommandPrimitive.Input
       ref={ref}
