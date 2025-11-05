@@ -51,8 +51,15 @@ export default function WidgetsBand() {
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="w-full max-w-4xl mx-auto px-6 py-12"
     >
-      {/* Glassmorphism container */}
-      <div className="relative rounded-lg border border-white/5 bg-white/[0.02] backdrop-blur-xl p-8 space-y-8">
+      {/* Glassmorphism container - Phase 3: Enhanced depth with inset shadow */}
+      <div 
+        className="relative rounded-lg border border-white/10 bg-white/[0.02] backdrop-blur-xl p-8 space-y-8"
+        style={{
+          boxShadow: 
+            'inset 0 1px 0 rgba(255, 255, 255, 0.1), ' +
+            '0 10px 30px rgba(0, 0, 0, 0.3)'
+        }}
+      >
         {/* Activity Feed */}
         <ActivityFeed
           project={stats.activity.project}
