@@ -70,9 +70,9 @@ export default function BlogPost() {
         title={`${post.title} | Dhanush Ranga Gopisetty`}
         description={post.seo?.metaDescription || post.excerpt}
         keywords={post.tags.join(", ")}
-        ogImage={post.coverImage || "https://dhanushranga.dev/og-image.png"}
+        ogImage={post.coverImage || "https://dhanushranga1.dev/og-image.png"}
         ogType="article"
-        canonicalUrl={`https://dhanushranga.dev/blog/${post.slug}`}
+        canonicalUrl={`https://dhanushranga1.dev/blog/${post.slug}`}
       />
       <BlogPostStructuredData
         title={post.title}
@@ -81,7 +81,7 @@ export default function BlogPost() {
         updatedAt={post.updatedAt}
         author={post.author.name}
         image={post.coverImage}
-        url={`https://dhanushranga.dev/blog/${post.slug}`}
+        url={`https://dhanushranga1.dev/blog/${post.slug}`}
       />
       <div className="min-h-screen bg-terminal-bg text-terminal-text font-mono">
       {/* Cover Image */}

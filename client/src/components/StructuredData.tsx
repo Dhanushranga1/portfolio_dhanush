@@ -10,7 +10,7 @@ interface PersonStructuredDataProps {
 export function PersonStructuredData({
   name = 'Dhanush Ranga Gopisetty',
   jobTitle = 'Full-Stack Developer & AI Engineer',
-  url = 'https://dhanushranga.dev',
+  url = 'https://dhanushranga1.dev',
   sameAs = [
     'https://github.com/Dhanushranga1',
     'https://linkedin.com/in/dhanushranga',
@@ -88,18 +88,18 @@ export function BlogPostStructuredData({
       '@type': 'BlogPosting',
       headline: title,
       description,
-      image: image || 'https://dhanushranga.dev/og-image.png',
+      image: image || 'https://dhanushranga1.dev/og-image.png',
       datePublished: publishedAt,
       dateModified: updatedAt || publishedAt,
       author: {
         '@type': 'Person',
         name: author,
-        url: 'https://dhanushranga.dev',
+        url: 'https://dhanushranga1.dev',
       },
       publisher: {
         '@type': 'Person',
         name: author,
-        url: 'https://dhanushranga.dev',
+        url: 'https://dhanushranga1.dev',
       },
       mainEntityOfPage: {
         '@type': 'WebPage',

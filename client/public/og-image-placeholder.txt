@@ -5,6 +5,6 @@
   Your OG image should include:
   - Your name: Dhanush Ranga Gopisetty
   - Title: Full-Stack Developer & AI Engineer
-  - Your domain: dhanushranga.dev
+  - Your domain: dhanushranga1.dev
   - Clean, professional design matching your terminal aesthetic
 -->

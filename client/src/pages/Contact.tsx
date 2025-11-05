@@ -28,12 +28,12 @@ export default function Contact() {
             className="space-y-4 font-mono text-sm"
           >
             <a
-              href="mailto:hello@dhanushranga.dev"
+              href="mailto:hello@dhanushranga1.dev"
               className="flex items-center gap-2 text-muted-foreground hover:text-accent-info transition-colors group"
               data-testid="link-email"
             >
               <Mail className="h-4 w-4" />
-              <span>email → hello@dhanushranga.dev <ExternalLink className="inline h-3 w-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" /></span>
+              <span>email → hello@dhanushranga1.dev <ExternalLink className="inline h-3 w-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" /></span>
             </a>
             <a
               href="https://discord.com"
