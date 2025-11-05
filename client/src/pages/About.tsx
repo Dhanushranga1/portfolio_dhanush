@@ -52,6 +52,63 @@ export default function About() {
             </div>
           </div>
 
+          {/* Tech Stack - Clean Categorized View */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-mono font-bold flex items-center gap-2">
+              <span className="text-accent-info">$</span> tech stack
+            </h2>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Languages & Core */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Code className="h-4 w-4 text-accent-info" />
+                  <h3 className="text-sm uppercase tracking-wider font-mono">languages & core</h3>
+                </div>
+                <div className="font-mono text-sm text-foreground pl-6">
+                  <p>python • typescript • javascript • sql</p>
+                  <p className="text-muted-foreground">java • c++ • bash</p>
+                </div>
+              </div>
+
+              {/* Frameworks */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Terminal className="h-4 w-4 text-accent-info" />
+                  <h3 className="text-sm uppercase tracking-wider font-mono">frameworks & libraries</h3>
+                </div>
+                <div className="font-mono text-sm text-foreground pl-6">
+                  <p>react • next.js • fastapi</p>
+                  <p className="text-muted-foreground">pandas • numpy • scikit-learn • transformers</p>
+                </div>
+              </div>
+
+              {/* Cloud & DevOps */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Cloud className="h-4 w-4 text-accent-info" />
+                  <h3 className="text-sm uppercase tracking-wider font-mono">cloud & devops</h3>
+                </div>
+                <div className="font-mono text-sm text-foreground pl-6">
+                  <p>aws • docker • kubernetes • terraform</p>
+                  <p className="text-muted-foreground">github actions • jenkins • ansible</p>
+                </div>
+              </div>
+
+              {/* Databases & Tools */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Database className="h-4 w-4 text-accent-info" />
+                  <h3 className="text-sm uppercase tracking-wider font-mono">databases & tools</h3>
+                </div>
+                <div className="font-mono text-sm text-foreground pl-6">
+                  <p>postgresql • supabase • faiss</p>
+                  <p className="text-muted-foreground">git • prometheus • grafana • langchain</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="space-y-4">
             <h2 className="text-xl font-bold">education</h2>
             <div className="space-y-2">
@@ -107,66 +164,6 @@ export default function About() {
                 <Mail className="h-4 w-4" />
                 <span>email <ExternalLink className="inline h-3 w-3 ml-1" /></span>
               </a>
-            </div>
-          </div>
-
-          {/* Tech Stack - Clean Categorized View */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-mono font-bold flex items-center gap-2">
-              <span className="text-accent-info">$</span> tech stack
-            </h2>
-            
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Languages & Core */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Code className="h-4 w-4 text-accent-info" />
-                  <h3 className="text-sm uppercase tracking-wider">languages & core</h3>
-                </div>
-                <div className="font-mono text-sm text-foreground space-y-1 pl-6">
-                  <p>• python, typescript, javascript</p>
-                  <p>• sql, java, c++, bash</p>
-                </div>
-              </div>
-
-              {/* Frameworks */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Terminal className="h-4 w-4 text-accent-info" />
-                  <h3 className="text-sm uppercase tracking-wider">frameworks</h3>
-                </div>
-                <div className="font-mono text-sm text-foreground space-y-1 pl-6">
-                  <p>• react, next.js, fastapi</p>
-                  <p>• sqlalchemy, pandas, numpy</p>
-                  <p>• scikit-learn, transformers</p>
-                </div>
-              </div>
-
-              {/* Cloud & DevOps */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Cloud className="h-4 w-4 text-accent-info" />
-                  <h3 className="text-sm uppercase tracking-wider">cloud & devops</h3>
-                </div>
-                <div className="font-mono text-sm text-foreground space-y-1 pl-6">
-                  <p>• aws (ec2, s3, rds, lambda)</p>
-                  <p>• docker, kubernetes, terraform</p>
-                  <p>• github actions, jenkins</p>
-                </div>
-              </div>
-
-              {/* Databases & Tools */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Database className="h-4 w-4 text-accent-info" />
-                  <h3 className="text-sm uppercase tracking-wider">databases & tools</h3>
-                </div>
-                <div className="font-mono text-sm text-foreground space-y-1 pl-6">
-                  <p>• postgresql, supabase, faiss</p>
-                  <p>• git, prometheus, grafana</p>
-                  <p>• ansible, langchain</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>

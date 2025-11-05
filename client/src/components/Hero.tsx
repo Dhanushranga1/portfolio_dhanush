@@ -8,10 +8,10 @@ export default function Hero() {
 
   // Main hero UI
   return (
-    <section className="min-h-screen flex items-center justify-center px-6">
-      <div className="max-w-2xl text-center space-y-8">
+    <section className="h-screen flex items-center justify-center px-6 overflow-hidden">
+      <div className="max-w-3xl text-center space-y-6">
         {/* Username/Title with typing animation */}
-        <h1 className="text-4xl md:text-5xl font-mono font-bold tracking-tight">
+        <h1 className="text-5xl md:text-6xl font-mono font-bold tracking-tight">
           <span className="text-accent-info">$ </span>
           {shouldReduceMotion ? (
             <>dhanushranga1</>
@@ -25,12 +25,12 @@ export default function Hero() {
         
         {/* Bio - staggered entry */}
         <motion.p 
-          className="text-base md:text-lg font-mono text-muted-foreground leading-relaxed"
+          className="text-lg md:text-xl font-mono text-muted-foreground leading-relaxed max-w-2xl mx-auto"
           initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.4, duration: 0.15 }}
         >
-          <span className="text-text-primary">~</span> hey there! i'm dhanush, i like building things
+          <span className="text-accent-info">~</span> computer science student passionate about ai/ml & full-stack development
         </motion.p>
 
         {/* Quick links with underline reveal effect - staggered entry */}
