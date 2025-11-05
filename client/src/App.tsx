@@ -7,7 +7,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import TerminalNavbar from "@/components/TerminalNavbar";
 import CommandHints from "@/components/CommandHints";
 import CommandPalette from "@/components/CommandPalette";
-import BootSequence from "@/components/BootSequence";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Projects from "@/pages/Projects";
@@ -43,7 +42,6 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
         <TooltipProvider>
-          <BootSequence />
           <div className="min-h-screen flex flex-col bg-background text-foreground">
             <TerminalNavbar />
             <CommandHints />
