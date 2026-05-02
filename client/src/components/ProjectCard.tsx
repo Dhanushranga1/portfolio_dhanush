@@ -8,10 +8,9 @@ import CardPrimitive, {
   CardFooter,
 } from "@/components/primitives/CardPrimitive";
 
-const TRUNCATE_AT = 180;
-
 interface ProjectCardProps {
   title: string;
+  summary: string;
   description: string;
   image?: string;
   tags: string[];
@@ -27,6 +26,7 @@ const ProjectCard = forwardRef<HTMLLIElement, ProjectCardProps>(
   (
     {
       title,
+      summary,
       description,
       tags,
       liveUrl,
@@ -38,13 +38,7 @@ const ProjectCard = forwardRef<HTMLLIElement, ProjectCardProps>(
     },
     ref
   ) => {
-    const isLong = description.length > TRUNCATE_AT;
     const [expanded, setExpanded] = useState(false);
-
-    const displayDescription =
-      isLong && !expanded
-        ? description.slice(0, TRUNCATE_AT).trimEnd() + "…"
-        : description;
 
     const statusColors = {
       deployed: "text-green-500 bg-green-500/10 border-green-500/30",
@@ -72,7 +66,7 @@ const ProjectCard = forwardRef<HTMLLIElement, ProjectCardProps>(
           className="group text-sm pl-6 transition-all duration-200 hover:bg-surface-2/50"
         >
           <CardContent spacing="md">
-            {/* Status, Number, and Title */}
+            {/* Status, Number, Title */}
             <CardHeader className="mb-2">
               {projectNumber && (
                 <span className="text-muted-foreground font-bold min-w-[2ch] text-right">
@@ -88,15 +82,13 @@ const ProjectCard = forwardRef<HTMLLIElement, ProjectCardProps>(
               <CardTitle
                 level={3}
                 className="text-lg md:text-xl font-semibold flex-1 min-w-[200px]"
-                data-testid={`text-project-title-${title
-                  .toLowerCase()
-                  .replace(/\s+/g, "-")}`}
+                data-testid={`text-project-title-${title.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 {title}
               </CardTitle>
             </CardHeader>
 
-            {/* Impact Statement */}
+            {/* Impact */}
             {impact && (
               <p className="text-accent-info/90 pl-8 leading-[1.5] mb-3 text-[0.9rem] font-medium">
                 <span className="text-muted-foreground"># </span>
@@ -104,25 +96,24 @@ const ProjectCard = forwardRef<HTMLLIElement, ProjectCardProps>(
               </p>
             )}
 
-            {/* Description with expand toggle */}
+            {/* Description: summary → full on expand */}
             <div className="pl-8 mb-4">
               <CardDescription className="leading-[1.6] text-[0.9rem]">
-                {displayDescription}
+                {expanded ? description : summary}
               </CardDescription>
-              {isLong && (
-                <button
-                  type="button"
-                  onClick={() => setExpanded(v => !v)}
-                  className="mt-1.5 flex items-center gap-1 text-[0.78rem] text-accent-info/70 hover:text-accent-info transition-colors duration-150 font-mono focus:outline-none focus-visible:underline"
-                  aria-expanded={expanded ? "true" : "false"}
-                >
-                  {expanded ? (
-                    <>show less <ChevronUp className="h-3 w-3" /></>
-                  ) : (
-                    <>show more <ChevronDown className="h-3 w-3" /></>
-                  )}
-                </button>
-              )}
+
+              <button
+                type="button"
+                onClick={() => setExpanded(v => !v)}
+                className="mt-2 flex items-center gap-1 text-[0.75rem] text-accent-info/60 hover:text-accent-info transition-colors duration-150 font-mono focus:outline-none focus-visible:underline"
+                aria-expanded={expanded}
+              >
+                {expanded ? (
+                  <>show less <ChevronUp className="h-3 w-3" /></>
+                ) : (
+                  <>technical details <ChevronDown className="h-3 w-3" /></>
+                )}
+              </button>
             </div>
 
             {/* Tags */}

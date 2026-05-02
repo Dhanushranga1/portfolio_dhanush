@@ -454,6 +454,145 @@ You don't need to sacrifice grades or projects. With intentional time management
         "Practical strategies for managing academic coursework while building real-world software projects as a Computer Science student.",
     },
   },
+
+  "building-casper-adaptive-rag": {
+    id: "7",
+    title: "Building CASPER: an adaptive RAG scoring algorithm",
+    slug: "building-casper-adaptive-rag",
+    excerpt:
+      "How I designed CASPER for TicketPilot — a custom RAG engine that classifies query intent across four types and adjusts retrieval strategy per query. Includes the experiment that cut overconfidence bias from 0.0028 → 0.0003.",
+    content: `## the problem with static RAG confidence
+
+Most RAG systems compute a single confidence score by averaging chunk similarities. That works fine for factual lookups like "what is the return policy?" but fails badly on troubleshooting queries where the answer requires synthesising multiple docs — the system either over-confidently assembles a wrong answer or under-confidently escalates every complex ticket to a human.
+
+In TicketPilot I needed the AI to escalate genuinely uncertain cases to a senior rep, not just anything it wasn't 100% sure about. A flat threshold set too high means every second ticket goes to a human. Too low and bad answers reach customers.
+
+## enter CASPER
+
+CASPER stands for Contextual Adaptive Scoring with Probabilistic Ensemble Ranking. The core idea is that different query types need different scoring strategies.
+
+Before scoring anything, CASPER classifies the query into one of four intents:
+
+- **factual** — "what is the cancellation policy?"
+- **procedural** — "how do I reset my 2FA?"
+- **troubleshooting** — "my login keeps failing after the update"
+- **comparison** — "what's the difference between the pro and free tier?"
+
+Each intent gets its own weights across seven scoring factors: retrieval confidence, citation rate, coherence, diversity, retrieval spread, KB density calibration, and a probabilistic confidence interval.
+
+## intent-adaptive retrieval
+
+A factual query needs high precision — one clear authoritative chunk. Troubleshooting needs breadth — you want diverse docs covering different angles of the problem. So the FAISS search headroom (how many extra candidates to pull before MMR selection) is 4x for troubleshooting, 2x for factual.
+
+The MMR lambda (which balances relevance vs. diversity) is 0.82 for factual (prefer relevant), 0.55 for troubleshooting (prefer diverse).
+
+## the overconfidence problem
+
+Before CASPER, the baseline system had an overconfidence score of 0.0028 — meaning it reported high confidence on tickets it ultimately escalated wrong. After implementing the intent-aware scoring with KB-density calibration and a retrieval-spread penalty, that dropped to 0.0003.
+
+The spread penalty specifically fixed a failure mode where a single very relevant chunk would dominate the score and push confidence artificially high, even though the answer was thin.
+
+## escalation F1: 0.71 vs 0.61
+
+The test suite had 24 scenarios × 7 weight configurations. CASPER's intent-aware weights hit an escalation F1 of 0.71 vs the 0.61 baseline — 16% fewer missed and false escalations. The improvement was largest on troubleshooting queries where the static system was most confused.
+
+## implementation notes
+
+The vectorised coherence and diversity scoring (np.matmul instead of loops) gave a 3–5x speedup on the scoring step. For the MMR inner loop, I used \`rem_unit @ sel_unit.T\` per greedy step instead of recomputing pairwise similarities from scratch.
+
+There's a 60-second per-org KB chunk count cache to eliminate the extra DB round-trip on every chat request, which was adding ~30ms per call under load.
+
+## what i'd do differently
+
+CASPER's intent classifier is rule-based + keyword-driven. A small fine-tuned model would be more robust on edge cases. The comparison intent in particular has false negatives when users phrase things without explicit comparison words.`,
+    coverImage: null,
+    category: { id: "2", name: "AI", slug: "ai" },
+    tags: ["rag", "faiss", "gemini", "python", "ticketpilot"],
+    featured: true,
+    publishedAt: "2025-04-10T10:00:00Z",
+    updatedAt: null,
+    readTime: 10,
+    author: {
+      name: "Dhanush Ranga",
+      bio: "Full-stack developer intern at Tonik. Building AI systems and agentic tools.",
+      avatar: null,
+    },
+    seo: {
+      metaTitle: "Building CASPER: an adaptive RAG scoring algorithm | Dhanush Ranga",
+      metaDescription:
+        "How CASPER classifies query intent and adapts retrieval strategy, MMR lambda, and escalation thresholds per query type — cutting overconfidence bias from 0.0028 to 0.0003.",
+    },
+  },
+
+  "natural-language-api-gateway-langgraph": {
+    id: "8",
+    title: "Natural language API gateway management with LangGraph",
+    slug: "natural-language-api-gateway-langgraph",
+    excerpt:
+      "Building Kong-Agentic at Tonik: how I wired LangGraph + Groq to Kong's Admin API, added dual-model routing, and a three-tier fallback so the tool never goes down even when the LLM rate-limits.",
+    content: `## why natural language for a gateway
+
+Kong is powerful but its Admin API has a steep learning curve — remembering the exact endpoint structure, payload shape, and plugin config schema for every operation. At Tonik I noticed the team was looking things up constantly for routine tasks like enabling plugins or adding consumers.
+
+The premise for Kong-Agentic was simple: what if you could just type "enable rate-limiting on the payments service at 100 requests per minute" and the system figures out the rest?
+
+## the architecture
+
+The core flow is: **Next.js frontend → WebSocket/REST → FastAPI backend → LangGraph agent → Kong Admin API**.
+
+FastAPI exposes a \`/api/agent/chat\` endpoint that routes each message through the agent pipeline. Every management action is auto-tracked as an Objective in an in-memory store with status: pending → completed / failed, so you always know what the system did.
+
+## dual-model routing
+
+Not every command needs a 70B model. "list services" is trivial. "create a banking service, enable key-auth, create three consumers with read/write/delete access on /customers" is complex multi-step reasoning.
+
+I set up dual-model routing in the LangGraph node:
+- Simple reads (list, show stats, export config) → llama-3.1-8b-instant via Groq (fast, cheap)
+- Compound writes (RBAC setup, multi-step plugin configs, cascade operations) → llama-3.3-70b-versatile
+
+The classifier is heuristic-based: if the parsed command has multiple action tokens or references role/group setup, it gets routed to the 70B model. Deterministic single-token commands skip the LLM entirely.
+
+## the deterministic short-circuit
+
+For unambiguous commands — "show stats", "list services", "export config" — there's no reason to call an LLM at all. A regex short-circuit matches these patterns and calls Kong directly. Response time for these is under 10ms vs 500–800ms for an LLM-routed call.
+
+This matters at scale and also means the tool works perfectly even if Groq is down or the key isn't set.
+
+## three-tier fallback
+
+This was probably the most important engineering decision. LLMs rate-limit, go down, or get expensive. I needed the tool to always work:
+
+1. **langgraph-groq** — full LangGraph ReAct agent with tool use (default)
+2. **degraded-fallback** — Groq rate-limited or timed out; drop to regex patterns, show a warning banner in the UI
+3. **no-key fallback** — no GROQ_API_KEY set at all; pure regex, zero LLM dependency
+
+The UI reflects which mode is active so the user knows if they're in degraded mode.
+
+## what this looks like in practice
+
+A single natural-language command like "create service banking at http://host.docker.internal:8080, enable key-auth, create consumers reader1, writer1, admin1 with read/write/delete access on /customers" triggers a full RBAC setup: service creation, method-scoped routes for each access level, ACL groups, and credential generation for all three consumers. The LangGraph agent chains the tool calls and handles the cascade ordering automatically.
+
+## what's next
+
+The main gap is workspace switching — Kong Enterprise has workspaces but OSS doesn't. I'm currently adding workspace emulation via service/route tagging so it reads as namespaced in the UI. Also planning plugin-config memory: if you've set rate-limiting once on a service type, the system should remember your preferred defaults.`,
+    coverImage: null,
+    category: { id: "2", name: "AI", slug: "ai" },
+    tags: ["langgraph", "groq", "kong", "fastapi", "agentic"],
+    featured: true,
+    publishedAt: "2025-03-18T09:00:00Z",
+    updatedAt: null,
+    readTime: 9,
+    author: {
+      name: "Dhanush Ranga",
+      bio: "Full-stack developer intern at Tonik. Building AI systems and agentic tools.",
+      avatar: null,
+    },
+    seo: {
+      metaTitle: "Natural language API gateway management with LangGraph | Dhanush Ranga",
+      metaDescription:
+        "How I built Kong-Agentic: LangGraph + Groq wired to Kong's Admin API with dual-model routing and a three-tier fallback chain.",
+    },
+  },
 };
 
 export const RELATED_POSTS = [

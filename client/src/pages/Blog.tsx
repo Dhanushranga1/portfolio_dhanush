@@ -1,543 +1,316 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Calendar, Clock, Tag, Search, Filter, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Clock, Search } from "lucide-react";
 import { SEO, seoConfigs } from "@/components/SEO";
-
-// For production, replace with: import { useBlogPosts, useBlogCategories } from "@/hooks/useStrapi";
-// For now, we'll use mock data since Strapi isn't set up yet
 
 type BlogPost = {
   id: string;
   title: string;
   slug: string;
   excerpt: string;
-  content: string;
-  coverImage: string | null;
-  category: {
-    id: string;
-    name: string;
-    slug: string;
-  } | null;
+  category: string;
   tags: string[];
   featured: boolean;
   publishedAt: string;
-  readTime: number; // in minutes
-  author: {
-    name: string;
-    avatar: string | null;
-  };
+  readTime: number;
 };
 
-type BlogCategory = {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  postCount: number;
-};
-
-// Mock data
-const MOCK_CATEGORIES: BlogCategory[] = [
+const POSTS: BlogPost[] = [
   {
     id: "1",
-    name: "Development",
-    slug: "development",
-    description: "Web frameworks, APIs, and best practices",
-    postCount: 2,
+    title: "Building CASPER: an adaptive RAG scoring algorithm",
+    slug: "building-casper-adaptive-rag",
+    excerpt:
+      "How I designed CASPER — a custom RAG engine for TicketPilot that classifies query intent across four types and adjusts retrieval strategy, MMR lambda, and escalation thresholds per query. Includes the experiment that cut overconfidence bias from 0.0028 → 0.0003.",
+    category: "AI",
+    tags: ["rag", "faiss", "gemini", "python", "ticketpilot"],
+    featured: true,
+    publishedAt: "2025-04-10T10:00:00Z",
+    readTime: 10,
   },
   {
     id: "2",
-    name: "AI",
-    slug: "ai",
-    description: "Machine Learning, LLMs, and applied AI workflows",
-    postCount: 2,
+    title: "Natural language API gateway management with LangGraph",
+    slug: "natural-language-api-gateway-langgraph",
+    excerpt:
+      "Building Kong-Agentic at Tonik: how I wired LangGraph + Groq to Kong's Admin API, added dual-model routing (8b for reads, 70b for writes), and a three-tier fallback chain so the tool never goes down even when the LLM rate-limits.",
+    category: "AI",
+    tags: ["langgraph", "groq", "kong", "fastapi", "agentic"],
+    featured: true,
+    publishedAt: "2025-03-18T09:00:00Z",
+    readTime: 9,
   },
   {
     id: "3",
-    name: "Career",
-    slug: "career",
-    description: "Personal growth, DevOps journey, student life",
-    postCount: 1,
-  },
-  {
-    id: "4",
-    name: "Tech",
-    slug: "tech",
-    description: "Open-source tools, utilities, and experiments",
-    postCount: 1,
-  },
-];
-
-const MOCK_POSTS: BlogPost[] = [
-  {
-    id: "1",
-    title: "Bringing AI to Everyday Projects",
+    title: "Bringing AI to everyday projects",
     slug: "bringing-ai-to-everyday-projects",
     excerpt:
-      "How I integrated AI models like GPT-4 and Mistral into real projects. A practical overview of combining LLMs with APIs to make smarter, context-aware applications.",
-    content: "Full content would be here...",
-    coverImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=600&fit=crop",
-    category: { id: "2", name: "AI", slug: "ai" },
+      "A practical overview of integrating GPT-4 and Mistral into real projects — combining LLMs with APIs to make smarter, context-aware applications without over-engineering.",
+    category: "AI",
     tags: ["ai", "llm", "fastapi", "automation"],
     featured: true,
     publishedAt: "2024-11-03T10:00:00Z",
     readTime: 7,
-    author: {
-      name: "Dhanush Ranga",
-      avatar: null,
-    },
-  },
-  {
-    id: "2",
-    title: "Deploying FastAPI Apps with Docker & Render",
-    slug: "deploying-fastapi-docker-render",
-    excerpt:
-      "A step-by-step breakdown of how I containerized and deployed my FastAPI apps using Docker and Render. Covers setup, CI/CD integration, and scaling best practices.",
-    content: "Full content would be here...",
-    coverImage: "https://images.unsplash.com/photo-1605745341112-85968b19335b?w=1200&h=600&fit=crop",
-    category: { id: "1", name: "Development", slug: "development" },
-    tags: ["fastapi", "docker", "backend", "deployment"],
-    featured: true,
-    publishedAt: "2024-11-06T14:30:00Z",
-    readTime: 9,
-    author: {
-      name: "Dhanush Ranga",
-      avatar: null,
-    },
-  },
-  {
-    id: "3",
-    title: "How I Built ScrubPy — A Data Cleaning Library in Python",
-    slug: "how-i-built-scrubpy",
-    excerpt:
-      "A behind-the-scenes look at ScrubPy — my open-source Python package for quick data cleaning. The motivation, design choices, and lessons from publishing to PyPI.",
-    content: "Full content would be here...",
-    coverImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=600&fit=crop",
-    category: { id: "4", name: "Tech", slug: "tech" },
-    tags: ["python", "pandas", "data-cleaning", "pypi"],
-    featured: true,
-    publishedAt: "2024-11-10T09:00:00Z",
-    readTime: 8,
-    author: {
-      name: "Dhanush Ranga",
-      avatar: null,
-    },
   },
   {
     id: "4",
-    title: "My Journey into Cloud & DevOps",
-    slug: "my-journey-cloud-devops",
+    title: "Deploying FastAPI apps with Docker and Render",
+    slug: "deploying-fastapi-docker-render",
     excerpt:
-      "Reflecting on my first real experience with AWS, Terraform, and Kubernetes. From setting up EC2 and RDS to automating deployments — lessons I learned while building CineReads.",
-    content: "Full content would be here...",
-    coverImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=600&fit=crop",
-    category: { id: "3", name: "Career", slug: "career" },
-    tags: ["cloud", "aws", "devops", "infrastructure"],
+      "A step-by-step breakdown of containerising and deploying FastAPI apps. Covers production Dockerfiles, CI/CD integration, connection timeout handling, and the specific quirks of Render's free tier.",
+    category: "Development",
+    tags: ["fastapi", "docker", "backend", "deployment"],
     featured: false,
-    publishedAt: "2024-11-13T11:00:00Z",
-    readTime: 10,
-    author: {
-      name: "Dhanush Ranga",
-      avatar: null,
-    },
+    publishedAt: "2024-11-06T14:30:00Z",
+    readTime: 9,
   },
   {
     id: "5",
-    title: "Building Smarter Search with FAISS and Gemini",
-    slug: "building-smarter-search-faiss-gemini",
+    title: "How I built ScrubPy — a data cleaning library in Python",
+    slug: "how-i-built-scrubpy",
     excerpt:
-      "Explaining how I used FAISS for semantic search and combined it with Gemini LLM to build a context-aware retrieval system in TicketPilot. Includes architecture and tuning notes.",
-    content: "Full content would be here...",
-    coverImage: "https://images.unsplash.com/photo-1523961131990-5ea7c61b2107?w=1200&h=600&fit=crop",
-    category: { id: "2", name: "AI", slug: "ai" },
-    tags: ["faiss", "gemini", "rag", "search"],
+      "Behind the scenes of ScrubPy: the motivation, design decisions, publishing to PyPI, and how I added a Streamlit web GUI plus an LLM chat interface on top of a pure pandas/numpy core.",
+    category: "Tech",
+    tags: ["python", "pandas", "data-cleaning", "pypi"],
     featured: false,
-    publishedAt: "2024-11-17T16:00:00Z",
-    readTime: 9,
-    author: {
-      name: "Dhanush Ranga",
-      avatar: null,
-    },
+    publishedAt: "2024-11-10T09:00:00Z",
+    readTime: 8,
   },
   {
     id: "6",
-    title: "Balancing Studies and Real Projects",
+    title: "Building smarter search with FAISS and Gemini",
+    slug: "building-smarter-search-faiss-gemini",
+    excerpt:
+      "How I used FAISS for semantic vector search and combined it with Gemini embeddings to build context-aware retrieval in TicketPilot — including cold-start persistence via binary snapshots in PostgreSQL.",
+    category: "AI",
+    tags: ["faiss", "gemini", "rag", "search", "postgresql"],
+    featured: false,
+    publishedAt: "2024-11-17T16:00:00Z",
+    readTime: 9,
+  },
+  {
+    id: "7",
+    title: "My journey into cloud and DevOps",
+    slug: "my-journey-cloud-devops",
+    excerpt:
+      "Reflecting on my first real experience with AWS, Terraform, and Kubernetes while building CineReads — from EC2 and RDS basics to automating deployments and learning what actually breaks in production.",
+    category: "Career",
+    tags: ["cloud", "aws", "devops", "kubernetes", "terraform"],
+    featured: false,
+    publishedAt: "2024-11-13T11:00:00Z",
+    readTime: 10,
+  },
+  {
+    id: "8",
+    title: "Balancing studies and real projects",
     slug: "balancing-studies-real-projects",
     excerpt:
-      "As a Computer Science student, managing academic load and real-world projects is tricky. Here's how I balance both — planning, learning from mentors, and turning coursework into portfolio-ready work.",
-    content: "Full content would be here...",
-    coverImage: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&h=600&fit=crop",
-    category: { id: "3", name: "Career", slug: "career" },
-    tags: ["student-life", "projects", "productivity", "learning"],
+      "Managing a 9.06 CGPA alongside production-grade side projects isn't magic — it's planning, saying no to the wrong things, and learning to treat coursework as a launchpad, not a ceiling.",
+    category: "Career",
+    tags: ["student-life", "productivity", "learning"],
     featured: false,
     publishedAt: "2024-11-20T13:00:00Z",
     readTime: 6,
-    author: {
-      name: "Dhanush Ranga",
-      avatar: null,
-    },
   },
 ];
 
-export default function Blog() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [filterFeatured, setFilterFeatured] = useState(false);
+const CATEGORIES = ["All", "AI", "Development", "Tech", "Career"];
 
-  // Filter posts
-  const filteredPosts = MOCK_POSTS.filter((post) => {
-    const matchesSearch =
-      searchQuery === "" ||
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    
-    const matchesCategory = !selectedCategory || post.category?.slug === selectedCategory;
-    const matchesFeatured = !filterFeatured || post.featured;
+const categoryColors: Record<string, string> = {
+  AI:          "text-purple-300 bg-purple-400/8 border-purple-400/25",
+  Development: "text-blue-300 bg-blue-400/8 border-blue-400/25",
+  Tech:        "text-accent-info bg-accent-info/8 border-accent-info/25",
+  Career:      "text-orange-300 bg-orange-400/8 border-orange-400/25",
+};
 
-    return matchesSearch && matchesCategory && matchesFeatured;
+function fmt(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
   });
+}
 
-  const featuredPosts = MOCK_POSTS.filter((p) => p.featured).slice(0, 3);
+export default function Blog() {
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+
+  const filtered = POSTS.filter((p) => {
+    const q = search.toLowerCase();
+    const matchSearch =
+      !q ||
+      p.title.toLowerCase().includes(q) ||
+      p.excerpt.toLowerCase().includes(q) ||
+      p.tags.some((t) => t.includes(q));
+    const matchCat = category === "All" || p.category === category;
+    return matchSearch && matchCat;
+  });
 
   return (
     <>
       <SEO {...seoConfigs.blog} />
-      <div className="min-h-screen bg-terminal-bg text-terminal-text pt-24 pb-20 px-6">
-      <div className="container mx-auto max-w-6xl space-y-12">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h1 className="text-3xl md:text-4xl font-bold text-accent-info mb-3">
-            <span className="text-accent-info/70">$</span> cat ~/blog
-          </h1>
-          <p className="text-terminal-text-dim text-base md:text-lg max-w-[65ch]" style={{ lineHeight: '1.6' }}>
-            thoughts on development, design, and technology —{" "}
-            <span className="text-accent-info/80">
-              {filteredPosts.length} {filteredPosts.length === 1 ? "entry" : "entries"}
-            </span>
-          </p>
-        </motion.div>
+      <div className="min-h-screen pt-24 pb-32 px-6">
+        <div className="max-w-3xl mx-auto">
 
-        {/* Featured Posts */}
-        {!searchQuery && !selectedCategory && !filterFeatured && featuredPosts.length > 0 && (
+          {/* Header */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="space-y-6"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.18 }}
+            className="mb-12"
           >
-            <h2 className="text-2xl font-semibold text-accent-info">
-              <span className="text-accent-info/70">$</span> ls -la featured/
-            </h2>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {featuredPosts.map((post, idx) => (
-                <motion.div
-                  key={post.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.2 + idx * 0.1 }}
-                >
-                  <Link href={`/blog/${post.slug}`}>
-                    <Card className="terminal-card h-full overflow-hidden cursor-pointer group hover:border-accent-info/50 hover:bg-surface-2/30 transition-all duration-200">
-                      <div className="aspect-video relative overflow-hidden bg-terminal-bg-alt border-b border-border/30">
-                        {post.coverImage ? (
-                          <img
-                            src={post.coverImage}
-                            alt={post.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-terminal-text-dim">
-                            No cover image
-                          </div>
-                        )}
-                        <Badge
-                          variant="secondary"
-                          className="absolute top-3 right-3 uppercase tracking-wider bg-amber-950/50 text-amber-400 border-amber-400/30 font-medium backdrop-blur-sm"
-                        >
-                          Featured
-                        </Badge>
-                      </div>
-                      <div className="p-5 space-y-3">
-                        {post.category && (
-                          <Badge variant="secondary" className="text-xs uppercase tracking-wider bg-[#064E3B] text-[#10B981] border-[#10B981]/30 font-medium">
-                            {post.category.name}
-                          </Badge>
-                        )}
-                        <h3 className="text-xl font-semibold text-accent-info group-hover:text-accent-info/80 transition-colors line-clamp-2" style={{ lineHeight: '1.4' }}>
-                          {post.title}
-                        </h3>
-                        <p className="text-[0.95rem] text-terminal-text-dim/90 line-clamp-3" style={{ lineHeight: '1.6' }}>
-                          {post.excerpt}
-                        </p>
-                        <div className="flex items-center gap-3 text-xs text-terminal-text-dim/80 pt-3 border-t border-border/30">
-                          <span className="flex items-center gap-1.5">
-                            <Clock className="h-3.5 w-3.5" />
-                            {post.readTime} min
-                          </span>
-                          <span className="flex items-center gap-1.5">
-                            <Calendar className="h-3.5 w-3.5" />
-                            {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                            })}
-                          </span>
-                        </div>
-                      </div>
-                    </Card>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Categories */}
-        {!searchQuery && !selectedCategory && !filterFeatured && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="space-y-6"
-          >
-            <h2 className="text-2xl font-semibold text-accent-info">
-              <span className="text-accent-info/70">$</span> ls categories/
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {MOCK_CATEGORIES.map((category, idx) => (
-                <motion.div
-                  key={category.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.4 + idx * 0.1 }}
-                >
-                  <Link href={`/blog?category=${category.slug}`}>
-                    <Card className="terminal-card p-5 cursor-pointer group hover:border-accent-info/50 hover:bg-surface-2/30 transition-all duration-200 h-full">
-                      <div className="flex items-start justify-between mb-3">
-                        <Tag className="h-5 w-5 text-accent-info/70 group-hover:text-accent-info transition-colors" />
-                        <Badge variant="secondary" className="text-xs bg-surface-2 text-accent-info/80 border border-border/50 font-medium">
-                          {category.postCount}
-                        </Badge>
-                      </div>
-                      <h3 className="font-bold text-lg text-accent-info group-hover:text-accent-info/80 transition-colors mb-2">
-                        {category.name}
-                      </h3>
-                      <p className="text-sm text-terminal-text-dim/90 line-clamp-2" style={{ lineHeight: '1.6' }}>
-                        {category.description}
-                      </p>
-                    </Card>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Search and Filters */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="terminal-card p-5 mb-8 space-y-4"
-        >
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-terminal-text-dim" />
-            <Input
-              type="text"
-              placeholder="Search posts by title, content, or tags..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-terminal-bg-alt border-terminal-border focus:border-accent-info/50 focus:ring-2 focus:ring-accent-info/20 transition-all duration-200"
-            />
-          </div>
-
-          {/* Filters */}
-          <div className="flex flex-wrap gap-3 items-center">
-            {/* Category Filter */}
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-terminal-text-dim" />
-              <Select
-                value={selectedCategory || "all"}
-                onValueChange={(v) => setSelectedCategory(v === "all" ? null : v)}
-              >
-                <SelectTrigger className="w-[180px] bg-terminal-bg-alt border-terminal-border">
-                  <SelectValue placeholder="All categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {MOCK_CATEGORIES.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.slug}>
-                      {cat.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Featured Filter */}
-            <Button
-              variant={filterFeatured ? "default" : "outline"}
-              size="sm"
-              onClick={() => setFilterFeatured(!filterFeatured)}
-              className={filterFeatured ? "bg-terminal-accent-yellow" : ""}
-            >
-              Featured Only
-            </Button>
-
-            {/* Clear Filters */}
-            {(searchQuery || selectedCategory || filterFeatured) && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setSearchQuery("");
-                  setSelectedCategory(null);
-                  setFilterFeatured(false);
-                }}
-                className="ml-auto"
-              >
-                Clear Filters
-              </Button>
-            )}
-          </div>
-
-          {/* Active Category */}
-          {selectedCategory && (
-            <div className="pt-2 border-t border-terminal-border">
-              <span className="text-sm text-terminal-text-dim">Viewing: </span>
-              <Badge variant="secondary">
-                {MOCK_CATEGORIES.find((c) => c.slug === selectedCategory)?.name}
-              </Badge>
-            </div>
-          )}
-        </motion.div>
-
-        {/* Posts List */}
-        {filteredPosts.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="terminal-card p-12 text-center"
-          >
-            <p className="text-terminal-text-dim text-lg">
-              No posts found matching your criteria
+            <h1 className="text-4xl md:text-5xl font-mono font-bold mb-3">
+              <span className="text-accent-info">$</span> cat ~/blog
+            </h1>
+            <p className="text-sm font-mono text-muted-foreground">
+              {filtered.length} {filtered.length === 1 ? "entry" : "entries"} · thoughts on ai, systems, and shipping things
             </p>
           </motion.div>
-        ) : (
-          <div className="space-y-5">
-            {filteredPosts.map((post, idx) => (
-              <motion.div
-                key={post.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: Math.min(0.6 + idx * 0.1, 1.2) }}
-              >
-                <Link href={`/blog/${post.slug}`}>
-                  <Card className="terminal-card overflow-hidden cursor-pointer group hover:border-l-4 hover:border-l-accent-info hover:border-accent-info/50 hover:bg-surface-2/30 transition-all duration-200">
-                    <div className="flex flex-col md:flex-row gap-6 p-6">
-                      {/* Cover Image */}
-                      {post.coverImage && (
-                        <div className="md:w-64 flex-shrink-0">
-                          <div className="aspect-video relative overflow-hidden bg-terminal-bg-alt rounded border border-border/30">
-                            <img
-                              src={post.coverImage}
-                              alt={post.title}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                              loading="lazy"
-                            />
-                          </div>
-                        </div>
+
+          {/* Search + category filter */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.18, delay: 0.06 }}
+            className="space-y-4 mb-10"
+          >
+            {/* Search */}
+            <div className="relative font-mono">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/50" />
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="search posts, tags…"
+                className="w-full pl-9 pr-4 py-2 text-sm bg-surface-2/50 border border-border/40 rounded focus:outline-none focus:border-accent-info/40 text-foreground placeholder:text-muted-foreground/40 transition-colors duration-150"
+              />
+            </div>
+
+            {/* Category pills */}
+            <div className="flex flex-wrap gap-2 font-mono text-xs">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setCategory(cat)}
+                  className={`px-2.5 py-1 rounded border transition-colors duration-150 ${
+                    category === cat
+                      ? "bg-accent-info text-surface border-accent-info font-semibold"
+                      : "border-border/40 text-muted-foreground hover:text-accent-info hover:border-accent-info/30"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+              {(search || category !== "All") && (
+                <button
+                  type="button"
+                  onClick={() => { setSearch(""); setCategory("All"); }}
+                  className="px-2.5 py-1 rounded border border-border/40 text-muted-foreground/50 hover:text-accent-warn hover:border-accent-warn/30 transition-colors duration-150"
+                >
+                  ✕ clear
+                </button>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Post list */}
+          {filtered.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="font-mono text-sm text-muted-foreground py-12 text-center"
+            >
+              <p><span className="text-accent-action">$</span> no posts match &quot;{search}&quot;</p>
+              <p className="text-xs mt-1 opacity-60">// try a different search term</p>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.18, delay: 0.1 }}
+              className="space-y-px"
+            >
+              {filtered.map((post, i) => (
+                <motion.div
+                  key={post.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.15, delay: 0.12 + i * 0.04 }}
+                >
+                  <Link href={`/blog/${post.slug}`}>
+                    <div className="group relative py-5 border-b border-border/20 cursor-pointer hover:bg-surface-2/30 -mx-4 px-4 rounded transition-colors duration-150">
+
+                      {/* Featured accent */}
+                      {post.featured && (
+                        <span
+                          className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-accent-info/60 rounded-r"
+                          aria-label="featured"
+                        />
                       )}
 
-                      {/* Content */}
-                      <div className="flex-1 space-y-3">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-3">
-                              {post.category && (
-                                <Badge 
-                                  variant="secondary" 
-                                  className="text-xs uppercase tracking-wider bg-[#064E3B] text-[#10B981] border-[#10B981]/30 font-medium"
-                                >
-                                  {post.category.name}
-                                </Badge>
-                              )}
-                              {post.featured && (
-                                <Badge
-                                  variant="secondary"
-                                  className="text-xs uppercase tracking-wider bg-amber-950/50 text-amber-400 border-amber-400/30 font-medium"
-                                >
-                                  Featured
-                                </Badge>
-                              )}
-                            </div>
-                            <h2 className="text-xl md:text-2xl font-semibold text-accent-info mb-3 group-hover:text-accent-info/80 transition-colors" style={{ lineHeight: '1.4' }}>
-                              {post.title}
-                            </h2>
-                            <p className="text-[0.95rem] text-terminal-text-dim/90 mb-4 line-clamp-2" style={{ lineHeight: '1.6' }}>
-                              {post.excerpt}
-                            </p>
-                          </div>
-                          <ChevronRight className="h-5 w-5 text-terminal-text-dim group-hover:text-accent-info transition-colors flex-shrink-0 mt-1" />
-                        </div>
-
-                        {/* Tags */}
-                        <div className="flex flex-wrap gap-2">
-                          {post.tags.map((tag) => (
-                            <Badge key={tag} variant="outline" className="text-xs bg-surface-2 text-terminal-text-dim/80 border-border/50 hover:border-accent-info/50 transition-colors">
-                              <Tag className="h-3 w-3 mr-1" />
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-
-                        {/* Meta */}
-                        <div className="flex items-center gap-4 text-xs text-terminal-text-dim/80 pt-3 border-t border-border/30">
-                          <span className="flex items-center gap-1.5">
-                            <Calendar className="h-3.5 w-3.5" />
-                            {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })}
-                          </span>
-                          <span className="flex items-center gap-1.5">
-                            <Clock className="h-3.5 w-3.5" />
-                            {post.readTime} min read
-                          </span>
-                          <span className="ml-auto text-accent-info/80 group-hover:text-accent-info group-hover:underline transition-colors">
-                            Read more →
-                          </span>
-                        </div>
+                      {/* Top row: category + date + read-time */}
+                      <div className="flex items-center gap-3 mb-2 font-mono text-xs text-muted-foreground">
+                        <span
+                          className={`px-2 py-0.5 rounded border text-[0.68rem] font-medium uppercase tracking-wider ${categoryColors[post.category] ?? ""}`}
+                        >
+                          {post.category}
+                        </span>
+                        <span>{fmt(post.publishedAt)}</span>
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {post.readTime}m
+                        </span>
+                        {post.featured && (
+                          <span className="text-accent-info/60 text-[0.65rem] uppercase tracking-widest ml-auto">featured</span>
+                        )}
                       </div>
+
+                      {/* Title */}
+                      <h2 className="font-mono font-semibold text-base text-foreground group-hover:text-accent-info transition-colors duration-150 mb-2 leading-snug">
+                        {post.title}
+                      </h2>
+
+                      {/* Excerpt */}
+                      <p className="font-mono text-xs text-muted-foreground leading-relaxed line-clamp-2 max-w-[65ch]">
+                        {post.excerpt}
+                      </p>
+
+                      {/* Tags */}
+                      <div className="flex flex-wrap gap-1.5 mt-3">
+                        {post.tags.map((t) => (
+                          <span
+                            key={t}
+                            className="font-mono text-[0.65rem] text-muted-foreground/60 bg-surface-2 border border-border/30 px-1.5 py-0.5 rounded"
+                          >
+                            #{t}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Hover arrow */}
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-accent-info opacity-0 group-hover:opacity-100 transition-opacity duration-150 font-mono text-sm">
+                        →
+                      </span>
                     </div>
-                  </Card>
-                </Link>
-              </motion.div>
-            ))}
+                  </Link>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+
+          {/* Footer */}
+          <div className="mt-12 pt-6 border-t border-border/20 font-mono text-xs text-muted-foreground/50">
+            <p>
+              <span className="text-accent-info">$</span> total {filtered.length} posts
+              {category !== "All" && ` in "${category}"`}
+              {search && ` matching "${search}"`}
+            </p>
           </div>
-        )}
+
+        </div>
       </div>
-    </div>
     </>
   );
 }
