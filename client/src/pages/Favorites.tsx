@@ -315,7 +315,7 @@ export default function Favorites() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <div className="min-h-screen bg-background text-foreground p-4 sm:p-6 lg:p-8 font-mono pb-32">
+      <div className="min-h-screen bg-background text-foreground pt-24 pb-20 px-6 font-mono">
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-8">
         <motion.div

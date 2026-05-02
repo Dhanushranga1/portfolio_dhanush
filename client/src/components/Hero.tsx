@@ -88,7 +88,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.4, duration: 0.15 }}
         >
-          <span className="text-accent-info">~</span> computer science student passionate about ai/ml & full-stack development
+          <span className="text-accent-info">~</span> full-stack dev intern @ tonik · srm ist · ai/ml · agentic systems
         </motion.p>
 
         {/* Quick links with underline reveal effect - staggered entry */}

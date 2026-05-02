@@ -215,8 +215,8 @@ export default function Blog() {
   return (
     <>
       <SEO {...seoConfigs.blog} />
-      <div className="min-h-screen bg-terminal-bg text-terminal-text pt-24 pb-16">
-      <div className="container mx-auto px-4 max-w-6xl space-y-12">
+      <div className="min-h-screen bg-terminal-bg text-terminal-text pt-24 pb-20 px-6">
+      <div className="container mx-auto max-w-6xl space-y-12">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

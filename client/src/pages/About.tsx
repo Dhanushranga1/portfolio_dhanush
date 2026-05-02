@@ -17,16 +17,16 @@ export default function About() {
         {/* Bio */}
         <div className="space-y-5 font-mono text-sm md:text-base leading-[1.6] text-foreground mb-16 max-w-[65ch]">
           <p className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-            hey there! i'm <span className="text-accent-info font-medium">dhanush ranga gopisetty</span> — a computer science student at srm institute of science and technology with a deep interest in ai/ml, system design, and full-stack engineering.
+            hey there! i'm <span className="text-accent-info font-medium">dhanush ranga gopisetty</span> — a final-year b.tech computer science student at srm institute of science and technology, kattankulathur, with a deep interest in ai/ml, system design, and full-stack engineering.
           </p>
           <p className="animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100">
-            currently maintaining a <span className="text-accent-info">9.06/10 cgpa</span> while building production-grade systems that bridge modern web technologies with intelligent automation. as an ai intern at deep algorithms solutions, i engineered fastapi endpoints for document-qa workflows and implemented neural architectures for medical image segmentation.
+            currently a <span className="text-accent-info">full-stack developer intern at tonik</span>, where i handle ai governance, api gateway management, and am building kong-agentic — a natural-language interface for kong oss api gateway powered by langgraph and groq. maintaining a <span className="text-accent-info">9.06/10 cgpa</span> while shipping production-grade systems.
           </p>
           <p className="animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200">
-            i enjoy creating intelligent platforms that blend data-driven reasoning with seamless user experiences. some of my projects include ai-powered support agents, movie-to-book recommendation systems, and open-source preprocessing libraries published on pypi.
+            i build intelligent platforms that blend data-driven reasoning with seamless ux — from multi-tenant saas with custom rag pipelines (ticketpilot) to agentic gateway management tools. open-source contributor with a pypi-published library and active fosshack participant.
           </p>
           <p className="animate-in fade-in slide-in-from-bottom-2 duration-500 delay-300">
-            outside code, you'll find me exploring cloud infrastructure patterns, contributing to fosshack 2024 & 2025, or studying how llms and vector databases shape the next generation of ai systems.
+            outside code, you'll find me exploring llm architectures, vector database internals, and how agentic systems are reshaping software infrastructure.
           </p>
         </div>
 
@@ -37,14 +37,32 @@ export default function About() {
             <h2 className="text-xl md:text-2xl font-semibold text-accent-info flex items-center gap-2">
               <span className="text-muted-foreground">$</span> experience
             </h2>
-            <div className="space-y-6">
+            <div className="space-y-8">
+
+              {/* Tonik */}
               <div className="space-y-2">
-                <div className="flex justify-between items-start">
+                <div className="flex justify-between items-start flex-wrap gap-1">
+                  <div>
+                    <h3 className="font-semibold">full-stack developer intern</h3>
+                    <p className="text-muted-foreground">tonik · on-site · chennai, india</p>
+                  </div>
+                  <span className="text-muted-foreground text-xs">jan 2026 – present</span>
+                </div>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <li>own ai governance layer and api gateway infrastructure for internal platform services</li>
+                  <li>building kong-agentic — a natural-language interface for kong oss using langgraph + groq with dual-model routing, deterministic short-circuit for simple commands, and full rbac/workspace management</li>
+                  <li>designed agentic fallback chain: langgraph-groq → degraded-regex fallback on rate-limit, zero downtime</li>
+                </ul>
+              </div>
+
+              {/* Deep Algorithms */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-start flex-wrap gap-1">
                   <div>
                     <h3 className="font-semibold">artificial intelligence intern</h3>
-                    <p className="text-muted-foreground">deep algorithms solutions • remote</p>
+                    <p className="text-muted-foreground">deep algorithms solutions · remote · hyderabad, india</p>
                   </div>
-                  <span className="text-muted-foreground text-xs">may 2025 – jun 2025</span>
+                  <span className="text-muted-foreground text-xs">jun 2025 – jul 2025</span>
                 </div>
                 <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                   <li>engineered fastapi endpoints for document qa using transformer embeddings, improving answer relevance by 40%</li>
@@ -52,6 +70,64 @@ export default function About() {
                   <li>automated data preparation pipelines, reducing manual processing time by 30%</li>
                 </ul>
               </div>
+
+              {/* Intel */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-start flex-wrap gap-1">
+                  <div>
+                    <h3 className="font-semibold">industrial trainee</h3>
+                    <p className="text-muted-foreground">intel corporation · remote · chennai, india</p>
+                  </div>
+                  <span className="text-muted-foreground text-xs">may 2024 – jul 2024</span>
+                </div>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <li>built gps toll-based system simulation using python and computer vision techniques</li>
+                  <li>applied industrial experience in embedded systems and real-world sensor data processing</li>
+                </ul>
+              </div>
+
+              {/* Ventura */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-start flex-wrap gap-1">
+                  <div>
+                    <h3 className="font-semibold">intern</h3>
+                    <p className="text-muted-foreground">ventura automation services inc · on-site · chennai, india</p>
+                  </div>
+                  <span className="text-muted-foreground text-xs">may 2024 – jun 2024</span>
+                </div>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <li>developed automation scripts in python and sql for internal data workflows</li>
+                </ul>
+              </div>
+
+              {/* Beyond Pages */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-start flex-wrap gap-1">
+                  <div>
+                    <h3 className="font-semibold">community connect intern</h3>
+                    <p className="text-muted-foreground">beyond pages trust · on-site · chennai, india</p>
+                  </div>
+                  <span className="text-muted-foreground text-xs">jun 2024 – jul 2024</span>
+                </div>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <li>led fundraising campaigns and managed outreach projects for community education initiatives</li>
+                </ul>
+              </div>
+
+              {/* RADIANCE SRMIST */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-start flex-wrap gap-1">
+                  <div>
+                    <h3 className="font-semibold">developer</h3>
+                    <p className="text-muted-foreground">radiance srmist · part-time · chennai, india</p>
+                  </div>
+                  <span className="text-muted-foreground text-xs">sep 2023 – oct 2024</span>
+                </div>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <li>drove technology initiatives and led development projects for the srmist student community</li>
+                </ul>
+              </div>
+
             </div>
           </div>
 
@@ -105,8 +181,8 @@ export default function About() {
                   <h3 className="text-sm uppercase tracking-wider font-mono">databases & tools</h3>
                 </div>
                 <div className="font-mono text-sm text-foreground pl-6">
-                  <p>postgresql • supabase • faiss</p>
-                  <p className="text-muted-foreground">git • prometheus • grafana • langchain</p>
+                  <p>postgresql • supabase • faiss • kong oss</p>
+                  <p className="text-muted-foreground">langchain • langgraph • groq • git • prometheus</p>
                 </div>
               </div>
             </div>

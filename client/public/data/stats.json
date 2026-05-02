@@ -11,13 +11,13 @@
   ],
   "metrics": [
     { "label": "projects", "value": 12 },
-    { "label": "tech stacks", "value": 8 },
+    { "label": "tech stacks", "value": 10 },
     { "label": "years exp", "value": 3 },
     { "label": "commits", "value": "2.4k" }
   ],
   "activity": {
-    "project": "TicketPilot v2.1",
+    "project": "Kong-Agentic @ Tonik",
     "status": "building",
-    "lastUpdated": "2025-11-04T10:30:00Z"
+    "lastUpdated": "2026-05-02T10:30:00Z"
   }
 }

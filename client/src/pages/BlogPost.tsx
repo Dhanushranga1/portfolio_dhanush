@@ -83,10 +83,10 @@ export default function BlogPost() {
         image={post.coverImage}
         url={`https://dhanushranga1.dev/blog/${post.slug}`}
       />
-      <div className="min-h-screen bg-terminal-bg text-terminal-text font-mono">
+      <div className="min-h-screen bg-terminal-bg text-terminal-text font-mono pt-24 pb-20">
       {/* Cover Image */}
       {post.coverImage && (
-        <div className="w-full aspect-[21/9] bg-terminal-bg-alt relative overflow-hidden">
+        <div className="w-full aspect-[21/9] bg-terminal-bg-alt relative overflow-hidden -mt-24">
           <img
             src={post.coverImage}
             alt={post.title}

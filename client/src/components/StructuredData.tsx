@@ -24,10 +24,6 @@ export function PersonStructuredData({
       jobTitle,
       url,
       sameAs,
-      alumniOf: {
-        '@type': 'CollegeOrUniversity',
-        name: 'George Mason University',
-      },
       knowsAbout: [
         'FastAPI',
         'React',

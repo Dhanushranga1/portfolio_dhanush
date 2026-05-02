@@ -6,12 +6,21 @@ import { useToast } from "@/hooks/use-toast";
 const allProjects = [
   {
     title: "ticketpilot",
-    description: "ai-powered multi-tenant support platform built with a rag pipeline and vector search, reducing response latency and manual intervention by 60%.",
-    impact: "reduced customer query resolution time by 60% across 50+ monthly tickets",
-    tags: ["FastAPI", "Next.js", "PostgreSQL", "Supabase", "FAISS", "Gemini LLM"],
+    description: "production-ready multi-tenant saas support platform with a custom adaptive rag engine (casper), automatic ai ticket routing, and real-time notifications. casper classifies query intent across four types and adjusts retrieval strategy per query — cutting overconfidence bias from 0.0028 → 0.0003 vs a static baseline. faiss index persists via binary snapshots in postgresql, recovering in ~50ms on cold start. dual connection-pool strategy (asyncpg + psycopg3) optimised for supabase's 5-connection free tier. ticket list latency: 3,200ms → 380ms after pooling + index tuning. escalation f1: 0.71 vs 0.61 baseline.",
+    impact: "ticket list latency 3,200ms → 380ms · escalation f1 +16% · faiss cold-start ~50ms · multi-tenant, unlimited orgs",
+    tags: ["Next.js 15", "FastAPI", "PostgreSQL", "Supabase", "FAISS", "Gemini", "shadcn/ui", "Framer Motion", "SendGrid"],
     liveUrl: "https://ticketpilot.vercel.app/",
     githubUrl: "https://github.com/Dhanushranga1/ticketpilot",
     status: "deployed" as const,
+  },
+  {
+    title: "kong-agentic",
+    description: "natural-language interface for kong oss api gateway. type plain english → fastapi backend → langgraph + groq agent → kong admin api. dual-model routing: simple reads use llama-3.1-8b-instant, compound writes use llama-3.3-70b-versatile. unambiguous commands hit a deterministic short-circuit and never call the llm. three-tier fallback: langgraph-groq → degraded-regex on rate-limit → pure regex with no key. every management action auto-tracked as an objective (pending → completed / failed). full rbac, hmac-auth, acl groups, workspace switching, config export.",
+    impact: "zero-downtime fallback chain · full kong rbac in one natural-language command · live at tonik",
+    tags: ["FastAPI", "Next.js", "LangGraph", "Groq", "Kong OSS", "PostgreSQL", "WebSocket"],
+    liveUrl: undefined,
+    githubUrl: undefined,
+    status: "active" as const,
   },
   {
     title: "cinereads",

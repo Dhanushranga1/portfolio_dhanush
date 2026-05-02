@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import TerminalNavbar from "@/components/TerminalNavbar";
 import CommandHints from "@/components/CommandHints";
 import CommandPalette from "@/components/CommandPalette";
+import PageTransition from "@/components/PageTransition";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Projects from "@/pages/Projects";
@@ -42,11 +43,13 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
         <TooltipProvider>
-          <div className="min-h-screen flex flex-col bg-background text-foreground">
+          <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
             <TerminalNavbar />
             <CommandHints />
-            <main className="flex-1 pb-24">
-              <Router />
+            <main id="main-content" className="flex-1 overflow-auto" tabIndex={-1}>
+              <PageTransition distance={10} mainId="main-content">
+                <Router />
+              </PageTransition>
             </main>
             <CommandPalette />
           </div>

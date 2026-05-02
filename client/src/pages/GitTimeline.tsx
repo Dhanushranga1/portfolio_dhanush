@@ -245,7 +245,7 @@ export default function GitTimeline() {
   };
 
   return (
-    <div className="min-h-screen bg-terminal-bg text-terminal-text font-mono p-6">
+    <div className="min-h-screen bg-terminal-bg text-terminal-text font-mono pt-24 pb-20 px-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="space-y-2">

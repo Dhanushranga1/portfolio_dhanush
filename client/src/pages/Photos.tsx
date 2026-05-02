@@ -241,7 +241,7 @@ export default function Photos() {
   const currentAlbum = MOCK_ALBUMS.find((a) => a.slug === selectedAlbum);
 
   return (
-    <div className="min-h-screen bg-terminal-bg text-terminal-text p-4 sm:p-6 lg:p-8 font-mono">
+    <div className="min-h-screen bg-terminal-bg text-terminal-text pt-24 pb-20 px-6 font-mono">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">

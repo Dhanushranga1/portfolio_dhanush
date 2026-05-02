@@ -11,15 +11,25 @@ export default {
         sm: ".1875rem", /* 3px */
       },
       colors: {
-        // Hybrid Terminal palette - semantic tokens
+        // Hybrid Terminal palette - semantic tokens (refined)
         terminal: {
           bg: "#121619",          // Near-black blue/grey
           text: "#d1e8e5",        // Off-white with teal tint
-          muted: "#4f4f4f",       // Dark grey for metadata
+          muted: "#9e9e9e",       // Accessible grey (4.52:1 contrast)
           accent: "#7fd0bd",      // Mint teal for links/prompts
           action: "#ea5c2a",      // Rust orange for CTAs
           warn: "#fb3f58",        // Rose red for warnings
         },
+        // New refined tokens from design spec
+        surface: "hsl(var(--surface) / <alpha-value>)",
+        "surface-2": "hsl(var(--surface-2) / <alpha-value>)",
+        "surface-contrast": "hsl(var(--surface-contrast) / <alpha-value>)",
+        "accent-info": "hsl(var(--accent-info) / <alpha-value>)",
+        "accent-info-muted": "hsl(var(--accent-info-muted) / <alpha-value>)",
+        "accent-action": "hsl(var(--accent-action) / <alpha-value>)",
+        "accent-warn": "hsl(var(--accent-warn) / <alpha-value>)",
+        "text-primary": "hsl(var(--text-primary) / <alpha-value>)",
+        "text-muted": "hsl(var(--text-muted) / <alpha-value>)",
         // Flat / base colors (regular buttons)
         background: "hsl(var(--background) / <alpha-value>)",
         foreground: "hsl(var(--foreground) / <alpha-value>)",
@@ -96,6 +106,14 @@ export default {
         display: ["Space Grotesk", "Inter", "sans-serif"],
         serif: ["var(--font-serif)"],
         mono: ["JetBrains Mono", "Fira Code", "Courier New", "monospace"],
+      },
+      transitionDuration: {
+        fast: "120ms",
+        medium: "150ms",
+        long: "200ms",
+      },
+      transitionTimingFunction: {
+        "motion-ease": "cubic-bezier(.2, .9, .25, 1)",
       },
       keyframes: {
         "accordion-down": {

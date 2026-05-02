@@ -49,11 +49,19 @@ export default function PageTransition({
   };
 
   // Focus management: focus main after route change + animation finishes
+  // Also scroll to top on route change
   useEffect(() => {
     if (!mountedRef.current) {
       mountedRef.current = true;
       return;
     }
+
+    // Scroll to top immediately on route change
+    const mainElement = document.getElementById(mainId);
+    if (mainElement) {
+      mainElement.scrollTo(0, 0);
+    }
+
     const timeout = window.setTimeout(() => {
       const el = document.getElementById(mainId);
       if (el) {

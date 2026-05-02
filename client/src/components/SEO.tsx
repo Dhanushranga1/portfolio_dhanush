@@ -11,8 +11,8 @@ interface SEOProps {
 
 export function SEO({
   title = 'Dhanush Ranga Gopisetty | Full-Stack Developer & AI Engineer',
-  description = 'Computer Science student at George Mason University building AI-powered applications with FastAPI, React, and modern web technologies.',
-  keywords = 'Dhanush Ranga, Full-Stack Developer, AI Engineer, FastAPI, React, Python, TypeScript',
+  description = 'Full-stack developer intern at Tonik, final-year B.Tech CSE student at SRM IST. Building AI-powered platforms with FastAPI, Next.js, LangGraph, and Kong API Gateway.',
+  keywords = 'Dhanush Ranga, Full-Stack Developer, AI Engineer, FastAPI, React, Python, TypeScript, LangGraph, Kong, SRM IST',
   ogImage = 'https://dhanushranga1.dev/og-image.png',
   ogType = 'website',
   canonicalUrl,
@@ -73,20 +73,20 @@ export function SEO({
 export const seoConfigs = {
   home: {
     title: 'Dhanush Ranga Gopisetty | Full-Stack Developer & AI Engineer',
-    description: 'Computer Science student at George Mason University building AI-powered applications with FastAPI, React, and modern web technologies. Explore my projects and technical blog.',
-    keywords: 'Dhanush Ranga, Full-Stack Developer, AI Engineer, FastAPI, React, Python, TypeScript, Web Development, Machine Learning',
+    description: 'Full-stack developer intern at Tonik, final-year B.Tech CSE at SRM IST Kattankulathur. Building AI platforms, agentic systems, and API gateway tools.',
+    keywords: 'Dhanush Ranga, Full-Stack Developer, AI Engineer, FastAPI, React, LangGraph, Kong, Python, TypeScript, SRM IST',
     canonicalUrl: 'https://dhanushranga1.dev/',
   },
   about: {
     title: 'About Me | Dhanush Ranga Gopisetty',
-    description: 'Learn about my journey as a Computer Science student at George Mason University, my technical skills, and my passion for building AI-powered web applications.',
-    keywords: 'Dhanush Ranga, About, George Mason University, Computer Science, Software Engineer',
+    description: 'Full-stack developer intern at Tonik. Final-year B.Tech CSE at SRM IST Kattankulathur (2022–2026), CGPA 9.06. AI governance, Kong API Gateway, LangGraph.',
+    keywords: 'Dhanush Ranga, About, SRM IST, Computer Science, Software Engineer, Tonik, Kong, LangGraph',
     canonicalUrl: 'https://dhanushranga1.dev/about',
   },
   projects: {
     title: 'Projects | Dhanush Ranga Gopisetty',
-    description: 'Explore my portfolio of projects including TicketPilot, CineReads, ScrubPy, and more. Full-stack applications built with FastAPI, React, AI, and modern web technologies.',
-    keywords: 'Projects, Portfolio, TicketPilot, CineReads, ScrubPy, FastAPI, React, AI Projects',
+    description: 'Portfolio: TicketPilot (multi-tenant RAG support platform), Kong-Agentic (natural-language Kong OSS interface), CineReads, Mesh3, ScrubPy.',
+    keywords: 'Projects, Portfolio, TicketPilot, Kong-Agentic, CineReads, ScrubPy, FastAPI, React, AI, CASPER, LangGraph',
     canonicalUrl: 'https://dhanushranga1.dev/projects',
   },
   blog: {
