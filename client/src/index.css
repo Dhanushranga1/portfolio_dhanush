@@ -709,6 +709,43 @@
   margin-left: 0.1rem;
 }
 
+/* ============================================
+   CUSTOM SCROLLBAR
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--accent-info) / 0.25);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--accent-info) / 0.55);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--accent-info) / 0.25) transparent;
+}
+
+/* ============================================
+   SELECTION HIGHLIGHT
+   ============================================ */
+
+::selection {
+  background: hsl(var(--accent-info) / 0.2);
+  color: hsl(var(--foreground));
+}
+
 /* Homepage no-scroll scaling */
 .homepage-viewport {
   height: 100vh;

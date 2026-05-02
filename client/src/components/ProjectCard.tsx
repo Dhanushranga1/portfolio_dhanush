@@ -1,5 +1,5 @@
-import { forwardRef } from "react";
-import { ExternalLink, Github } from "lucide-react";
+import { forwardRef, useState } from "react";
+import { ExternalLink, Github, ChevronDown, ChevronUp } from "lucide-react";
 import CardPrimitive, {
   CardContent,
   CardHeader,
@@ -7,6 +7,8 @@ import CardPrimitive, {
   CardDescription,
   CardFooter,
 } from "@/components/primitives/CardPrimitive";
+
+const TRUNCATE_AT = 180;
 
 interface ProjectCardProps {
   title: string;
@@ -36,6 +38,14 @@ const ProjectCard = forwardRef<HTMLLIElement, ProjectCardProps>(
     },
     ref
   ) => {
+    const isLong = description.length > TRUNCATE_AT;
+    const [expanded, setExpanded] = useState(false);
+
+    const displayDescription =
+      isLong && !expanded
+        ? description.slice(0, TRUNCATE_AT).trimEnd() + "…"
+        : description;
+
     const statusColors = {
       deployed: "text-green-500 bg-green-500/10 border-green-500/30",
       active: "text-accent-info bg-accent-info/10 border-accent-info/30",
@@ -86,7 +96,7 @@ const ProjectCard = forwardRef<HTMLLIElement, ProjectCardProps>(
               </CardTitle>
             </CardHeader>
 
-            {/* Impact Statement as Comment */}
+            {/* Impact Statement */}
             {impact && (
               <p className="text-accent-info/90 pl-8 leading-[1.5] mb-3 text-[0.9rem] font-medium">
                 <span className="text-muted-foreground"># </span>
@@ -94,8 +104,26 @@ const ProjectCard = forwardRef<HTMLLIElement, ProjectCardProps>(
               </p>
             )}
 
-            {/* Description */}
-            <CardDescription className="pl-8 mb-4 leading-[1.6] text-[0.9rem]">{description}</CardDescription>
+            {/* Description with expand toggle */}
+            <div className="pl-8 mb-4">
+              <CardDescription className="leading-[1.6] text-[0.9rem]">
+                {displayDescription}
+              </CardDescription>
+              {isLong && (
+                <button
+                  type="button"
+                  onClick={() => setExpanded(v => !v)}
+                  className="mt-1.5 flex items-center gap-1 text-[0.78rem] text-accent-info/70 hover:text-accent-info transition-colors duration-150 font-mono focus:outline-none focus-visible:underline"
+                  aria-expanded={expanded ? "true" : "false"}
+                >
+                  {expanded ? (
+                    <>show less <ChevronUp className="h-3 w-3" /></>
+                  ) : (
+                    <>show more <ChevronDown className="h-3 w-3" /></>
+                  )}
+                </button>
+              )}
+            </div>
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2 pl-8 mb-3">
@@ -119,12 +147,9 @@ const ProjectCard = forwardRef<HTMLLIElement, ProjectCardProps>(
                   className="text-accent-info hover:text-accent-action transition-all duration-200 inline-flex items-center gap-1.5 group/link text-[0.85rem]"
                   aria-label={`Open live demo of ${title}`}
                 >
-                  <span className="group-hover/link:translate-x-0.5 transition-transform">
-                    →
-                  </span>
-                  <span className="group-hover/link:underline decoration-1 underline-offset-4">
-                    [live] 🔗
-                  </span>
+                  <span className="group-hover/link:translate-x-0.5 transition-transform">→</span>
+                  <span className="group-hover/link:underline decoration-1 underline-offset-4">[live]</span>
+                  <ExternalLink className="h-3 w-3 opacity-60" />
                 </a>
               )}
               {githubUrl && (
@@ -135,12 +160,9 @@ const ProjectCard = forwardRef<HTMLLIElement, ProjectCardProps>(
                   className="text-accent-info hover:text-accent-action transition-all duration-200 inline-flex items-center gap-1.5 group/link text-[0.85rem]"
                   aria-label={`View source code of ${title} on GitHub`}
                 >
-                  <span className="group-hover/link:translate-x-0.5 transition-transform">
-                    →
-                  </span>
-                  <span className="group-hover/link:underline decoration-1 underline-offset-4">
-                    [source] 💾
-                  </span>
+                  <span className="group-hover/link:translate-x-0.5 transition-transform">→</span>
+                  <Github className="h-3.5 w-3.5" />
+                  <span className="group-hover/link:underline decoration-1 underline-offset-4">[source]</span>
                 </a>
               )}
             </CardFooter>

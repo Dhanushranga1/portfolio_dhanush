@@ -82,7 +82,7 @@ export default function Hero() {
         </h1>
         
         {/* Bio - staggered entry */}
-        <motion.p 
+        <motion.p
           className="text-lg md:text-xl font-mono text-muted-foreground leading-relaxed max-w-2xl mx-auto"
           initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -91,8 +91,24 @@ export default function Hero() {
           <span className="text-accent-info">~</span> full-stack dev intern @ tonik · srm ist · ai/ml · agentic systems
         </motion.p>
 
+        {/* Now building badge */}
+        <motion.div
+          className="flex items-center justify-center"
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.7, duration: 0.15 }}
+        >
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent-info/20 bg-accent-info/5 font-mono text-xs text-muted-foreground">
+            <span className="relative flex h-1.5 w-1.5 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-info opacity-60" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent-info" />
+            </span>
+            now building: kong-agentic @ tonik
+          </span>
+        </motion.div>
+
         {/* Quick links with underline reveal effect - staggered entry */}
-        <motion.div 
+        <motion.div
           className="flex items-center justify-center gap-6 text-sm font-mono"
           initial={shouldReduceMotion ? false : "hidden"}
           animate="visible"
@@ -101,7 +117,7 @@ export default function Hero() {
             visible: {
               transition: {
                 staggerChildren: 0.08, // 80ms stagger
-                delayChildren: 1.6, // Start after tagline
+                delayChildren: 1.95, // Start after status badge
               }
             }
           }}
