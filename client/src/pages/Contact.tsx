@@ -1,34 +1,61 @@
 import ContactForm from "@/components/ContactForm";
 import { Mail, Github, Linkedin, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
+import { useSiteSettings } from "@/hooks/useStrapi";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const contacts = [
-  {
-    icon: Mail,
-    label: "email",
-    value: "dhanushrangag@gmail.com",
-    href: "mailto:dhanushrangag@gmail.com",
-    testId: "link-email",
-  },
-  {
-    icon: Github,
-    label: "github",
-    value: "dhanushranga1",
-    href: "https://github.com/dhanushranga1",
-    testId: "link-github",
-    external: true,
-  },
-  {
-    icon: Linkedin,
-    label: "linkedin",
-    value: "dhanush-ranga",
-    href: "https://linkedin.com/in/dhanush-ranga",
-    testId: "link-linkedin",
-    external: true,
-  },
-];
+function urlHandle(url: string) {
+  try {
+    return new URL(url).pathname.replace(/^\//, "") || url;
+  } catch {
+    return url;
+  }
+}
+
+type ContactLink = {
+  icon: typeof Mail;
+  label: string;
+  value: string;
+  href: string;
+  testId: string;
+  external?: boolean;
+};
 
 export default function Contact() {
+  const { data, isLoading } = useSiteSettings();
+  const settings = data?.data;
+
+  const contacts: ContactLink[] = [];
+  if (settings?.email) {
+    contacts.push({
+      icon: Mail,
+      label: "email",
+      value: settings.email,
+      href: `mailto:${settings.email}`,
+      testId: "link-email",
+    });
+  }
+  if (settings?.githubUrl) {
+    contacts.push({
+      icon: Github,
+      label: "github",
+      value: urlHandle(settings.githubUrl),
+      href: settings.githubUrl,
+      testId: "link-github",
+      external: true,
+    });
+  }
+  if (settings?.linkedinUrl) {
+    contacts.push({
+      icon: Linkedin,
+      label: "linkedin",
+      value: urlHandle(settings.linkedinUrl),
+      href: settings.linkedinUrl,
+      testId: "link-linkedin",
+      external: true,
+    });
+  }
+
   return (
     <div className="min-h-screen pt-24 pb-32 px-6">
       <div className="max-w-2xl mx-auto">
@@ -45,7 +72,7 @@ export default function Contact() {
             <span className="animate-pulse text-accent-info">_</span>
           </h1>
           <p className="text-sm font-mono text-muted-foreground">
-            open to collaboration, internship opportunities, and interesting conversations.
+            {settings?.contactIntro ?? "open to collaboration, internship opportunities, and interesting conversations."}
           </p>
         </motion.div>
 
@@ -58,7 +85,13 @@ export default function Contact() {
             transition={{ duration: 0.18, delay: 0.08 }}
             className="space-y-3 font-mono text-sm"
           >
-            {contacts.map(({ icon: Icon, label, value, href, testId, external }) => (
+            {isLoading ? (
+              <div className="space-y-3">
+                {[0, 1, 2].map((i) => (
+                  <Skeleton key={i} className="h-5 w-48" />
+                ))}
+              </div>
+            ) : contacts.map(({ icon: Icon, label, value, href, testId, external }) => (
               <a
                 key={testId}
                 href={href}

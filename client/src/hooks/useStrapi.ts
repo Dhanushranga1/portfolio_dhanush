@@ -1,21 +1,105 @@
 /**
  * React hooks for Strapi CMS integration
- * 
+ *
  * These hooks use React Query for caching and state management
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { STRAPI_CONFIG, getStrapiHeaders, buildStrapiQuery } from '@/lib/strapiConfig';
 import type {
+  ProjectsResponse,
+  ExperiencesResponse,
+  SkillsResponse,
+  HomePageResponse,
+  SiteSettingResponse,
   MoviesResponse,
   PhotosResponse,
   PhotoAlbumsResponse,
   BlogPostsResponse,
   BlogCategoriesResponse,
   MovieEntity,
-  PhotoEntity,
-  BlogPostEntity,
 } from '@shared/strapi-types';
+
+async function strapiFetch<T>(endpoint: string, query = ''): Promise<T> {
+  const response = await fetch(`${STRAPI_CONFIG.API_URL}${endpoint}${query}`, {
+    headers: getStrapiHeaders(),
+  });
+  if (!response.ok) {
+    throw new Error(`Strapi request failed (${response.status}): ${endpoint}`);
+  }
+  return response.json() as Promise<T>;
+}
+
+// ============================================================================
+// Projects
+// ============================================================================
+
+export function useProjects(options?: { featured?: boolean }) {
+  return useQuery({
+    queryKey: ['projects', options],
+    queryFn: () => {
+      const filters: Record<string, any> = {};
+      if (options?.featured !== undefined) filters.featured = options.featured;
+
+      const query = buildStrapiQuery({
+        populate: ['coverImage'],
+        filters,
+        sort: 'order:asc',
+      });
+      return strapiFetch<ProjectsResponse>(STRAPI_CONFIG.ENDPOINTS.PROJECTS, query);
+    },
+    enabled: !!STRAPI_CONFIG.API_URL,
+  });
+}
+
+// ============================================================================
+// Experience & Skills
+// ============================================================================
+
+export function useExperiences() {
+  return useQuery({
+    queryKey: ['experiences'],
+    queryFn: () => {
+      const query = buildStrapiQuery({ sort: 'order:asc' });
+      return strapiFetch<ExperiencesResponse>(STRAPI_CONFIG.ENDPOINTS.EXPERIENCES, query);
+    },
+    enabled: !!STRAPI_CONFIG.API_URL,
+  });
+}
+
+export function useSkills() {
+  return useQuery({
+    queryKey: ['skills'],
+    queryFn: () => {
+      const query = buildStrapiQuery({ sort: 'order:asc' });
+      return strapiFetch<SkillsResponse>(STRAPI_CONFIG.ENDPOINTS.SKILLS, query);
+    },
+    enabled: !!STRAPI_CONFIG.API_URL,
+  });
+}
+
+// ============================================================================
+// Home Page & Site Settings
+// ============================================================================
+
+export function useHomePage() {
+  return useQuery({
+    queryKey: ['home-page'],
+    queryFn: () => strapiFetch<HomePageResponse>(STRAPI_CONFIG.ENDPOINTS.HOME_PAGE),
+    enabled: !!STRAPI_CONFIG.API_URL,
+  });
+}
+
+export function useSiteSettings() {
+  return useQuery({
+    queryKey: ['site-setting'],
+    queryFn: () => {
+      const query = buildStrapiQuery({ populate: ['resumeFile'] });
+      return strapiFetch<SiteSettingResponse>(STRAPI_CONFIG.ENDPOINTS.SITE_SETTING, query);
+    },
+    enabled: !!STRAPI_CONFIG.API_URL,
+  });
+}
 
 // ============================================================================
 // Movies
@@ -28,27 +112,17 @@ export function useMovies(options?: {
 }) {
   return useQuery({
     queryKey: ['movies', options],
-    queryFn: async () => {
+    queryFn: () => {
       const filters: Record<string, any> = {};
       if (options?.favorite !== undefined) filters.favorite = options.favorite;
       if (options?.watched !== undefined) filters.watched = options.watched;
-      
+
       const query = buildStrapiQuery({
         populate: ['poster'],
         filters,
         sort: options?.sort || 'rating:desc',
       });
-      
-      const response = await fetch(
-        `${STRAPI_CONFIG.API_URL}${STRAPI_CONFIG.ENDPOINTS.MOVIES}${query}`,
-        { headers: getStrapiHeaders() }
-      );
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch movies: ${response.statusText}`);
-      }
-      
-      return response.json() as Promise<MoviesResponse>;
+      return strapiFetch<MoviesResponse>(STRAPI_CONFIG.ENDPOINTS.MOVIES, query);
     },
     enabled: !!STRAPI_CONFIG.API_URL,
   });
@@ -57,21 +131,9 @@ export function useMovies(options?: {
 export function useMovie(id: number) {
   return useQuery({
     queryKey: ['movie', id],
-    queryFn: async () => {
-      const query = buildStrapiQuery({
-        populate: ['poster'],
-      });
-      
-      const response = await fetch(
-        `${STRAPI_CONFIG.API_URL}${STRAPI_CONFIG.ENDPOINTS.MOVIES}/${id}${query}`,
-        { headers: getStrapiHeaders() }
-      );
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch movie: ${response.statusText}`);
-      }
-      
-      return response.json();
+    queryFn: () => {
+      const query = buildStrapiQuery({ populate: ['poster'] });
+      return strapiFetch<any>(`${STRAPI_CONFIG.ENDPOINTS.MOVIES}/${id}`, query);
     },
     enabled: !!id && !!STRAPI_CONFIG.API_URL,
   });
@@ -79,9 +141,9 @@ export function useMovie(id: number) {
 
 export function useAddMovie() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: async (movieData: Partial<MovieEntity['attributes']>) => {
+    mutationFn: async (movieData: Partial<MovieEntity>) => {
       const response = await fetch(
         `${STRAPI_CONFIG.API_URL}${STRAPI_CONFIG.ENDPOINTS.MOVIES}`,
         {
@@ -90,11 +152,11 @@ export function useAddMovie() {
           body: JSON.stringify({ data: movieData }),
         }
       );
-      
+
       if (!response.ok) {
         throw new Error(`Failed to add movie: ${response.statusText}`);
       }
-      
+
       return response.json();
     },
     onSuccess: () => {
@@ -109,32 +171,20 @@ export function useAddMovie() {
 
 export function usePhotos(options?: {
   albumId?: number;
-  featured?: boolean;
   sort?: string;
 }) {
   return useQuery({
     queryKey: ['photos', options],
-    queryFn: async () => {
+    queryFn: () => {
       const filters: Record<string, any> = {};
-      if (options?.featured !== undefined) filters.featured = options.featured;
-      if (options?.albumId) filters['album']['id'] = options.albumId;
-      
+      if (options?.albumId) filters.photo_album = { id: options.albumId };
+
       const query = buildStrapiQuery({
-        populate: ['image', 'album'],
+        populate: ['image', 'photo_album'],
         filters,
-        sort: options?.sort || 'capturedAt:desc',
+        sort: options?.sort || 'dateTaken:desc',
       });
-      
-      const response = await fetch(
-        `${STRAPI_CONFIG.API_URL}${STRAPI_CONFIG.ENDPOINTS.PHOTOS}${query}`,
-        { headers: getStrapiHeaders() }
-      );
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch photos: ${response.statusText}`);
-      }
-      
-      return response.json() as Promise<PhotosResponse>;
+      return strapiFetch<PhotosResponse>(STRAPI_CONFIG.ENDPOINTS.PHOTOS, query);
     },
     enabled: !!STRAPI_CONFIG.API_URL,
   });
@@ -143,22 +193,12 @@ export function usePhotos(options?: {
 export function usePhotoAlbums() {
   return useQuery({
     queryKey: ['photo-albums'],
-    queryFn: async () => {
+    queryFn: () => {
       const query = buildStrapiQuery({
         populate: ['coverImage', 'photos'],
-        sort: 'name:asc',
+        sort: 'title:asc',
       });
-      
-      const response = await fetch(
-        `${STRAPI_CONFIG.API_URL}${STRAPI_CONFIG.ENDPOINTS.PHOTO_ALBUMS}${query}`,
-        { headers: getStrapiHeaders() }
-      );
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch albums: ${response.statusText}`);
-      }
-      
-      return response.json() as Promise<PhotoAlbumsResponse>;
+      return strapiFetch<PhotoAlbumsResponse>(STRAPI_CONFIG.ENDPOINTS.PHOTO_ALBUMS, query);
     },
     enabled: !!STRAPI_CONFIG.API_URL,
   });
@@ -175,28 +215,18 @@ export function useBlogPosts(options?: {
 }) {
   return useQuery({
     queryKey: ['blog-posts', options],
-    queryFn: async () => {
+    queryFn: () => {
       const filters: Record<string, any> = {};
       if (options?.featured !== undefined) filters.featured = options.featured;
-      if (options?.categoryId) filters['category']['id'] = options.categoryId;
-      
+      if (options?.categoryId) filters.blog_category = { id: options.categoryId };
+
       const query = buildStrapiQuery({
-        populate: ['coverImage', 'category'],
+        populate: ['coverImage', 'blog_category'],
         filters,
         sort: 'publishedAt:desc',
         pagination: options?.limit ? { pageSize: options.limit } : undefined,
       });
-      
-      const response = await fetch(
-        `${STRAPI_CONFIG.API_URL}${STRAPI_CONFIG.ENDPOINTS.BLOG_POSTS}${query}`,
-        { headers: getStrapiHeaders() }
-      );
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch blog posts: ${response.statusText}`);
-      }
-      
-      return response.json() as Promise<BlogPostsResponse>;
+      return strapiFetch<BlogPostsResponse>(STRAPI_CONFIG.ENDPOINTS.BLOG_POSTS, query);
     },
     enabled: !!STRAPI_CONFIG.API_URL,
   });
@@ -207,21 +237,11 @@ export function useBlogPost(slug: string) {
     queryKey: ['blog-post', slug],
     queryFn: async () => {
       const query = buildStrapiQuery({
-        populate: ['coverImage', 'category'],
+        populate: ['coverImage', 'blog_category'],
         filters: { slug },
       });
-      
-      const response = await fetch(
-        `${STRAPI_CONFIG.API_URL}${STRAPI_CONFIG.ENDPOINTS.BLOG_POSTS}${query}`,
-        { headers: getStrapiHeaders() }
-      );
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch blog post: ${response.statusText}`);
-      }
-      
-      const data = await response.json() as BlogPostsResponse;
-      return data.data[0]; // Return first match
+      const data = await strapiFetch<BlogPostsResponse>(STRAPI_CONFIG.ENDPOINTS.BLOG_POSTS, query);
+      return data.data[0] ?? null;
     },
     enabled: !!slug && !!STRAPI_CONFIG.API_URL,
   });
@@ -230,21 +250,9 @@ export function useBlogPost(slug: string) {
 export function useBlogCategories() {
   return useQuery({
     queryKey: ['blog-categories'],
-    queryFn: async () => {
-      const query = buildStrapiQuery({
-        sort: 'name:asc',
-      });
-      
-      const response = await fetch(
-        `${STRAPI_CONFIG.API_URL}${STRAPI_CONFIG.ENDPOINTS.BLOG_CATEGORIES}${query}`,
-        { headers: getStrapiHeaders() }
-      );
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch categories: ${response.statusText}`);
-      }
-      
-      return response.json() as Promise<BlogCategoriesResponse>;
+    queryFn: () => {
+      const query = buildStrapiQuery({ sort: 'name:asc' });
+      return strapiFetch<BlogCategoriesResponse>(STRAPI_CONFIG.ENDPOINTS.BLOG_CATEGORIES, query);
     },
     enabled: !!STRAPI_CONFIG.API_URL,
   });

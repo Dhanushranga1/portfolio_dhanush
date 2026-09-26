@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Clock, Search } from "lucide-react";
 import { SEO, seoConfigs } from "@/components/SEO";
+import { useBlogPosts } from "@/hooks/useStrapi";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 type BlogPost = {
   id: string;
@@ -15,105 +18,6 @@ type BlogPost = {
   publishedAt: string;
   readTime: number;
 };
-
-const POSTS: BlogPost[] = [
-  {
-    id: "1",
-    title: "Building CASPER: an adaptive RAG scoring algorithm",
-    slug: "building-casper-adaptive-rag",
-    excerpt:
-      "How I designed CASPER — a custom RAG engine for TicketPilot that classifies query intent across four types and adjusts retrieval strategy, MMR lambda, and escalation thresholds per query. Includes the experiment that cut overconfidence bias from 0.0028 → 0.0003.",
-    category: "AI",
-    tags: ["rag", "faiss", "gemini", "python", "ticketpilot"],
-    featured: true,
-    publishedAt: "2025-04-10T10:00:00Z",
-    readTime: 10,
-  },
-  {
-    id: "2",
-    title: "Natural language API gateway management with LangGraph",
-    slug: "natural-language-api-gateway-langgraph",
-    excerpt:
-      "Building Kong-Agentic at Tonik: how I wired LangGraph + Groq to Kong's Admin API, added dual-model routing (8b for reads, 70b for writes), and a three-tier fallback chain so the tool never goes down even when the LLM rate-limits.",
-    category: "AI",
-    tags: ["langgraph", "groq", "kong", "fastapi", "agentic"],
-    featured: true,
-    publishedAt: "2025-03-18T09:00:00Z",
-    readTime: 9,
-  },
-  {
-    id: "3",
-    title: "Bringing AI to everyday projects",
-    slug: "bringing-ai-to-everyday-projects",
-    excerpt:
-      "A practical overview of integrating GPT-4 and Mistral into real projects — combining LLMs with APIs to make smarter, context-aware applications without over-engineering.",
-    category: "AI",
-    tags: ["ai", "llm", "fastapi", "automation"],
-    featured: true,
-    publishedAt: "2024-11-03T10:00:00Z",
-    readTime: 7,
-  },
-  {
-    id: "4",
-    title: "Deploying FastAPI apps with Docker and Render",
-    slug: "deploying-fastapi-docker-render",
-    excerpt:
-      "A step-by-step breakdown of containerising and deploying FastAPI apps. Covers production Dockerfiles, CI/CD integration, connection timeout handling, and the specific quirks of Render's free tier.",
-    category: "Development",
-    tags: ["fastapi", "docker", "backend", "deployment"],
-    featured: false,
-    publishedAt: "2024-11-06T14:30:00Z",
-    readTime: 9,
-  },
-  {
-    id: "5",
-    title: "How I built ScrubPy — a data cleaning library in Python",
-    slug: "how-i-built-scrubpy",
-    excerpt:
-      "Behind the scenes of ScrubPy: the motivation, design decisions, publishing to PyPI, and how I added a Streamlit web GUI plus an LLM chat interface on top of a pure pandas/numpy core.",
-    category: "Tech",
-    tags: ["python", "pandas", "data-cleaning", "pypi"],
-    featured: false,
-    publishedAt: "2024-11-10T09:00:00Z",
-    readTime: 8,
-  },
-  {
-    id: "6",
-    title: "Building smarter search with FAISS and Gemini",
-    slug: "building-smarter-search-faiss-gemini",
-    excerpt:
-      "How I used FAISS for semantic vector search and combined it with Gemini embeddings to build context-aware retrieval in TicketPilot — including cold-start persistence via binary snapshots in PostgreSQL.",
-    category: "AI",
-    tags: ["faiss", "gemini", "rag", "search", "postgresql"],
-    featured: false,
-    publishedAt: "2024-11-17T16:00:00Z",
-    readTime: 9,
-  },
-  {
-    id: "7",
-    title: "My journey into cloud and DevOps",
-    slug: "my-journey-cloud-devops",
-    excerpt:
-      "Reflecting on my first real experience with AWS, Terraform, and Kubernetes while building CineReads — from EC2 and RDS basics to automating deployments and learning what actually breaks in production.",
-    category: "Career",
-    tags: ["cloud", "aws", "devops", "kubernetes", "terraform"],
-    featured: false,
-    publishedAt: "2024-11-13T11:00:00Z",
-    readTime: 10,
-  },
-  {
-    id: "8",
-    title: "Balancing studies and real projects",
-    slug: "balancing-studies-real-projects",
-    excerpt:
-      "Managing a 9.06 CGPA alongside production-grade side projects isn't magic — it's planning, saying no to the wrong things, and learning to treat coursework as a launchpad, not a ceiling.",
-    category: "Career",
-    tags: ["student-life", "productivity", "learning"],
-    featured: false,
-    publishedAt: "2024-11-20T13:00:00Z",
-    readTime: 6,
-  },
-];
 
 const CATEGORIES = ["All", "AI", "Development", "Tech", "Career"];
 
@@ -135,6 +39,24 @@ function fmt(dateStr: string) {
 export default function Blog() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+
+  const { data, isLoading, isError, refetch } = useBlogPosts();
+
+  const POSTS: BlogPost[] = useMemo(
+    () =>
+      (data?.data ?? []).map((p) => ({
+        id: p.documentId,
+        title: p.title,
+        slug: p.slug,
+        excerpt: p.excerpt ?? "",
+        category: p.blog_category?.name ?? "Uncategorized",
+        tags: p.tags ?? [],
+        featured: p.featured,
+        publishedAt: p.publishedAt ?? p.createdAt,
+        readTime: p.readTime ?? 5,
+      })),
+    [data]
+  );
 
   const filtered = POSTS.filter((p) => {
     const q = search.toLowerCase();
@@ -216,7 +138,18 @@ export default function Blog() {
           </motion.div>
 
           {/* Post list */}
-          {filtered.length === 0 ? (
+          {isLoading ? (
+            <div className="space-y-4" aria-busy="true" aria-label="Loading posts">
+              {[0, 1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-24 w-full" />
+              ))}
+            </div>
+          ) : isError ? (
+            <div className="font-mono text-sm text-muted-foreground py-12 text-center">
+              <p className="mb-3"><span className="text-accent-warn">$</span> failed to load posts</p>
+              <Button variant="outline" size="sm" onClick={() => refetch()}>retry</Button>
+            </div>
+          ) : filtered.length === 0 ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

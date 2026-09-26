@@ -17,9 +17,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-
-// For production, replace with: import { useMovies, useAddMovie } from "@/hooks/useStrapi";
-// For now, we'll use mock data since Strapi isn't set up yet
+import { useMovies } from "@/hooks/useStrapi";
+import { getStrapiImageUrl } from "@/lib/strapiConfig";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { MovieEntity } from "@shared/strapi-types";
 
 type Movie = {
   id: string;
@@ -39,83 +40,38 @@ type Movie = {
   addedAt: string;
 };
 
-// Mock data matching the research spec format
-const MOCK_MOVIES: Movie[] = [
-  {
-    id: "1",
-    title: "The Matrix",
-    year: 1999,
-    director: "Wachowskis",
-    genre: "Sci-Fi, Action",
-    rating: 10,
-    watched: true,
-    watchedDate: "2024-01-01",
-    poster: "https://image.tmdb.org/t/p/w500/f89J6sVrpETYoGk2xfB9g6mEGYb.jpg",
-    tmdbId: "603",
-    notes: "A foundational film. *Mind-bending* cyberpunk masterpiece.",
-    tags: ["sci-fi", "action", "mind-bending"],
-    favorite: true,
-    trailer: "https://www.youtube.com/embed/vKQi3bBA1y8",
-    addedAt: "2024-01-01T00:00:00Z",
-  },
-  {
-    id: "2",
-    title: "Star Wars: Ep. V",
-    year: 1980,
-    director: "Irvin Kershner",
-    genre: "Sci-Fi, Adventure",
-    rating: 9,
-    watched: true,
-    watchedDate: "2024-02-15",
-    poster: "https://image.tmdb.org/t/p/w500/7BuH8S4Y02wYn5e0rsx0xKkH0b.jpg",
-    tmdbId: "1891",
-    notes: "Best of the original trilogy",
-    tags: ["sci-fi", "classic", "space-opera"],
-    favorite: true,
-    trailer: "https://www.youtube.com/embed/JNwNXF9Y6kY",
-    addedAt: "2024-02-01T00:00:00Z",
-  },
-  {
-    id: "3",
-    title: "Pulp Fiction",
-    year: 1994,
-    director: "Quentin Tarantino",
-    genre: "Crime, Drama",
-    rating: 9,
-    watched: true,
-    watchedDate: "2024-03-10",
-    poster: "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
-    tmdbId: "680",
-    notes: "Non-linear storytelling perfection",
-    tags: ["crime", "classic", "dialogue-heavy"],
-    favorite: false,
-    trailer: "https://www.youtube.com/embed/s7EdQ4FqbhY",
-    addedAt: "2024-03-01T00:00:00Z",
-  },
-  {
-    id: "4",
-    title: "Inception",
-    year: 2010,
-    director: "Christopher Nolan",
-    genre: "Sci-Fi, Action, Thriller",
-    rating: 8,
-    watched: true,
-    watchedDate: "2024-04-05",
-    poster: "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
-    tmdbId: "27205",
-    notes: "Dreams within dreams",
-    tags: ["sci-fi", "action", "mind-bending"],
-    favorite: false,
-    trailer: "https://www.youtube.com/embed/YoHD9XEInc0",
-    addedAt: "2024-04-01T00:00:00Z",
-  },
-];
+function mapStrapiMovie(m: MovieEntity): Movie {
+  return {
+    id: m.documentId,
+    title: m.title,
+    year: m.year,
+    director: m.director ?? null,
+    genre: (m.genres ?? []).join(", "),
+    rating: m.rating ?? 0,
+    watched: m.watched,
+    watchedDate: null,
+    poster: m.poster ? getStrapiImageUrl(m.poster) : null,
+    tmdbId: m.tmdbId ? String(m.tmdbId) : null,
+    notes: m.personalNotes ?? "",
+    tags: m.genres ?? [],
+    favorite: m.favorite,
+    trailer: m.trailerUrl ?? null,
+    addedAt: m.createdAt,
+  };
+}
 
 type ViewMode = "grid" | "list";
 type SortMode = "manual" | "rating" | "year" | "alphabetical";
 
 export default function Favorites() {
-  const [movies, setMovies] = useState<Movie[]>(MOCK_MOVIES);
+  const { data, isLoading, isError, refetch } = useMovies();
+  const [movies, setMovies] = useState<Movie[]>([]);
+
+  useEffect(() => {
+    if (data?.data) {
+      setMovies(data.data.map(mapStrapiMovie));
+    }
+  }, [data]);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [sortMode, setSortMode] = useState<SortMode>("manual");
   const [searchQuery, setSearchQuery] = useState("");
@@ -307,6 +263,36 @@ export default function Favorites() {
     }))
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground pt-24 pb-20 px-6 font-mono">
+        <div className="max-w-7xl mx-auto space-y-6" aria-busy="true" aria-label="Loading movies">
+          <Skeleton className="h-10 w-64" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[0, 1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-72 w-full rounded-lg" />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-background text-foreground pt-24 pb-20 px-6 font-mono flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-muted-foreground mb-3">
+            <span className="text-accent-warn">$</span> failed to load movies
+          </p>
+          <Button variant="outline" size="sm" onClick={() => refetch()}>
+            retry
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       {/* JSON-LD structured data */}
@@ -314,7 +300,7 @@ export default function Favorites() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      
+
       <div className="min-h-screen bg-background text-foreground pt-24 pb-20 px-6 font-mono">
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-8">

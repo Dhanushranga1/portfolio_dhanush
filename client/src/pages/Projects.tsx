@@ -1,60 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import ProjectCard from "@/components/ProjectCard";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-
-const allProjects = [
-  {
-    title: "ticketpilot",
-    summary: "a customer support platform where ai reads your knowledge base, instantly answers tickets, and automatically routes complex issues to senior agents — no manual configuration needed.",
-    description: "multi-tenant saas (unlimited orgs, row-level security). casper — a custom adaptive rag engine — classifies each query as factual / procedural / troubleshooting / comparison and tunes retrieval strategy, mmr lambda, and escalation threshold per type. reduced overconfidence bias from 0.0028 → 0.0003 vs static baseline. faiss index persisted as binary snapshots in postgresql; cold-start recovery in ~50ms instead of full re-ingest. dual pool strategy (asyncpg async + psycopg3 sync) designed around supabase's 5-connection free-tier limit, with 60s membership/role caches and a circuit breaker. bulk ticket ops up to 100 tickets, audit log with csv export, real-time notification bell, dark mode, full email invite flow. shipped 23 sql migrations.",
-    impact: "ticket list latency 3,200ms → 380ms · escalation f1 0.71 vs 0.61 baseline · faiss cold-start ~50ms",
-    tags: ["Next.js 15", "FastAPI", "PostgreSQL", "Supabase", "FAISS", "Gemini", "shadcn/ui", "SendGrid"],
-    liveUrl: "https://ticketpilot.vercel.app/",
-    githubUrl: "https://github.com/Dhanushranga1/ticketpilot",
-    status: "deployed" as const,
-  },
-  {
-    title: "kong-agentic",
-    summary: "type plain english to manage your api gateway infrastructure. 'enable rate-limiting on the payments service' — done. built and running at tonik.",
-    description: "fastapi backend → langgraph react agent → kong admin api. dual-model routing: simple reads (list services, show stats) use llama-3.1-8b-instant; compound writes (rbac setup, multi-step plugin configs) use llama-3.3-70b-versatile. unambiguous commands hit a deterministic short-circuit — no llm call at all, sub-10ms. three-tier fallback: langgraph-groq → degraded-regex on rate-limit → pure regex with no api key. every action tracked as an objective (pending → completed / failed). supports full rbac, acl groups, hmac-auth, workspace switching, config snapshots, and real-time stats via websocket.",
-    impact: "zero-downtime fallback chain · deterministic short-circuit eliminates llm calls for simple ops · live at tonik",
-    tags: ["FastAPI", "Next.js", "LangGraph", "Groq", "Kong OSS", "PostgreSQL", "WebSocket"],
-    liveUrl: undefined,
-    githubUrl: undefined,
-    status: "active" as const,
-  },
-  {
-    title: "cinereads",
-    summary: "loved interstellar? cinereads finds you books with the same themes, emotional arc, and tone — using ai to bridge movies and literature.",
-    description: "fastapi backend + next.js 15 frontend. gpt-4 analyses a movie's themes, genre, and emotional arc via tmdb api then queries the hardcover api for matching books with metadata (synopsis, ratings, covers). 30% token reduction via prompt engineering. 85% cache hit rate on book data. dockerised with multi-stage builds; kubernetes manifests and a jenkins ci/cd pipeline for deployment. backend on render, frontend on vercel. mobile-responsive.",
-    impact: "85% cache hit rate · ~$200/month api cost savings · 1,000+ monthly active users",
-    tags: ["FastAPI", "Next.js 15", "GPT-4", "Docker", "Kubernetes", "Jenkins", "TMDB API"],
-    liveUrl: "https://cinereads.dhanushranga1.dev/",
-    githubUrl: "https://github.com/Dhanushranga1/CineReads",
-    status: "deployed" as const,
-  },
-  {
-    title: "mesh3",
-    summary: "a chat app where your messages never touch a server — encrypted on your device and sent directly to the other person's browser.",
-    description: "webrtc datachannels establish direct peer-to-peer connections; messages are aes-gcm encrypted client-side before any transmission (zero-trust, even over turn relay). metamask wallet = your identity — no accounts, no passwords. fastapi signaling server handles peer discovery only; metered turn/stun provides nat traversal fallback. no database, no message persistence — everything lives in ram and is gone when the tab closes. planned: group chat, file transfer, video calling.",
-    impact: "zero server-side message storage · ephemeral key exchange · wallet-based identity verification",
-    tags: ["Next.js", "FastAPI", "WebRTC", "MetaMask", "AES-GCM", "TURN/STUN"],
-    liveUrl: undefined,
-    githubUrl: "https://github.com/Dhanushranga1/mesh3",
-    status: "active" as const,
-  },
-  {
-    title: "scrubpy",
-    summary: "a python library that cleans messy csv data automatically — and lets you ask questions about it in plain english.",
-    description: "published on pypi (pip install scrubpy / pip install scrubpy[ai]). three interfaces: streamlit web gui for visual cleaning, typer + rich cli for scripting, and an llm chat interface (openai/mistral) for conversational data queries. ml-powered analysis auto-detects missing values, duplicates, outliers, and type mismatches. supports professional documentation export. python 3.8+, pandas/numpy backend. 30+ downloads in first month, actively maintained.",
-    impact: "30+ pypi downloads in first month · 40% reduction in manual data cleaning effort",
-    tags: ["Python", "pandas", "scikit-learn", "Streamlit", "OpenAI", "PyPI"],
-    liveUrl: "https://pypi.org/project/scrubpy/",
-    githubUrl: "https://github.com/Dhanushranga1/scrubpy",
-    status: "active" as const,
-  },
-];
+import { useProjects } from "@/hooks/useStrapi";
 
 type StatusFilter = "all" | "deployed" | "active" | "archived";
 
@@ -63,6 +12,23 @@ export default function Projects() {
   const [focusedIndex, setFocusedIndex] = useState<number>(0);
   const projectRefs = useRef<(HTMLLIElement | null)[]>([]);
   const { toast } = useToast();
+
+  const { data, isLoading, isError, refetch } = useProjects();
+
+  const allProjects = useMemo(
+    () =>
+      (data?.data ?? []).map((p) => ({
+        title: p.title,
+        summary: p.summary,
+        description: p.description ?? "",
+        tags: p.tags ?? [],
+        liveUrl: p.liveUrl ?? undefined,
+        githubUrl: p.githubUrl ?? undefined,
+        status: p.status,
+        impact: p.impact,
+      })),
+    [data]
+  );
 
   const filteredProjects = allProjects.filter(
     (project) => statusFilter === "all" || project.status === statusFilter
@@ -208,7 +174,22 @@ export default function Projects() {
 
         {/* Projects as terminal list */}
         <h2 className="sr-only">Project List</h2>
-        {filteredProjects.length > 0 ? (
+        {isLoading ? (
+          <div className="space-y-6" aria-busy="true" aria-label="Loading projects">
+            {[0, 1, 2].map((i) => (
+              <Skeleton key={i} className="h-40 w-full rounded-lg" />
+            ))}
+          </div>
+        ) : isError ? (
+          <div className="py-12 text-center font-mono">
+            <p className="text-muted-foreground mb-3">
+              <span className="text-accent-warn">$</span> failed to load projects
+            </p>
+            <Button variant="outline" size="sm" onClick={() => refetch()}>
+              retry
+            </Button>
+          </div>
+        ) : filteredProjects.length > 0 ? (
           <ul className="space-y-6" role="list" aria-label="Projects list">
             {filteredProjects.map((project, index) => (
               <ProjectCard

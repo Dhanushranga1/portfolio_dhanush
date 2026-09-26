@@ -4,10 +4,16 @@ import { useEffect, useRef } from "react";
 import TextAnim from "./animations/TextAnim";
 import CursorBlinker from "./animations/CursorBlinker";
 import ActionButtons from "./ActionButtons";
+import { useHomePage } from "@/hooks/useStrapi";
+
+const FALLBACK_SUBHEADING = "full-stack dev intern @ tonik · srm ist · ai/ml · agentic systems";
 
 export default function Hero() {
   const shouldReduceMotion = useReducedMotion();
   const contentRef = useRef<HTMLDivElement>(null);
+  const { data } = useHomePage();
+  const home = data?.data;
+  const subheading = home?.subheading ?? FALLBACK_SUBHEADING;
 
   // Scale-to-fit logic to prevent scrolling
   useEffect(() => {
@@ -88,7 +94,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.4, duration: 0.15 }}
         >
-          <span className="text-accent-info">~</span> full-stack dev intern @ tonik · srm ist · ai/ml · agentic systems
+          <span className="text-accent-info">~</span> {subheading}
         </motion.p>
 
         {/* Now building badge */}

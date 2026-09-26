@@ -35,6 +35,11 @@ export const STRAPI_CONFIG = {
   
   // API Endpoints
   ENDPOINTS: {
+    PROJECTS: '/api/projects',
+    EXPERIENCES: '/api/experiences',
+    SKILLS: '/api/skills',
+    HOME_PAGE: '/api/home-page',
+    SITE_SETTING: '/api/site-setting',
     MOVIES: '/api/movies',
     PHOTOS: '/api/photos',
     PHOTO_ALBUMS: '/api/photo-albums',

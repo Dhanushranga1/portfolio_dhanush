@@ -2,67 +2,80 @@ import { useRoute, Link } from "wouter";
 import { Calendar, Clock, ChevronLeft, Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-import { BLOG_POSTS } from "@/data/blogPosts";
+import { useBlogPost } from "@/hooks/useStrapi";
 import { SEO } from "@/components/SEO";
 import { BlogPostStructuredData } from "@/components/StructuredData";
+import { Skeleton } from "@/components/ui/skeleton";
 
-function renderContent(md: string) {
-  return md
-    .split("\n\n")
-    .map((block, i) => {
-      if (block.startsWith("## ")) {
+type InlineNode = { type: "text"; text: string; bold?: boolean; code?: boolean; italic?: boolean };
+type Block =
+  | { type: "heading"; level: number; children: InlineNode[] }
+  | { type: "paragraph"; children: InlineNode[] }
+  | { type: "code"; children: InlineNode[] }
+  | { type: "list"; format: "ordered" | "unordered"; children: { type: "list-item"; children: InlineNode[] }[] };
+
+function renderInline(children: InlineNode[]) {
+  return children.map((node, i) => {
+    let el: React.ReactNode = node.text;
+    if (node.code) {
+      el = <code key={i} className="bg-surface-2 border border-border/30 text-accent-info px-1.5 py-0.5 rounded text-xs font-mono">{node.text}</code>;
+      return el;
+    }
+    if (node.bold) {
+      return <strong key={i} className="text-foreground font-semibold">{node.text}</strong>;
+    }
+    return <span key={i}>{node.text}</span>;
+  });
+}
+
+function renderBlocks(blocks: unknown) {
+  if (!Array.isArray(blocks)) return null;
+  return (blocks as Block[]).map((block, i) => {
+    switch (block.type) {
+      case "heading": {
+        const Tag = (`h${Math.min(block.level + 1, 6)}` as unknown) as "h2" | "h3" | "h4";
         return (
-          <h2 key={i} className="text-lg font-semibold text-accent-info mt-10 mb-4">
-            {block.slice(3)}
-          </h2>
+          <Tag key={i} className="font-semibold text-accent-info mt-10 mb-4 text-lg first:mt-0">
+            {renderInline(block.children)}
+          </Tag>
         );
       }
-      if (block.startsWith("### ")) {
-        return (
-          <h3 key={i} className="text-base font-semibold text-foreground mt-8 mb-3">
-            {block.slice(4)}
-          </h3>
-        );
-      }
-      if (block.startsWith("```")) {
-        const code = block.replace(/^```[^\n]*\n?/, "").replace(/```$/, "");
+      case "code": {
+        const code = block.children.map((c) => c.text).join("");
         return (
           <pre key={i} className="bg-surface-2 border border-border/40 rounded p-4 overflow-x-auto my-4 text-xs text-accent-info/90 leading-relaxed">
             <code>{code}</code>
           </pre>
         );
       }
-      if (block.match(/^- /m) || block.match(/^\* /m)) {
-        const items = block.split("\n").filter(Boolean);
+      case "list": {
+        const ListTag = block.format === "ordered" ? "ol" : "ul";
         return (
-          <ul key={i} className="space-y-1.5 my-4">
-            {items.map((line, j) => (
+          <ListTag key={i} className="space-y-1.5 my-4">
+            {block.children.map((item, j) => (
               <li key={j} className="flex gap-2 text-muted-foreground">
                 <span className="text-accent-info/40 shrink-0 select-none mt-0.5">›</span>
-                <span>{line.replace(/^[-*]\s+/, "")}</span>
+                <span>{renderInline(item.children)}</span>
               </li>
             ))}
-          </ul>
+          </ListTag>
         );
       }
-      // inline bold with **text**
-      const withBold = block.replace(/\*\*(.+?)\*\*/g, '<strong class="text-foreground font-semibold">$1</strong>');
-      // inline code with `text`
-      const withCode = withBold.replace(/`([^`]+)`/g, '<code class="bg-surface-2 border border-border/30 text-accent-info px-1.5 py-0.5 rounded text-xs font-mono">$1</code>');
-      return (
-        <p
-          key={i}
-          className="text-muted-foreground leading-[1.75] my-4"
-          dangerouslySetInnerHTML={{ __html: withCode }}
-        />
-      );
-    });
+      case "paragraph":
+      default:
+        return (
+          <p key={i} className="text-muted-foreground leading-[1.75] my-4">
+            {renderInline(block.children)}
+          </p>
+        );
+    }
+  });
 }
 
 export default function BlogPost() {
   const [, params] = useRoute("/blog/:slug");
   const { toast } = useToast();
-  const post = params?.slug ? BLOG_POSTS[params.slug] : null;
+  const { data: post, isLoading, isError } = useBlogPost(params?.slug ?? "");
 
   const handleShare = () => {
     const url = `${window.location.origin}/blog/${post?.slug}`;
@@ -70,7 +83,19 @@ export default function BlogPost() {
     toast({ description: "Link copied to clipboard", duration: 2000 });
   };
 
-  if (!post) {
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-24 pb-32 px-6">
+        <div className="max-w-2xl mx-auto space-y-6" aria-busy="true" aria-label="Loading post">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-24 w-full" />
+        </div>
+      </div>
+    );
+  }
+
+  if (isError || !post) {
     return (
       <div className="min-h-screen flex items-center justify-center px-6 font-mono">
         <div className="space-y-4 text-center">
@@ -90,18 +115,18 @@ export default function BlogPost() {
     <>
       <SEO
         title={`${post.title} | Dhanush Ranga`}
-        description={post.seo?.metaDescription ?? post.excerpt}
-        keywords={post.tags.join(", ")}
+        description={post.excerpt}
+        keywords={(post.tags ?? []).join(", ")}
         ogType="article"
         canonicalUrl={`https://dhanushranga1.dev/blog/${post.slug}`}
       />
       <BlogPostStructuredData
         title={post.title}
-        description={post.excerpt}
-        publishedAt={post.publishedAt}
+        description={post.excerpt ?? ""}
+        publishedAt={post.publishedAt ?? post.createdAt}
         updatedAt={post.updatedAt}
-        author={post.author.name}
-        image={post.coverImage}
+        author="Dhanush Ranga Gopisetty"
+        image={post.coverImage?.url}
         url={`https://dhanushranga1.dev/blog/${post.slug}`}
       />
 
@@ -131,9 +156,9 @@ export default function BlogPost() {
             className="mb-10 pb-8 border-b border-border/20"
           >
             {/* Category */}
-            {post.category && (
+            {post.blog_category && (
               <span className="inline-block font-mono text-[0.68rem] uppercase tracking-widest text-accent-info/70 mb-4">
-                {post.category.name}
+                {post.blog_category.name}
               </span>
             )}
 
@@ -149,14 +174,16 @@ export default function BlogPost() {
             <div className="flex flex-wrap items-center gap-4 font-mono text-xs text-muted-foreground/70">
               <span className="flex items-center gap-1.5">
                 <Calendar className="h-3 w-3" />
-                {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                {new Date(post.publishedAt ?? post.createdAt).toLocaleDateString("en-US", {
                   year: "numeric", month: "long", day: "numeric",
                 })}
               </span>
-              <span className="flex items-center gap-1.5">
-                <Clock className="h-3 w-3" />
-                {post.readTime} min read
-              </span>
+              {post.readTime && (
+                <span className="flex items-center gap-1.5">
+                  <Clock className="h-3 w-3" />
+                  {post.readTime} min read
+                </span>
+              )}
               <button
                 type="button"
                 onClick={handleShare}
@@ -176,27 +203,29 @@ export default function BlogPost() {
             transition={{ duration: 0.2, delay: 0.1 }}
             className="font-mono text-sm"
           >
-            {renderContent(post.content)}
+            {renderBlocks(post.content)}
           </motion.article>
 
           {/* Tags */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.2, delay: 0.15 }}
-            className="mt-12 pt-8 border-t border-border/20"
-          >
-            <div className="flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="font-mono text-[0.68rem] text-muted-foreground/60 bg-surface-2 border border-border/30 px-2 py-0.5 rounded"
-                >
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          </motion.div>
+          {post.tags && post.tags.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.2, delay: 0.15 }}
+              className="mt-12 pt-8 border-t border-border/20"
+            >
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="font-mono text-[0.68rem] text-muted-foreground/60 bg-surface-2 border border-border/30 px-2 py-0.5 rounded"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          )}
 
           {/* Footer nav */}
           <div className="mt-10 font-mono text-xs text-muted-foreground/50">
