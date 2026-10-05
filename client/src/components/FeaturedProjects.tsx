@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { ArrowRight, ExternalLink, Github } from "lucide-react";
 import { useProjects } from "@/hooks/useStrapi";
 import { Skeleton } from "@/components/ui/skeleton";
+import AnimatedSection from "@/components/AnimatedSection";
 
 export default function FeaturedProjects() {
   const { data, isLoading } = useProjects({ featured: true });
@@ -12,14 +13,14 @@ export default function FeaturedProjects() {
   return (
     <section className="px-6 py-16 border-t border-border/60">
       <div className="max-w-5xl mx-auto">
-        <div className="flex items-center justify-between mb-10">
+        <AnimatedSection className="flex items-center justify-between mb-10">
           <h2 className="text-2xl font-semibold text-foreground">Featured Projects</h2>
           <Link href="/projects">
             <span className="inline-flex items-center gap-1 text-sm text-accent-info hover:underline cursor-pointer">
               View all <ArrowRight className="h-3.5 w-3.5" />
             </span>
           </Link>
-        </div>
+        </AnimatedSection>
 
         {isLoading ? (
           <div className="grid md:grid-cols-3 gap-6">
@@ -29,10 +30,11 @@ export default function FeaturedProjects() {
           </div>
         ) : (
           <div className="grid md:grid-cols-3 gap-6">
-            {projects.map((p) => (
-              <div
+            {projects.map((p, i) => (
+              <AnimatedSection
                 key={p.documentId}
-                className="group flex flex-col rounded-lg border border-border bg-card p-6 hover:border-accent-info/40 transition-colors duration-150"
+                delay={i * 0.06}
+                className="group flex flex-col rounded-lg border border-border bg-card p-6 transition-all duration-200 hover:border-accent-info/40 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/10"
               >
                 <h3 className="font-semibold text-foreground mb-2 group-hover:text-accent-info transition-colors duration-150">
                   {p.title}
@@ -72,7 +74,7 @@ export default function FeaturedProjects() {
                     </a>
                   )}
                 </div>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         )}

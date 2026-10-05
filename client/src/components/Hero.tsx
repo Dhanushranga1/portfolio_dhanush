@@ -69,13 +69,13 @@ export default function Hero() {
             className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-10"
           >
             <Link href={primaryUrl}>
-              <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity duration-150 cursor-pointer">
+              <span className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium text-sm transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/20 cursor-pointer">
                 {primaryLabel}
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
               </span>
             </Link>
             <Link href={secondaryUrl}>
-              <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border text-foreground font-medium text-sm hover:bg-muted transition-colors duration-150 cursor-pointer">
+              <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border text-foreground font-medium text-sm transition-all duration-200 hover:bg-muted hover:-translate-y-0.5 cursor-pointer">
                 {secondaryLabel}
               </span>
             </Link>
@@ -93,7 +93,7 @@ export default function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub"
-                className="hover:text-foreground transition-colors duration-150"
+                className="hover:text-foreground transition-all duration-150 hover:-translate-y-0.5 inline-block"
               >
                 <Github className="h-5 w-5" />
               </a>
@@ -104,7 +104,7 @@ export default function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
-                className="hover:text-foreground transition-colors duration-150"
+                className="hover:text-foreground transition-all duration-150 hover:-translate-y-0.5 inline-block"
               >
                 <Linkedin className="h-5 w-5" />
               </a>
@@ -115,7 +115,7 @@ export default function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Resume"
-                className="hover:text-foreground transition-colors duration-150"
+                className="hover:text-foreground transition-all duration-150 hover:-translate-y-0.5 inline-block"
               >
                 <FileText className="h-5 w-5" />
               </a>

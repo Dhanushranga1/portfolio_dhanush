@@ -51,8 +51,10 @@ const ProjectCard = forwardRef<HTMLLIElement, ProjectCardProps>(
         className="animate-in fade-in slide-in-from-bottom-3 duration-500"
       >
         <div
-          className={`group rounded-lg border bg-card p-6 transition-colors duration-200 ${
-            isFocused ? "border-accent-info/50 ring-1 ring-accent-info/20" : "border-border hover:border-accent-info/30"
+          className={`group rounded-lg border bg-card p-6 transition-all duration-200 ${
+            isFocused
+              ? "border-accent-info/50 ring-1 ring-accent-info/20"
+              : "border-border hover:border-accent-info/30 hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/10"
           }`}
         >
           {/* Status + Title */}
