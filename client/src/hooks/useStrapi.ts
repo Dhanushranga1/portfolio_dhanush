@@ -6,6 +6,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { STRAPI_CONFIG, getStrapiHeaders, buildStrapiQuery } from '@/lib/strapiConfig';
+import { withStrapiFallback } from '@/lib/strapiCache';
 import type {
   ProjectsResponse,
   ExperiencesResponse,
@@ -21,13 +22,16 @@ import type {
 } from '@shared/strapi-types';
 
 async function strapiFetch<T>(endpoint: string, query = ''): Promise<T> {
-  const response = await fetch(`${STRAPI_CONFIG.API_URL}${endpoint}${query}`, {
-    headers: getStrapiHeaders(),
+  const cacheKey = `${endpoint}${query}`;
+  return withStrapiFallback(cacheKey, async () => {
+    const response = await fetch(`${STRAPI_CONFIG.API_URL}${endpoint}${query}`, {
+      headers: getStrapiHeaders(),
+    });
+    if (!response.ok) {
+      throw new Error(`Strapi request failed (${response.status}): ${endpoint}`);
+    }
+    return response.json() as Promise<T>;
   });
-  if (!response.ok) {
-    throw new Error(`Strapi request failed (${response.status}): ${endpoint}`);
-  }
-  return response.json() as Promise<T>;
 }
 
 // ============================================================================
