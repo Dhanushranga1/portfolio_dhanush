@@ -18,7 +18,7 @@ function renderInline(children: InlineNode[]) {
   return children.map((node, i) => {
     let el: React.ReactNode = node.text;
     if (node.code) {
-      el = <code key={i} className="bg-surface-2 border border-border/30 text-accent-info px-1.5 py-0.5 rounded text-xs font-mono">{node.text}</code>;
+      el = <code key={i} className="bg-muted border border-border text-accent-info px-1.5 py-0.5 rounded text-sm font-mono">{node.text}</code>;
       return el;
     }
     if (node.bold) {
@@ -35,7 +35,7 @@ function renderBlocks(blocks: unknown) {
       case "heading": {
         const Tag = (`h${Math.min(block.level + 1, 6)}` as unknown) as "h2" | "h3" | "h4";
         return (
-          <Tag key={i} className="font-semibold text-accent-info mt-10 mb-4 text-lg first:mt-0">
+          <Tag key={i} className="font-semibold text-foreground mt-10 mb-4 text-xl first:mt-0">
             {renderInline(block.children)}
           </Tag>
         );
@@ -43,7 +43,7 @@ function renderBlocks(blocks: unknown) {
       case "code": {
         const code = block.children.map((c) => c.text).join("");
         return (
-          <pre key={i} className="bg-surface-2 border border-border/40 rounded p-4 overflow-x-auto my-4 text-xs text-accent-info/90 leading-relaxed">
+          <pre key={i} className="bg-muted border border-border rounded-lg p-4 overflow-x-auto my-4 text-sm text-accent-info/90 leading-relaxed font-mono">
             <code>{code}</code>
           </pre>
         );
@@ -97,13 +97,13 @@ export default function BlogPost() {
 
   if (isError || !post) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-6 font-mono">
+      <div className="min-h-screen flex items-center justify-center px-6">
         <div className="space-y-4 text-center">
-          <p className="text-accent-warn text-sm">bash: /blog/{params?.slug}: No such file or directory</p>
+          <p className="text-muted-foreground text-sm">Sorry, this post couldn't be found.</p>
           <Link href="/blog">
             <span className="inline-flex items-center gap-2 text-accent-info hover:underline cursor-pointer text-sm">
               <ChevronLeft className="h-3.5 w-3.5" />
-              back to /blog
+              Back to blog
             </span>
           </Link>
         </div>
@@ -130,7 +130,7 @@ export default function BlogPost() {
         url={`https://dhanushranga1.dev/blog/${post.slug}`}
       />
 
-      <div className="min-h-screen pt-24 pb-32 px-6">
+      <div className="min-h-screen pt-20 pb-28 px-6">
         <div className="max-w-2xl mx-auto">
 
           {/* Back nav */}
@@ -141,9 +141,9 @@ export default function BlogPost() {
             className="mb-10"
           >
             <Link href="/blog">
-              <span className="inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground hover:text-accent-info transition-colors duration-150 cursor-pointer group">
-                <ChevronLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform duration-150" />
-                ~/blog
+              <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-accent-info transition-colors duration-150 cursor-pointer group">
+                <ChevronLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform duration-150" />
+                Back to blog
               </span>
             </Link>
           </motion.div>
@@ -153,34 +153,34 @@ export default function BlogPost() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.18, delay: 0.05 }}
-            className="mb-10 pb-8 border-b border-border/20"
+            className="mb-10 pb-8 border-b border-border"
           >
             {/* Category */}
             {post.blog_category && (
-              <span className="inline-block font-mono text-[0.68rem] uppercase tracking-widest text-accent-info/70 mb-4">
+              <span className="inline-block text-xs uppercase tracking-widest text-accent-info font-medium mb-4">
                 {post.blog_category.name}
               </span>
             )}
 
-            <h1 className="font-mono text-2xl md:text-3xl font-bold text-foreground leading-snug mb-5">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-5">
               {post.title}
             </h1>
 
-            <p className="font-mono text-sm text-muted-foreground leading-relaxed mb-6 max-w-[60ch]">
+            <p className="text-base text-muted-foreground leading-relaxed mb-6 max-w-[60ch]">
               {post.excerpt}
             </p>
 
             {/* Meta row */}
-            <div className="flex flex-wrap items-center gap-4 font-mono text-xs text-muted-foreground/70">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1.5">
-                <Calendar className="h-3 w-3" />
+                <Calendar className="h-3.5 w-3.5" />
                 {new Date(post.publishedAt ?? post.createdAt).toLocaleDateString("en-US", {
                   year: "numeric", month: "long", day: "numeric",
                 })}
               </span>
               {post.readTime && (
                 <span className="flex items-center gap-1.5">
-                  <Clock className="h-3 w-3" />
+                  <Clock className="h-3.5 w-3.5" />
                   {post.readTime} min read
                 </span>
               )}
@@ -190,8 +190,8 @@ export default function BlogPost() {
                 className="flex items-center gap-1.5 ml-auto hover:text-accent-info transition-colors duration-150 focus:outline-none"
                 aria-label="Copy link"
               >
-                <Share2 className="h-3 w-3" />
-                share
+                <Share2 className="h-3.5 w-3.5" />
+                Share
               </button>
             </div>
           </motion.header>
@@ -201,7 +201,7 @@ export default function BlogPost() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.2, delay: 0.1 }}
-            className="font-mono text-sm"
+            className="text-base"
           >
             {renderBlocks(post.content)}
           </motion.article>
@@ -212,13 +212,13 @@ export default function BlogPost() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.2, delay: 0.15 }}
-              className="mt-12 pt-8 border-t border-border/20"
+              className="mt-12 pt-8 border-t border-border"
             >
               <div className="flex flex-wrap gap-2">
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="font-mono text-[0.68rem] text-muted-foreground/60 bg-surface-2 border border-border/30 px-2 py-0.5 rounded"
+                    className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded"
                   >
                     #{tag}
                   </span>
@@ -228,10 +228,10 @@ export default function BlogPost() {
           )}
 
           {/* Footer nav */}
-          <div className="mt-10 font-mono text-xs text-muted-foreground/50">
+          <div className="mt-10 text-sm text-muted-foreground">
             <Link href="/blog">
               <span className="hover:text-accent-info transition-colors duration-150 cursor-pointer">
-                ← back to all posts
+                ← Back to all posts
               </span>
             </Link>
           </div>

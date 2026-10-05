@@ -10,10 +10,10 @@ const categoryStyles: Record<string, string> = {
 };
 
 const skillCategories = [
-  { key: "lang",      icon: Code,     label: "languages & core" },
-  { key: "framework", icon: Terminal, label: "frameworks & libraries" },
-  { key: "infra",     icon: Cloud,    label: "cloud & devops" },
-  { key: "data",      icon: Database, label: "databases & tools" },
+  { key: "lang",      icon: Code,     label: "Languages & Core" },
+  { key: "framework", icon: Terminal, label: "Frameworks & Libraries" },
+  { key: "infra",     icon: Cloud,    label: "Cloud & DevOps" },
+  { key: "data",      icon: Database, label: "Databases & Tools" },
 ];
 
 export default function About() {
@@ -26,21 +26,16 @@ export default function About() {
   const settings = siteData?.data;
 
   return (
-    <div className="min-h-screen pt-24 pb-32 px-6">
+    <div className="min-h-screen pt-20 pb-28 px-6">
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
-        <div className="mb-16 animate-in fade-in slide-in-from-top-2 duration-700">
-          <h1 className="text-4xl md:text-5xl font-mono font-bold mb-4">
-            <span className="text-accent-info">$</span> about
-          </h1>
-          <p className="text-muted-foreground font-mono text-sm opacity-80 terminal-prompt">
-            whoami && cat bio.txt
-          </p>
+        <div className="mb-14">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">About</h1>
         </div>
 
         {/* Bio */}
-        <div className="space-y-5 font-mono text-sm md:text-base leading-[1.6] text-foreground mb-16 max-w-[65ch]">
+        <div className="space-y-4 text-base leading-relaxed text-foreground mb-16 max-w-[65ch]">
           {siteLoading ? (
             <div className="space-y-3">
               <Skeleton className="h-4 w-full" />
@@ -48,19 +43,15 @@ export default function About() {
               <Skeleton className="h-4 w-4/5" />
             </div>
           ) : (
-            <p className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-              {settings?.bio}
-            </p>
+            <p className="text-muted-foreground">{settings?.bio}</p>
           )}
         </div>
 
-        <div className="space-y-20 font-mono text-sm">
+        <div className="space-y-16">
 
           {/* ── Experience ─────────────────────────────────────────── */}
-          <section className="border-t border-border/30 pt-10">
-            <h2 className="text-xl md:text-2xl font-semibold text-accent-info flex items-center gap-2 mb-10">
-              <span className="text-muted-foreground">$</span> experience
-            </h2>
+          <section>
+            <h2 className="text-xl font-semibold text-foreground mb-8">Experience</h2>
 
             {expLoading ? (
               <div className="space-y-6">
@@ -71,7 +62,7 @@ export default function About() {
             ) : (
               <div className="relative pl-6">
                 {/* vertical connector */}
-                <div className="absolute left-[5px] top-2 bottom-2 w-px bg-border/40" aria-hidden="true" />
+                <div className="absolute left-[5px] top-2 bottom-2 w-px bg-border" aria-hidden="true" />
 
                 <div className="space-y-10">
                   {experiences.map((exp) => (
@@ -84,7 +75,7 @@ export default function About() {
                         </span>
                       ) : (
                         <span
-                          className="absolute -left-6 top-1 h-3 w-3 rounded-full border border-border bg-surface-2 block"
+                          className="absolute -left-6 top-1 h-3 w-3 rounded-full border border-border bg-muted block"
                           aria-hidden="true"
                         />
                       )}
@@ -93,7 +84,7 @@ export default function About() {
                         <div className="flex justify-between items-start flex-wrap gap-1">
                           <div>
                             <h3 className="font-semibold text-foreground">{exp.title}</h3>
-                            <p className="text-muted-foreground text-xs mt-0.5">
+                            <p className="text-muted-foreground text-sm mt-0.5">
                               {exp.company}
                               {exp.current && (
                                 <span className="ml-2 inline-flex items-center gap-1 text-accent-info text-[0.65rem] font-bold uppercase tracking-wider border border-accent-info/30 rounded px-1.5 py-0.5 bg-accent-info/5">
@@ -103,12 +94,12 @@ export default function About() {
                               {" "}· {exp.location}
                             </p>
                           </div>
-                          <span className="text-muted-foreground text-xs shrink-0 tabular-nums">{exp.period}</span>
+                          <span className="text-muted-foreground text-sm shrink-0 tabular-nums">{exp.period}</span>
                         </div>
-                        <ul className="space-y-1 text-muted-foreground leading-relaxed">
+                        <ul className="space-y-1.5 text-muted-foreground text-sm leading-relaxed">
                           {(exp.bullets ?? []).map((b, i) => (
                             <li key={i} className="flex gap-2">
-                              <span className="text-accent-info/40 shrink-0 select-none">›</span>
+                              <span className="text-accent-info/50 shrink-0 select-none">•</span>
                               <span>{b}</span>
                             </li>
                           ))}
@@ -122,10 +113,8 @@ export default function About() {
           </section>
 
           {/* ── Tech Stack ─────────────────────────────────────────── */}
-          <section className="border-t border-border/30 pt-10">
-            <h2 className="text-xl md:text-2xl font-semibold text-accent-info flex items-center gap-2 mb-8">
-              <span className="text-muted-foreground">$</span> tech stack
-            </h2>
+          <section>
+            <h2 className="text-xl font-semibold text-foreground mb-8">Tech Stack</h2>
 
             {skillLoading ? (
               <div className="flex flex-wrap gap-2">
@@ -139,7 +128,7 @@ export default function About() {
                   <div key={key} className="space-y-2">
                     <div className="flex items-center gap-2 text-muted-foreground mb-3">
                       <Icon className="h-3.5 w-3.5" />
-                      <span className="text-xs uppercase tracking-widest">{label}</span>
+                      <span className="text-xs uppercase tracking-widest font-medium">{label}</span>
                     </div>
                     <div className="flex flex-wrap gap-2 pl-5">
                       {techStack
@@ -147,7 +136,7 @@ export default function About() {
                         .map((t) => (
                           <span
                             key={t.label}
-                            className={`px-2.5 py-1 text-[0.72rem] rounded border font-medium transition-colors duration-150 cursor-default ${categoryStyles[key]}`}
+                            className={`px-2.5 py-1 text-sm rounded-md border font-medium transition-colors duration-150 cursor-default ${categoryStyles[key]}`}
                           >
                             {t.label}
                           </span>
@@ -161,18 +150,16 @@ export default function About() {
 
           {/* ── Education ──────────────────────────────────────────── */}
           {!siteLoading && settings?.education && settings.education.length > 0 && (
-            <section className="border-t border-border/30 pt-10">
-              <h2 className="text-xl md:text-2xl font-semibold text-accent-info flex items-center gap-2 mb-6">
-                <span className="text-muted-foreground">$</span> education
-              </h2>
+            <section>
+              <h2 className="text-xl font-semibold text-foreground mb-6">Education</h2>
               {settings.education.map((edu) => (
                 <div key={edu.degree} className="flex justify-between items-start flex-wrap gap-2">
                   <div>
-                    <h3 className="font-semibold">{edu.degree}</h3>
-                    <p className="text-muted-foreground mt-0.5">{edu.institution}</p>
-                    {edu.detail && <p className="text-accent-info text-xs mt-1">{edu.detail}</p>}
+                    <h3 className="font-semibold text-foreground">{edu.degree}</h3>
+                    <p className="text-muted-foreground mt-0.5 text-sm">{edu.institution}</p>
+                    {edu.detail && <p className="text-accent-info text-sm mt-1">{edu.detail}</p>}
                   </div>
-                  <span className="text-muted-foreground text-xs tabular-nums shrink-0">{edu.period}</span>
+                  <span className="text-muted-foreground text-sm tabular-nums shrink-0">{edu.period}</span>
                 </div>
               ))}
             </section>
@@ -180,14 +167,12 @@ export default function About() {
 
           {/* ── Achievements ───────────────────────────────────────── */}
           {!siteLoading && settings?.achievements && settings.achievements.length > 0 && (
-            <section className="border-t border-border/30 pt-10">
-              <h2 className="text-xl md:text-2xl font-semibold text-accent-info flex items-center gap-2 mb-6">
-                <span className="text-muted-foreground">$</span> achievements
-              </h2>
-              <ul className="space-y-2 text-muted-foreground">
+            <section>
+              <h2 className="text-xl font-semibold text-foreground mb-6">Achievements</h2>
+              <ul className="space-y-2 text-muted-foreground text-sm">
                 {settings.achievements.map((a, i) => (
                   <li key={i} className="flex gap-2">
-                    <span className="text-accent-info/40 shrink-0 select-none">›</span>
+                    <span className="text-accent-info/50 shrink-0 select-none">•</span>
                     <span>{a}</span>
                   </li>
                 ))}
@@ -196,21 +181,19 @@ export default function About() {
           )}
 
           {/* ── Links ──────────────────────────────────────────────── */}
-          <section className="border-t border-border/30 pt-10">
-            <h2 className="text-xl md:text-2xl font-semibold text-accent-info flex items-center gap-2 mb-6">
-              <span className="text-muted-foreground">$</span> links
-            </h2>
+          <section>
+            <h2 className="text-xl font-semibold text-foreground mb-6">Links</h2>
             <div className="space-y-3">
               {settings?.githubUrl && (
                 <a
                   href={settings.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-muted-foreground hover:text-accent-info transition-colors duration-150 group w-fit"
+                  className="flex items-center gap-2 text-muted-foreground hover:text-accent-info transition-colors duration-150 group w-fit text-sm"
                   data-testid="link-github"
                 >
                   <Github className="h-4 w-4 group-hover:scale-110 transition-transform duration-150" />
-                  <span className="nav-link">github</span>
+                  <span>GitHub</span>
                   <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-60 transition-opacity duration-150" />
                 </a>
               )}
@@ -219,22 +202,22 @@ export default function About() {
                   href={settings.linkedinUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-muted-foreground hover:text-accent-info transition-colors duration-150 group w-fit"
+                  className="flex items-center gap-2 text-muted-foreground hover:text-accent-info transition-colors duration-150 group w-fit text-sm"
                   data-testid="link-linkedin"
                 >
                   <Linkedin className="h-4 w-4 group-hover:scale-110 transition-transform duration-150" />
-                  <span className="nav-link">linkedin</span>
+                  <span>LinkedIn</span>
                   <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-60 transition-opacity duration-150" />
                 </a>
               )}
               {settings?.email && (
                 <a
                   href={`mailto:${settings.email}`}
-                  className="flex items-center gap-2 text-muted-foreground hover:text-accent-info transition-colors duration-150 group w-fit"
+                  className="flex items-center gap-2 text-muted-foreground hover:text-accent-info transition-colors duration-150 group w-fit text-sm"
                   data-testid="link-email"
                 >
                   <Mail className="h-4 w-4 group-hover:scale-110 transition-transform duration-150" />
-                  <span className="nav-link">email</span>
+                  <span>Email</span>
                   <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-60 transition-opacity duration-150" />
                 </a>
               )}

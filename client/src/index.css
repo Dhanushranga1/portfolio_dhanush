@@ -132,73 +132,73 @@
   --elevate-1: rgba(255,255,255, .02);
   --elevate-2: rgba(255,255,255, .05);
 
-  /* Hybrid Terminal Palette - Near-black blue/grey base */
-  --background: 210 14% 9%;          /* #121619 - bg-primary */
+  /* Modern neutral dark palette (replaces the blue-tinted "terminal" base) */
+  --background: 240 6% 7%;            /* neutral near-black */
 
-  --foreground: 171 23% 85%;          /* #d1e8e5 - text-primary (off-white with teal tint) */
+  --foreground: 240 8% 92%;           /* neutral off-white */
 
-  --border: 210 14% 18%;
+  --border: 240 6% 17%;
 
-  --card: 210 14% 11%;
+  --card: 240 6% 9%;
 
-  --card-foreground: 171 23% 85%;
+  --card-foreground: 240 8% 92%;
 
-  --card-border: 210 14% 14%;
+  --card-border: 240 6% 13%;
 
-  --sidebar: 210 14% 10%;
+  --sidebar: 240 6% 8%;
 
-  --sidebar-foreground: 171 23% 85%;
+  --sidebar-foreground: 240 8% 92%;
 
-  --sidebar-border: 210 14% 16%;
+  --sidebar-border: 240 6% 15%;
 
-  /* Mint teal accent - primary interactive color */
-  --sidebar-primary: 168 44% 65%;     /* #7fd0bd - accent-info */
+  /* Indigo accent - primary interactive color */
+  --sidebar-primary: 255 86% 71%;
 
-  --sidebar-primary-foreground: 210 14% 9%;
+  --sidebar-primary-foreground: 240 6% 7%;
 
-  --sidebar-accent: 210 14% 14%;
+  --sidebar-accent: 240 6% 13%;
 
-  --sidebar-accent-foreground: 171 23% 85%;
+  --sidebar-accent-foreground: 240 8% 92%;
 
-  --sidebar-ring: 168 44% 65%;
+  --sidebar-ring: 255 86% 71%;
 
-  --popover: 210 14% 11%;
+  --popover: 240 6% 10%;
 
-  --popover-foreground: 171 23% 85%;
+  --popover-foreground: 240 8% 92%;
 
-  --popover-border: 210 14% 18%;
+  --popover-border: 240 6% 17%;
 
-  /* Mint teal - primary brand color */
-  --primary: 168 44% 65%;             /* #7fd0bd */
+  /* Indigo - primary brand color */
+  --primary: 255 86% 71%;
 
-  --primary-foreground: 210 14% 9%;
+  --primary-foreground: 240 6% 7%;
 
-  /* Darker grey for secondary elements */
-  --secondary: 0 0% 31%;              /* #4f4f4f - text-secondary */
+  /* Neutral grey for secondary elements */
+  --secondary: 240 5% 20%;
 
-  --secondary-foreground: 171 23% 85%;
+  --secondary-foreground: 240 8% 92%;
 
-  --muted: 210 14% 14%;
+  --muted: 240 6% 13%;
 
-  --muted-foreground: 0 0% 55%;       /* Subtle grey for metadata */
+  --muted-foreground: 240 4% 62%;     /* Subtle grey for metadata */
 
-  /* Rust orange accent for CTAs */
-  --accent: 16 77% 54%;               /* #ea5c2a - accent-action */
+  /* Warm amber accent for CTAs */
+  --accent: 32 95% 60%;
 
-  --accent-foreground: 171 23% 95%;
+  --accent-foreground: 240 8% 10%;
 
-  /* Rose red for warnings/errors */
-  --destructive: 353 97% 61%;         /* #fb3f58 - accent-warn */
+  /* Red for warnings/errors */
+  --destructive: 0 84% 63%;
 
   --destructive-foreground: 0 0% 98%;
 
-  --input: 210 11% 15%;
-  --ring: 200 95% 65%;
-  --chart-1: 200 95% 65%;
-  --chart-2: 280 70% 70%;
-  --chart-3: 320 80% 70%;
-  --chart-4: 40 90% 65%;
-  --chart-5: 160 80% 55%;
+  --input: 240 6% 15%;
+  --ring: 255 86% 71%;
+  --chart-1: 255 86% 71%;
+  --chart-2: 199 89% 64%;
+  --chart-3: 32 95% 60%;
+  --chart-4: 340 75% 68%;
+  --chart-5: 160 70% 50%;
 
   --shadow-2xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.10);
   --shadow-xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.15);
@@ -283,37 +283,6 @@
   [role="button"],
   [role="link"] {
     -webkit-tap-highlight-color: rgba(127, 208, 189, 0.2); /* Mint teal at 20% */
-  }
-
-  /* ============================================
-     PHASE 3: BACKGROUND ACCENTS
-     Radial gradient + noise texture for depth
-     ============================================ */
-
-  /* Radial gradient glow - subtle mint-teal focal point */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(
-      circle at 50% 30%, 
-      hsl(var(--accent-info) / 0.06), 
-      transparent 40%
-    );
-    pointer-events: none;
-    z-index: -2;
-  }
-
-  /* Noise texture overlay - matte/grained effect */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url('/noise.svg');
-    background-repeat: repeat;
-    opacity: 0.03;
-    pointer-events: none;
-    z-index: -1;
   }
 
   /* Terminal-style input with blinking caret */
@@ -485,24 +454,24 @@
 }
 
 .dark {
-  /* Surface layers - refined terminal palette */
-  --surface: 210 14% 6%;              /* #0f1112 - deepest black-blue */
-  --surface-2: 210 14% 9%;            /* #121619 - elevated surface */
-  --surface-contrast: 210 14% 13%;    /* #202426 - border color */
-  
-  /* Accent colors - mint teal & rust orange */
-  --accent-info: 171 66% 56%;         /* #36e0c7 - vivid mint (primary interactive) */
-  --accent-info-muted: 168 44% 65%;   /* #7fd0bd - softer mint (fallback) */
-  --accent-action: 16 77% 54%;        /* #ea5c2a - rust orange (CTAs) */
-  --accent-warn: 353 97% 61%;         /* #fb3f58 - rose red (errors) */
-  
+  /* Surface layers - neutral dark palette (no blue/teal tint) */
+  --surface: 240 6% 5%;                /* deepest neutral black */
+  --surface-2: 240 6% 9%;              /* elevated surface */
+  --surface-contrast: 240 6% 15%;      /* border color */
+
+  /* Accent colors - indigo & amber */
+  --accent-info: 255 86% 71%;          /* indigo (primary interactive) */
+  --accent-info-muted: 255 60% 78%;    /* softer indigo (fallback) */
+  --accent-action: 32 95% 60%;         /* amber (CTAs) */
+  --accent-warn: 0 84% 63%;            /* red (errors) */
+
   /* Text hierarchy */
-  --text-primary: 171 23% 85%;        /* #d1e8e5 - off-white with teal tint */
-  --text-muted: 0 0% 62%;             /* #9e9e9e - accessible grey (4.52:1 contrast) */
-  
+  --text-primary: 240 8% 92%;          /* neutral off-white */
+  --text-muted: 240 4% 62%;            /* accessible grey */
+
   /* Glass/transparency */
   --glass: rgba(255, 255, 255, 0.02);
-  --focus-ring: rgba(54, 224, 199, 0.14);
+  --focus-ring: rgba(129, 111, 246, 0.18);
 }
 
 /* ============================================
@@ -549,61 +518,53 @@
   --type-label-small-weight: 400;
 }
 
-/* Utility classes for type scale */
+/* Utility classes for type scale (sans by default; monospace is opt-in via font-mono) */
 .type-display-small {
   font-size: var(--type-display-small-size);
   line-height: var(--type-display-small-height);
   font-weight: var(--type-display-small-weight);
-  font-family: 'JetBrains Mono', monospace;
 }
 
 .type-headline-small {
   font-size: var(--type-headline-small-size);
   line-height: var(--type-headline-small-height);
   font-weight: var(--type-headline-small-weight);
-  font-family: 'JetBrains Mono', monospace;
 }
 
 .type-body-large {
   font-size: var(--type-body-large-size);
   line-height: var(--type-body-large-height);
   font-weight: var(--type-body-large-weight);
-  font-family: 'JetBrains Mono', monospace;
 }
 
 .type-body-medium {
   font-size: var(--type-body-medium-size);
   line-height: var(--type-body-medium-height);
   font-weight: var(--type-body-medium-weight);
-  font-family: 'JetBrains Mono', monospace;
 }
 
 .type-title-medium {
   font-size: var(--type-title-medium-size);
   line-height: var(--type-title-medium-height);
   font-weight: var(--type-title-medium-weight);
-  font-family: 'JetBrains Mono', monospace;
 }
 
 .type-label-large {
   font-size: var(--type-label-large-size);
   line-height: var(--type-label-large-height);
   font-weight: var(--type-label-large-weight);
-  font-family: 'JetBrains Mono', monospace;
 }
 
 .type-label-medium {
   font-size: var(--type-label-medium-size);
   line-height: var(--type-label-medium-height);
   font-weight: var(--type-label-medium-weight);
-  font-family: 'JetBrains Mono', monospace;
 }
 
 .type-label-small {
   font-size: var(--type-label-small-size);
   line-height: var(--type-label-small-height);
   font-weight: var(--type-label-small-weight);
-  font-family: 'JetBrains Mono', monospace;
 }
 
 /* ============================================
@@ -746,21 +707,3 @@
   color: hsl(var(--foreground));
 }
 
-/* Homepage no-scroll scaling */
-.homepage-viewport {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.homepage-content {
-  transform-origin: center center;
-  backface-visibility: hidden;
-  will-change: transform;
-  transition: transform 240ms cubic-bezier(0.2, 0.9, 0.2, 1);
-}

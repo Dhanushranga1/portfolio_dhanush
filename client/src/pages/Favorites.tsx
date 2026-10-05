@@ -50,7 +50,11 @@ function mapStrapiMovie(m: MovieEntity): Movie {
     rating: m.rating ?? 0,
     watched: m.watched,
     watchedDate: null,
-    poster: m.poster ? getStrapiImageUrl(m.poster) : null,
+    poster: m.poster
+      ? getStrapiImageUrl(m.poster)
+      : m.posterPath
+        ? `https://image.tmdb.org/t/p/w500${m.posterPath}`
+        : null,
     tmdbId: m.tmdbId ? String(m.tmdbId) : null,
     notes: m.personalNotes ?? "",
     tags: m.genres ?? [],
@@ -265,7 +269,7 @@ export default function Favorites() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background text-foreground pt-24 pb-20 px-6 font-mono">
+      <div className="min-h-screen bg-background text-foreground pt-20 pb-20 px-6">
         <div className="max-w-7xl mx-auto space-y-6" aria-busy="true" aria-label="Loading movies">
           <Skeleton className="h-10 w-64" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -280,13 +284,11 @@ export default function Favorites() {
 
   if (isError) {
     return (
-      <div className="min-h-screen bg-background text-foreground pt-24 pb-20 px-6 font-mono flex items-center justify-center">
+      <div className="min-h-screen bg-background text-foreground pt-20 pb-20 px-6 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-muted-foreground mb-3">
-            <span className="text-accent-warn">$</span> failed to load movies
-          </p>
+          <p className="text-muted-foreground mb-3">Failed to load movies.</p>
           <Button variant="outline" size="sm" onClick={() => refetch()}>
-            retry
+            Retry
           </Button>
         </div>
       </div>
@@ -301,7 +303,7 @@ export default function Favorites() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="min-h-screen bg-background text-foreground pt-24 pb-20 px-6 font-mono">
+      <div className="min-h-screen bg-background text-foreground pt-20 pb-20 px-6">
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-8">
         <motion.div
@@ -311,23 +313,18 @@ export default function Favorites() {
           className="flex items-center justify-between mb-6 flex-wrap gap-4"
         >
           <div>
-            <h1 className="text-3xl md:text-[1.4rem] md:text-4xl font-bold text-accent-info mb-2 tracking-wide">
-              <span className="text-accent-info/70">$</span> ls ~/favorites/movies<span className="terminal-prompt"></span>
-            </h1>
-            <p className="text-muted-foreground text-sm md:text-base" style={{ lineHeight: '1.6' }}>
-              <span className="text-accent-info/80 font-medium">{filteredMovies.length}</span> of {movies.length} movies indexed
-              <span className="ml-2 text-accent-info/50">•</span>
-              <span className="ml-2">Press <kbd className="px-1.5 py-0.5 bg-surface-2 border border-border/50 rounded text-xs font-semibold">V</kbd> to toggle view</span>
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">Favorites</h1>
+            <p className="text-muted-foreground text-sm md:text-base">
+              {filteredMovies.length} of {movies.length} movies
             </p>
           </div>
-          
+
           {/* View Toggle */}
           <div className="flex gap-2">
             <Button
               variant={viewMode === "grid" ? "default" : "outline"}
               size="icon"
               onClick={() => setViewMode("grid")}
-              className={`font-mono ${viewMode === "grid" ? "bg-accent-info text-surface" : "hover:bg-surface-2"}`}
               aria-label="Grid view (press V to toggle)"
               title="Grid view"
             >
@@ -337,19 +334,18 @@ export default function Favorites() {
               variant={viewMode === "list" ? "default" : "outline"}
               size="icon"
               onClick={() => setViewMode("list")}
-              className={`font-mono ${viewMode === "list" ? "bg-accent-info text-surface" : "hover:bg-surface-2"}`}
               aria-label="List view (press V to toggle)"
               title="List view"
             >
               <List className="h-4 w-4" />
             </Button>
-            
+
             {/* Export Button */}
             <Button
               variant="outline"
               size="sm"
               onClick={exportToJson}
-              className="font-mono hover:bg-surface-2 ml-2"
+              className="ml-2"
               aria-label="Export to JSON (Ctrl/Cmd+E)"
               title="Export to JSON"
             >
@@ -364,27 +360,27 @@ export default function Favorites() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="terminal-card p-5 space-y-4 border-l-2 border-l-transparent hover:border-l-accent-info/30 transition-all duration-300"
+          className="rounded-lg border border-border bg-card p-5 space-y-4"
         >
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-terminal-text-dim" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
               placeholder="Search by title or director..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-terminal-bg-alt border-terminal-border focus:border-accent-info/50 focus:ring-2 focus:ring-accent-info/20 transition-all duration-200"
+              className="pl-10 focus:border-accent-info/50 focus:ring-2 focus:ring-accent-info/20 transition-all duration-200"
             />
           </div>
 
           {/* Filters and Sort */}
-          <div className="flex flex-wrap gap-3 items-center pt-2 border-t border-border/30">
+          <div className="flex flex-wrap gap-3 items-center pt-2 border-t border-border">
             {/* Sort */}
             <div className="flex items-center gap-2">
-              <ArrowUpDown className="h-4 w-4 text-terminal-text-dim" />
+              <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
               <Select value={sortMode} onValueChange={(v) => setSortMode(v as SortMode)}>
-                <SelectTrigger className="w-[180px] bg-terminal-bg-alt border-terminal-border">
+                <SelectTrigger className="w-[180px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -398,12 +394,12 @@ export default function Favorites() {
 
             {/* Filter by Tag */}
             <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-terminal-text-dim" />
-              <Select 
-                value={filterTag || "all"} 
+              <Filter className="h-4 w-4 text-muted-foreground" />
+              <Select
+                value={filterTag || "all"}
                 onValueChange={(v) => setFilterTag(v === "all" ? null : v)}
               >
-                <SelectTrigger className="w-[180px] bg-terminal-bg-alt border-terminal-border">
+                <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Filter by tag" />
                 </SelectTrigger>
                 <SelectContent>
@@ -422,7 +418,6 @@ export default function Favorites() {
               variant={filterFavorite ? "default" : "outline"}
               size="sm"
               onClick={() => setFilterFavorite(!filterFavorite)}
-              className={filterFavorite ? "bg-terminal-accent-yellow" : ""}
             >
               <Star className={`h-4 w-4 mr-2 ${filterFavorite ? "fill-current" : ""}`} />
               Favorites Only
@@ -443,7 +438,7 @@ export default function Favorites() {
           {/* Active Filters */}
           {(searchQuery || filterTag || filterFavorite) && (
             <div className="flex flex-wrap gap-2 items-center">
-              <span className="text-sm text-terminal-text-dim">Active filters:</span>
+              <span className="text-sm text-muted-foreground">Active filters:</span>
               {searchQuery && (
                 <Badge variant="secondary" className="gap-1">
                   Search: {searchQuery}
@@ -476,9 +471,9 @@ export default function Favorites() {
         </motion.div>
 
         {/* Keyboard Hints */}
-        <div className="mt-4 text-sm text-terminal-text-dim">
-          <span className="mr-4">Press <kbd className="px-2 py-1 bg-terminal-bg-alt rounded border border-terminal-border">v</kbd> to toggle view</span>
-          <span>Press <kbd className="px-2 py-1 bg-terminal-bg-alt rounded border border-terminal-border">Ctrl+E</kbd> to export</span>
+        <div className="mt-4 text-sm text-muted-foreground">
+          <span className="mr-4">Press <kbd className="px-2 py-1 bg-muted rounded border border-border">v</kbd> to toggle view</span>
+          <span>Press <kbd className="px-2 py-1 bg-muted rounded border border-border">Ctrl+E</kbd> to export</span>
         </div>
       </div>
 
@@ -489,9 +484,9 @@ export default function Favorites() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="terminal-card p-12 text-center"
+            className="rounded-lg border border-border bg-card p-12 text-center"
           >
-            <p className="text-terminal-text-dim text-lg">No movies found matching your criteria</p>
+            <p className="text-muted-foreground text-lg">No movies found matching your criteria</p>
           </motion.div>
         ) : viewMode === "grid" ? (
           /* Grid View */
@@ -503,10 +498,10 @@ export default function Favorites() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: Math.min(idx * 0.05, 0.8) }}
               >
-                <Card className="terminal-card overflow-hidden group hover:border-accent-info/50 hover:bg-surface-2/30 hover:-translate-y-1 hover:shadow-[0_0_12px_rgba(54,224,199,0.15)] transition-all duration-200 rounded-[14px] h-full">
+                <Card className="rounded-lg border border-border bg-card overflow-hidden group hover:border-accent-info/50 hover:bg-surface-2/30 hover:-translate-y-1 hover:shadow-[0_0_12px_rgba(54,224,199,0.15)] transition-all duration-200 rounded-[14px] h-full">
               
                   {/* Poster */}
-                  <div className="relative aspect-[2/3] overflow-hidden bg-gradient-to-b from-terminal-bg-alt/50 to-terminal-bg">
+                  <div className="relative aspect-[2/3] overflow-hidden bg-gradient-to-b from-muted/50 to-surface">
                     {movie.poster ? (
                       <img
                         src={movie.poster}
@@ -515,7 +510,7 @@ export default function Favorites() {
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-terminal-text-dim">
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground">
                         No poster
                       </div>
                     )}
@@ -523,14 +518,14 @@ export default function Favorites() {
                     {/* Favorite Star Overlay */}
                     <button
                       onClick={() => toggleFavorite(movie.id)}
-                      className="absolute top-2 right-2 p-2 bg-terminal-bg/90 backdrop-blur-sm rounded-full hover:bg-accent-info/20 hover:text-accent-info transition-all duration-200"
+                      className="absolute top-2 right-2 p-2 bg-surface/90 backdrop-blur-sm rounded-full hover:bg-accent-info/20 hover:text-accent-info transition-all duration-200"
                       aria-label={movie.favorite ? "Remove from favorites" : "Add to favorites"}
                     >
                       <Star
                         className={`h-5 w-5 transition-colors ${
                           movie.favorite
-                            ? "fill-terminal-accent-yellow text-terminal-accent-yellow"
-                            : "text-terminal-text-dim"
+                            ? "fill-accent-action text-accent-action"
+                            : "text-muted-foreground"
                         }`}
                       />
                     </button>
@@ -542,7 +537,7 @@ export default function Favorites() {
                       <h3 className="text-lg font-semibold text-accent-info mb-1 line-clamp-1 group-hover:text-accent-info/80 transition-colors">
                         {movie.title}
                       </h3>
-                      <p className="text-sm text-terminal-text-dim/90" style={{ lineHeight: '1.5' }}>
+                      <p className="text-sm text-muted-foreground/90" style={{ lineHeight: '1.5' }}>
                         {movie.year} • {movie.director || "Unknown"}
                       </p>
                     </div>
@@ -560,8 +555,8 @@ export default function Favorites() {
                             <Star
                               className={`h-3 w-3 transition-colors ${
                                 i < movie.rating
-                                  ? "fill-terminal-accent-yellow text-terminal-accent-yellow"
-                                  : "text-terminal-text-dim hover:text-terminal-accent-yellow/50"
+                                  ? "fill-accent-action text-accent-action"
+                                  : "text-muted-foreground hover:text-accent-action/50"
                               }`}
                             />
                           </button>
@@ -611,12 +606,12 @@ export default function Favorites() {
 
                   {/* Notes (if editing) */}
                   {editingNotes === movie.id && (
-                    <div className="space-y-2 pt-2 border-t border-terminal-border">
+                    <div className="space-y-2 pt-2 border-t border-border">
                       <Textarea
                         value={noteText}
                         onChange={(e) => setNoteText(e.target.value)}
                         placeholder="Add your notes... (Markdown supported)"
-                        className="min-h-[80px] text-sm bg-terminal-bg-alt"
+                        className="min-h-[80px] text-sm bg-muted"
                       />
                       <div className="flex gap-2">
                         <Button
@@ -642,7 +637,7 @@ export default function Favorites() {
 
                   {/* Show notes preview if not editing */}
                   {editingNotes !== movie.id && movie.notes && (
-                    <p className="text-sm text-terminal-text-dim/90 line-clamp-2 pt-3 border-t border-border/30" style={{ lineHeight: '1.6' }}>
+                    <p className="text-sm text-muted-foreground/90 line-clamp-2 pt-3 border-t border-border/30" style={{ lineHeight: '1.6' }}>
                       {movie.notes}
                     </p>
                   )}
@@ -661,11 +656,11 @@ export default function Favorites() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.6) }}
               >
-                <Card className="terminal-card p-4 hover:border-l-4 hover:border-l-accent-info hover:border-accent-info/50 hover:bg-surface-2/30 transition-all duration-200">
+                <Card className="rounded-lg border border-border bg-card p-4 hover:border-l-4 hover:border-l-accent-info hover:border-accent-info/50 hover:bg-surface-2/30 transition-all duration-200">
               
                 <div className="flex gap-4">
                   {/* Poster Thumbnail */}
-                  <div className="w-16 h-24 flex-shrink-0 bg-terminal-bg-alt rounded overflow-hidden">
+                  <div className="w-16 h-24 flex-shrink-0 bg-muted rounded overflow-hidden">
                     {movie.poster ? (
                       <img
                         src={movie.poster}
@@ -674,7 +669,7 @@ export default function Favorites() {
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-xs text-terminal-text-dim">
+                      <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
                         No poster
                       </div>
                     )}
@@ -684,10 +679,10 @@ export default function Favorites() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between mb-2">
                       <div>
-                        <h3 className="font-bold text-terminal-accent-blue">
-                          {movie.title} <span className="text-terminal-text-dim font-normal">({movie.year})</span>
+                        <h3 className="font-bold text-accent-info">
+                          {movie.title} <span className="text-muted-foreground font-normal">({movie.year})</span>
                         </h3>
-                        <p className="text-sm text-terminal-text-dim">
+                        <p className="text-sm text-muted-foreground">
                           {movie.director && `Directed by ${movie.director} • `}
                           {movie.genre}
                         </p>
@@ -695,7 +690,7 @@ export default function Favorites() {
 
                       {/* Rating */}
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className="text-terminal-accent-yellow font-bold">{movie.rating}/10</span>
+                        <span className="text-accent-action font-bold">{movie.rating}/10</span>
                         <button
                           onClick={() => toggleFavorite(movie.id)}
                           aria-label={movie.favorite ? "Remove from favorites" : "Add to favorites"}
@@ -703,8 +698,8 @@ export default function Favorites() {
                           <Star
                             className={`h-5 w-5 ${
                               movie.favorite
-                                ? "fill-terminal-accent-yellow text-terminal-accent-yellow"
-                                : "text-terminal-text-dim"
+                                ? "fill-accent-action text-accent-action"
+                                : "text-muted-foreground"
                             }`}
                           />
                         </button>
@@ -722,7 +717,7 @@ export default function Favorites() {
 
                     {/* Notes Preview */}
                     {movie.notes && (
-                      <p className="text-sm text-terminal-text-dim/90 mb-3 line-clamp-2" style={{ lineHeight: '1.6' }}>
+                      <p className="text-sm text-muted-foreground/90 mb-3 line-clamp-2" style={{ lineHeight: '1.6' }}>
                         {movie.notes}
                       </p>
                     )}
@@ -759,7 +754,7 @@ export default function Favorites() {
                         {movie.watched ? "Watched" : "Mark Watched"}
                       </Button>
                       {movie.watched && movie.watchedDate && (
-                        <span className="text-xs text-terminal-text-dim/80 flex items-center ml-auto">
+                        <span className="text-xs text-muted-foreground/80 flex items-center ml-auto">
                           <Calendar className="h-3 w-3 mr-1" />
                           {new Date(movie.watchedDate).toLocaleDateString()}
                         </span>
@@ -777,7 +772,7 @@ export default function Favorites() {
       {/* Native <dialog> Modal for Trailer */}
       <dialog
         ref={trailerDialog}
-        className="backdrop:bg-black/80 bg-terminal-bg border border-terminal-border rounded-lg p-0 max-w-4xl w-full"
+        className="backdrop:bg-black/80 bg-surface border border-border rounded-lg p-0 max-w-4xl w-full"
         onClick={(e) => {
           // Close on backdrop click
           if (e.target === trailerDialog.current) {
@@ -793,12 +788,12 @@ export default function Favorites() {
         {selectedMovie && (
           <div className="p-6">
             <div className="flex items-start justify-between mb-4">
-              <h2 id="dialog-title" className="text-xl font-bold text-terminal-accent-blue">
+              <h2 id="dialog-title" className="text-xl font-bold text-accent-info">
                 {selectedMovie.title} - Trailer
               </h2>
               <button
                 onClick={closeTrailer}
-                className="text-terminal-text-dim hover:text-terminal-text"
+                className="text-muted-foreground hover:text-foreground"
                 aria-label="Close"
               >
                 <X className="h-6 w-6" />

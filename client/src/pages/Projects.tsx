@@ -116,41 +116,15 @@ export default function Projects() {
   return (
     <div className="min-h-screen pt-24 pb-32 px-6">
       <div className="max-w-4xl mx-auto">
-        {/* Terminal-style header */}
-        <div className="mb-10 font-mono animate-in fade-in slide-in-from-top-2 duration-700">
-          <h1 className="text-3xl md:text-4xl font-semibold mb-3 text-accent-info">
-            <span className="text-muted-foreground">$</span> ls --impact ~/projects
-            {statusFilter !== "all" && (
-              <span className="text-accent-action"> --status={statusFilter}</span>
-            )}
-          </h1>
-          <p className="text-sm text-muted-foreground opacity-80">
-            showing {filteredProjects.length} of {allProjects.length} items •
-            sorted by impact
-          </p>
-          <p className="text-xs text-muted-foreground mt-2">
-            <kbd className="px-1.5 py-0.5 border border-border rounded bg-surface-2 text-accent-info">
-              j
-            </kbd>
-            /
-            <kbd className="px-1.5 py-0.5 border border-border rounded bg-surface-2 text-accent-info">
-              k
-            </kbd>{" "}
-            to navigate •{" "}
-            <kbd className="px-1.5 py-0.5 border border-border rounded bg-surface-2 text-accent-info">
-              1-9
-            </kbd>{" "}
-            for direct access •{" "}
-            <kbd className="px-1.5 py-0.5 border border-border rounded bg-surface-2 text-accent-info">
-              Enter
-            </kbd>{" "}
-            to open
+        <div className="mb-10">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Projects</h1>
+          <p className="text-muted-foreground">
+            {filteredProjects.length} of {allProjects.length} projects
           </p>
         </div>
 
         {/* Status filters */}
-        <div className="mb-6 flex flex-wrap gap-2 font-mono text-sm">
-          <span className="text-muted-foreground self-center">--status:</span>
+        <div className="mb-8 flex flex-wrap gap-2">
           {(["all", "deployed", "active", "archived"] as StatusFilter[]).map(
             (filter) => (
               <Button
@@ -158,10 +132,10 @@ export default function Projects() {
                 onClick={() => handleFilterChange(filter)}
                 variant="ghost"
                 size="sm"
-                className={`font-mono transition-colors ${
+                className={`capitalize transition-colors ${
                   statusFilter === filter
-                    ? "bg-accent-info text-surface border border-accent-info"
-                    : "text-muted-foreground hover:text-accent-info hover:bg-surface-2"
+                    ? "bg-foreground text-background hover:bg-foreground hover:text-background"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 }`}
                 aria-label={`Filter projects by ${filter} status`}
                 aria-pressed={statusFilter === filter}
@@ -172,7 +146,6 @@ export default function Projects() {
           )}
         </div>
 
-        {/* Projects as terminal list */}
         <h2 className="sr-only">Project List</h2>
         {isLoading ? (
           <div className="space-y-6" aria-busy="true" aria-label="Loading projects">
@@ -181,12 +154,10 @@ export default function Projects() {
             ))}
           </div>
         ) : isError ? (
-          <div className="py-12 text-center font-mono">
-            <p className="text-muted-foreground mb-3">
-              <span className="text-accent-warn">$</span> failed to load projects
-            </p>
+          <div className="py-12 text-center">
+            <p className="text-muted-foreground mb-3">Failed to load projects.</p>
             <Button variant="outline" size="sm" onClick={() => refetch()}>
-              retry
+              Retry
             </Button>
           </div>
         ) : filteredProjects.length > 0 ? (
@@ -202,31 +173,10 @@ export default function Projects() {
             ))}
           </ul>
         ) : (
-          <div className="py-12 text-center font-mono">
-            <p className="text-muted-foreground mb-2">
-              <span className="text-accent-action">$</span> No projects found
-            </p>
-            <p className="text-sm text-muted-foreground">
-              // Try adjusting your filters
-            </p>
+          <div className="py-12 text-center">
+            <p className="text-muted-foreground">No projects match this filter.</p>
           </div>
         )}
-
-        {/* Terminal-style footer */}
-        <div className="mt-12 pt-8 border-t border-border font-mono text-sm text-muted-foreground">
-          <p>
-            <span className="text-accent-info">$</span> total{" "}
-            {filteredProjects.length} projects
-            {statusFilter !== "all" && ` with status="${statusFilter}"`}
-          </p>
-          <p className="mt-2 text-xs">
-            tip: press{" "}
-            <kbd className="px-2 py-0.5 border border-border rounded bg-surface-2 text-accent-info">
-              {navigator.platform.includes("Mac") ? "⌘K" : "Ctrl+K"}
-            </kbd>{" "}
-            to open command palette
-          </p>
-        </div>
       </div>
     </div>
   );

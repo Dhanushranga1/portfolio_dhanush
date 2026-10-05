@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { submitContactForm } from "@/lib/formspree";
 
 export default function ContactForm() {
@@ -49,21 +49,21 @@ export default function ContactForm() {
 
       if (result.ok) {
         toast({
-          title: "message sent",
-          description: "thanks for reaching out. i'll get back to you soon!",
+          title: "Message sent",
+          description: "Thanks for reaching out — I'll get back to you soon!",
         });
         setFormData({ name: "", email: "", message: "", _gotcha: "" });
       } else {
         toast({
-          title: "error sending message",
-          description: result.error || "something went wrong. please try again.",
+          title: "Error sending message",
+          description: result.error || "Something went wrong. Please try again.",
           variant: "destructive",
         });
       }
     } catch (error) {
       toast({
-        title: "error sending message",
-        description: error instanceof Error ? error.message : "something went wrong. please try again.",
+        title: "Error sending message",
+        description: error instanceof Error ? error.message : "Something went wrong. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -72,7 +72,7 @@ export default function ContactForm() {
   };
 
   return (
-    <form id="contact-form" onSubmit={handleSubmit} className="space-y-6 font-mono" data-testid="form-contact">
+    <form id="contact-form" onSubmit={handleSubmit} className="space-y-6" data-testid="form-contact">
       {/* Honeypot field - hidden from users, catches bots */}
       <input
         type="text"
@@ -86,26 +86,26 @@ export default function ContactForm() {
       />
 
       <div className="space-y-2">
-        <label htmlFor="name" className="text-sm text-muted-foreground">
-          name
+        <label htmlFor="name" className="text-sm font-medium text-foreground">
+          Name
         </label>
         <Input
           id="name"
           name="name"
           autoComplete="name"
-          placeholder="john doe"
+          placeholder="Jane Doe"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           required
           disabled={isSubmitting}
-          className="font-mono border-border focus:ring-2 focus:ring-accent-info/20 focus:border-accent-info/50"
+          className="border-border focus:ring-2 focus:ring-accent-info/20 focus:border-accent-info/50"
           data-testid="input-name"
         />
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="email" className="text-sm text-muted-foreground">
-          email <span className="font-normal">(if you want a reply)</span>
+        <label htmlFor="email" className="text-sm font-medium text-foreground">
+          Email <span className="text-muted-foreground font-normal">(if you want a reply)</span>
         </label>
         <Input
           id="email"
@@ -118,22 +118,22 @@ export default function ContactForm() {
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           disabled={isSubmitting}
-          className="font-mono border-border focus:ring-2 focus:ring-accent-info/20 focus:border-accent-info/50"
+          className="border-border focus:ring-2 focus:ring-accent-info/20 focus:border-accent-info/50"
           data-testid="input-email"
         />
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="message" className="text-sm text-muted-foreground">
-          your message
+        <label htmlFor="message" className="text-sm font-medium text-foreground">
+          Message
         </label>
         <Textarea
           id="message"
           name="message"
-          placeholder="tell me what's on your mind..."
+          placeholder="What's on your mind?"
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-          className="min-h-[150px] resize-vertical font-mono border-border focus:ring-2 focus:ring-accent-info/20 focus:border-accent-info/50"
+          className="min-h-[150px] resize-vertical border-border focus:ring-2 focus:ring-accent-info/20 focus:border-accent-info/50"
           required
           disabled={isSubmitting}
           data-testid="input-message"
@@ -146,16 +146,19 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
         data-testid="button-submit"
       >
         {isSubmitting ? (
           <>
-            <Loader2 className="h-3 w-3 animate-spin" />
-            sending...
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Sending...
           </>
         ) : (
-          <>submit →</>
+          <>
+            Send Message
+            <ArrowRight className="h-4 w-4" />
+          </>
         )}
       </button>
     </form>

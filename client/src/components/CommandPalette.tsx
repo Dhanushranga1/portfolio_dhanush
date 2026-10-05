@@ -223,33 +223,23 @@ export default function CommandPalette() {
         </DialogDescription>
       </VisuallyHidden>
       
-      <CommandInput 
-        placeholder="Type a command or search... (try 'ls --category navigation')" 
-        className="font-mono text-sm"
+      <CommandInput
+        placeholder="Search pages and actions..."
         aria-label="Search for commands or pages"
         value={searchQuery}
         onValueChange={setSearchQuery}
       />
-      
+
       <CommandList>
-        <CommandEmpty className="font-mono text-sm py-6 text-muted-foreground">
-          <span className="text-accent-info">$</span> no results found
-          {parsedCommand.command && (
-            <div className="mt-2 text-xs text-muted">
-              Command: {parsedCommand.command} {JSON.stringify(parsedCommand.flags)}
-            </div>
-          )}
+        <CommandEmpty className="text-sm py-6 text-muted-foreground text-center">
+          No results found.
         </CommandEmpty>
-        
+
         {navigationCommands.length > 0 && (
           <>
-            <CommandGroup heading="Navigation" className="font-mono">
+            <CommandGroup heading="Navigation">
               {navigationCommands.map(cmd => (
-                <CommandItem 
-                  key={cmd.id}
-                  onSelect={cmd.action} 
-                  className="font-mono"
-                >
+                <CommandItem key={cmd.id} onSelect={cmd.action}>
                   {cmd.icon}
                   <span>{cmd.label}</span>
                   {cmd.shortcut && (
@@ -264,13 +254,9 @@ export default function CommandPalette() {
 
         {actionCommands.length > 0 && (
           <>
-            <CommandGroup heading="Actions" className="font-mono">
+            <CommandGroup heading="Actions">
               {actionCommands.map(cmd => (
-                <CommandItem 
-                  key={cmd.id}
-                  onSelect={cmd.action} 
-                  className="font-mono"
-                >
+                <CommandItem key={cmd.id} onSelect={cmd.action}>
                   {cmd.icon}
                   <span>{cmd.label}</span>
                 </CommandItem>
@@ -281,13 +267,9 @@ export default function CommandPalette() {
         )}
 
         {externalCommands.length > 0 && (
-          <CommandGroup heading="External Links" className="font-mono">
+          <CommandGroup heading="External Links">
             {externalCommands.map(cmd => (
-              <CommandItem 
-                key={cmd.id}
-                onSelect={cmd.action} 
-                className="font-mono"
-              >
+              <CommandItem key={cmd.id} onSelect={cmd.action}>
                 {cmd.icon}
                 <span>{cmd.label}</span>
                 <span className="ml-auto text-xs text-muted-foreground">↗</span>

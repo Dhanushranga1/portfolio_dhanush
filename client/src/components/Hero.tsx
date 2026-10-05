@@ -1,214 +1,112 @@
 import { Link } from "wouter";
 import { motion, useReducedMotion } from "framer-motion";
-import { useEffect, useRef } from "react";
-import TextAnim from "./animations/TextAnim";
-import CursorBlinker from "./animations/CursorBlinker";
-import ActionButtons from "./ActionButtons";
-import { useHomePage } from "@/hooks/useStrapi";
-
-const FALLBACK_SUBHEADING = "full-stack dev intern @ tonik · srm ist · ai/ml · agentic systems";
+import { ArrowRight, FileText, Github, Linkedin } from "lucide-react";
+import { useHomePage, useSiteSettings } from "@/hooks/useStrapi";
 
 export default function Hero() {
   const shouldReduceMotion = useReducedMotion();
-  const contentRef = useRef<HTMLDivElement>(null);
-  const { data } = useHomePage();
-  const home = data?.data;
-  const subheading = home?.subheading ?? FALLBACK_SUBHEADING;
+  const { data: homeData } = useHomePage();
+  const { data: siteData } = useSiteSettings();
 
-  // Scale-to-fit logic to prevent scrolling
-  useEffect(() => {
-    const content = contentRef.current;
-    if (!content) return;
+  const home = homeData?.data;
+  const settings = siteData?.data;
 
-    function computeScale() {
-      if (!content) return 1;
-      
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
+  const heading = home?.heading ?? "Dhanush Ranga Gopisetty";
+  const subheading =
+    home?.subheading ?? "Full-stack & AI engineer building intelligent, production-grade platforms";
+  const primaryLabel = home?.primaryCtaLabel ?? "View Projects";
+  const primaryUrl = home?.primaryCtaUrl ?? "/projects";
+  const secondaryLabel = home?.secondaryCtaLabel ?? "Get in Touch";
+  const secondaryUrl = home?.secondaryCtaUrl ?? "/contact";
 
-      // Temporarily remove transform to measure natural size
-      const prevTransform = content.style.transform;
-      content.style.transform = 'none';
-      const rect = content.getBoundingClientRect();
-      const contentW = rect.width;
-      const contentH = rect.height;
-      content.style.transform = prevTransform;
-
-      // Compute scale with padding
-      const scaleW = (vw - 32) / contentW;
-      const scaleH = (vh - 32) / contentH;
-      const scale = Math.min(1, scaleW, scaleH);
-
-      // Minimum scale to keep readable
-      const minScale = 0.7;
-      return Math.max(minScale, scale);
-    }
-
-    function applyScale() {
-      if (!content) return;
-      const scale = computeScale();
-      content.style.transform = `scale(${scale}) translateZ(0)`;
-    }
-
-    let resizeTimeout: NodeJS.Timeout;
-    function scheduleUpdate() {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(applyScale, 80);
-    }
-
-    window.addEventListener('resize', scheduleUpdate);
-    window.addEventListener('orientationchange', scheduleUpdate);
-    window.addEventListener('load', applyScale);
-    
-    // Apply immediately
-    applyScale();
-
-    return () => {
-      window.removeEventListener('resize', scheduleUpdate);
-      window.removeEventListener('orientationchange', scheduleUpdate);
-      window.removeEventListener('load', applyScale);
-    };
-  }, []);
-
-  // Main hero UI
   return (
-    <section className="homepage-viewport">
-      <div ref={contentRef} className="homepage-content max-w-3xl text-center space-y-6 px-6">
-        {/* Username/Title with typing animation */}
-        <h1 className="text-5xl md:text-6xl font-mono font-bold tracking-tight">
-          <span className="text-accent-info">$ </span>
-          {shouldReduceMotion ? (
-            <>dhanushranga1</>
-          ) : (
-            <>
-              <TextAnim text="dhanushranga1" delay={0.2} duration={1} />
-              <CursorBlinker className="ml-1" />
-            </>
-          )}
-        </h1>
-        
-        {/* Bio - staggered entry */}
+    <section className="px-6 pt-20 pb-24 md:pt-28 md:pb-32">
+      <div className="max-w-3xl mx-auto text-center">
         <motion.p
-          className="text-lg md:text-xl font-mono text-muted-foreground leading-relaxed max-w-2xl mx-auto"
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.4, duration: 0.15 }}
+          transition={{ duration: 0.3 }}
+          className="text-sm font-medium text-accent-info mb-4"
         >
-          <span className="text-accent-info">~</span> {subheading}
+          Hi, I'm {heading.split(" ")[0]} 👋
         </motion.p>
 
-        {/* Now building badge */}
-        <motion.div
-          className="flex items-center justify-center"
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
+        <motion.h1
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.7, duration: 0.15 }}
+          transition={{ duration: 0.35, delay: 0.05 }}
+          className="text-4xl md:text-6xl font-bold tracking-tight text-foreground leading-[1.1] mb-6"
         >
-          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent-info/20 bg-accent-info/5 font-mono text-xs text-muted-foreground">
-            <span className="relative flex h-1.5 w-1.5 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-info opacity-60" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent-info" />
+          {heading}
+        </motion.h1>
+
+        <motion.p
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.1 }}
+          className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-10"
+        >
+          {subheading}
+        </motion.p>
+
+        <motion.div
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.15 }}
+          className="flex flex-wrap items-center justify-center gap-3 mb-14"
+        >
+          <Link href={primaryUrl}>
+            <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity duration-150 cursor-pointer">
+              {primaryLabel}
+              <ArrowRight className="h-4 w-4" />
             </span>
-            now building: kong-agentic @ tonik
-          </span>
+          </Link>
+          <Link href={secondaryUrl}>
+            <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border text-foreground font-medium text-sm hover:bg-muted transition-colors duration-150 cursor-pointer">
+              {secondaryLabel}
+            </span>
+          </Link>
         </motion.div>
 
-        {/* Quick links with underline reveal effect - staggered entry */}
         <motion.div
-          className="flex items-center justify-center gap-6 text-sm font-mono"
-          initial={shouldReduceMotion ? false : "hidden"}
-          animate="visible"
-          variants={{
-            hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: 0.08, // 80ms stagger
-                delayChildren: 1.95, // Start after status badge
-              }
-            }
-          }}
+          initial={shouldReduceMotion ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.25 }}
+          className="flex items-center justify-center gap-5 text-muted-foreground"
         >
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 6 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.15 } }
-            }}
-          >
-            <Link href="/about" data-testid="link-about">
-              <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
-                /about
-              </span>
-            </Link>
-          </motion.div>
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 6 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.15 } }
-            }}
-          >
-            <Link href="/projects" data-testid="link-projects">
-              <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
-                /projects
-              </span>
-            </Link>
-          </motion.div>
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 6 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.15 } }
-            }}
-          >
-            <Link href="/blog" data-testid="link-blog">
-              <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
-                /blog
-              </span>
-            </Link>
-          </motion.div>
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 6 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.15 } }
-            }}
-          >
-            <Link href="/photos" data-testid="link-pics">
-              <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
-                /pics
-              </span>
-            </Link>
-          </motion.div>
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 6 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.15 } }
-            }}
-          >
-            <Link href="/contact" data-testid="link-contact">
-              <span className="nav-link text-muted-foreground hover:text-accent-info cursor-pointer">
-                /contact
-              </span>
-            </Link>
-          </motion.div>
-        </motion.div>
-
-        {/* Terminal-style Action Buttons */}
-        <div className="pt-8">
-          <ActionButtons />
-        </div>
-
-        {/* Command Palette Hint - Phase 4 */}
-        <motion.div
-          className="pt-6"
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.8, duration: 0.15 }}
-        >
-          <p className="type-label-small text-muted-foreground/70">
-            press{" "}
-            <kbd className="px-1.5 py-0.5 bg-surface-2 border border-surface-contrast rounded font-mono text-accent-info-muted">
-              ⌘K
-            </kbd>{" "}
-            for quick navigation
-          </p>
+          {settings?.githubUrl && (
+            <a
+              href={settings.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              className="hover:text-foreground transition-colors duration-150"
+            >
+              <Github className="h-5 w-5" />
+            </a>
+          )}
+          {settings?.linkedinUrl && (
+            <a
+              href={settings.linkedinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="hover:text-foreground transition-colors duration-150"
+            >
+              <Linkedin className="h-5 w-5" />
+            </a>
+          )}
+          {settings?.resumeFile?.url && (
+            <a
+              href={settings.resumeFile.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Resume"
+              className="hover:text-foreground transition-colors duration-150"
+            >
+              <FileText className="h-5 w-5" />
+            </a>
+          )}
         </motion.div>
       </div>
     </section>

@@ -67,12 +67,9 @@ export default function Contact() {
           transition={{ duration: 0.18 }}
           className="mb-14"
         >
-          <h1 className="text-4xl md:text-5xl font-mono font-bold mb-2">
-            <span className="text-accent-info">$</span> contact
-            <span className="animate-pulse text-accent-info">_</span>
-          </h1>
-          <p className="text-sm font-mono text-muted-foreground">
-            {settings?.contactIntro ?? "open to collaboration, internship opportunities, and interesting conversations."}
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Contact</h1>
+          <p className="text-muted-foreground max-w-[55ch]">
+            {settings?.contactIntro ?? "Open to collaboration, internship opportunities, and interesting conversations."}
           </p>
         </motion.div>
 
@@ -83,7 +80,7 @@ export default function Contact() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.18, delay: 0.08 }}
-            className="space-y-3 font-mono text-sm"
+            className="space-y-3"
           >
             {isLoading ? (
               <div className="space-y-3">
@@ -97,12 +94,11 @@ export default function Contact() {
                 href={href}
                 {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 data-testid={testId}
-                className="flex items-center gap-3 text-muted-foreground hover:text-accent-info transition-colors duration-150 group w-fit"
+                className="flex items-center gap-3 text-muted-foreground hover:text-accent-info transition-colors duration-150 group w-fit text-sm"
               >
                 <Icon className="h-4 w-4 shrink-0 group-hover:scale-110 transition-transform duration-150" />
-                <span className="text-muted-foreground/50 select-none">{label}</span>
-                <span className="text-accent-info/30 select-none">→</span>
-                <span className="nav-link">{value}</span>
+                <span className="capitalize">{label}:</span>
+                <span className="text-foreground group-hover:text-accent-info transition-colors duration-150">{value}</span>
                 {external && (
                   <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-50 transition-opacity duration-150" />
                 )}
@@ -115,11 +111,11 @@ export default function Contact() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.18, delay: 0.15 }}
-            className="flex items-center gap-4 font-mono text-xs text-muted-foreground/40"
+            className="flex items-center gap-4 text-xs text-muted-foreground/60"
           >
-            <div className="h-px flex-1 bg-border/30" />
+            <div className="h-px flex-1 bg-border" />
             <span>or send a message</span>
-            <div className="h-px flex-1 bg-border/30" />
+            <div className="h-px flex-1 bg-border" />
           </motion.div>
 
           {/* Form */}
@@ -128,9 +124,6 @@ export default function Contact() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.18, delay: 0.2 }}
           >
-            <h2 className="text-base font-mono font-semibold mb-6 text-foreground">
-              <span className="text-accent-info">$</span> contact_form
-            </h2>
             <ContactForm />
           </motion.div>
 

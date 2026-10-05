@@ -11,14 +11,15 @@ export default {
         sm: ".1875rem", /* 3px */
       },
       colors: {
-        // Hybrid Terminal palette - semantic tokens (refined)
+        // Legacy palette aliases (retained so existing bg-terminal-*/text-terminal-*
+        // utility classes resolve to the current modern token values)
         terminal: {
-          bg: "#121619",          // Near-black blue/grey
-          text: "#d1e8e5",        // Off-white with teal tint
-          muted: "#9e9e9e",       // Accessible grey (4.52:1 contrast)
-          accent: "#7fd0bd",      // Mint teal for links/prompts
-          action: "#ea5c2a",      // Rust orange for CTAs
-          warn: "#fb3f58",        // Rose red for warnings
+          bg: "#121212",          // Neutral near-black
+          text: "#eaeaec",        // Neutral off-white
+          muted: "#9a9aa2",       // Accessible grey
+          accent: "#8b7cf6",      // Indigo for links/prompts
+          action: "#f5a524",      // Amber for CTAs
+          warn: "#f04444",        // Red for warnings
         },
         // New refined tokens from design spec
         surface: "hsl(var(--surface) / <alpha-value>)",
