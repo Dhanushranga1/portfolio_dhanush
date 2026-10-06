@@ -1,13 +1,13 @@
 # Portfolio - Dhanush Ranga Gopisetty
 
-A modern, terminal-inspired developer portfolio built with React, TypeScript, and the "Hybrid Terminal" design system.
+A developer portfolio built with React, TypeScript, and Vite, with all content (projects, experience, blog, favorites) managed through a self-hosted Strapi CMS rather than hardcoded in the frontend. Live at [dhanushranga1.dev](https://www.dhanushranga1.dev).
 
 ## 🎨 Design Philosophy
 
-This portfolio implements a "Hybrid Terminal" approach that combines:
+A clean, modern design with a single confident accent color, standard typography, and a conventional top navbar — with one deliberate touch of personality: an interactive terminal panel in the homepage hero showing real project stats, tech stack, and latest work. Built around:
 - **Professional multi-page structure** for accessibility and SEO
-- **Terminal aesthetics** for a unique, memorable experience
-- **Modern interactions** via command palette and micro-animations
+- **CMS-backed content** so projects/blog/experience can be edited without a code change
+- **Modern interactions** via command palette and subtle micro-animations
 - **Accessibility-first** design with WCAG AA compliance
 
 ## ✨ Features
