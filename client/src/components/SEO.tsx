@@ -10,9 +10,9 @@ interface SEOProps {
 }
 
 export function SEO({
-  title = 'Dhanush Ranga Gopisetty | Full-Stack Developer & AI Engineer',
-  description = 'Full-stack developer intern at Tonik, final-year B.Tech CSE student at SRM IST. Building AI-powered platforms with FastAPI, Next.js, LangGraph, and Kong API Gateway.',
-  keywords = 'Dhanush Ranga, Full-Stack Developer, AI Engineer, FastAPI, React, Python, TypeScript, LangGraph, Kong, SRM IST',
+  title = 'Dhanush Ranga Gopisetty | Software Engineer',
+  description = 'Junior Software Engineer at Tonik. Building AI-powered platforms with FastAPI, Next.js, LangGraph, and Kong API Gateway.',
+  keywords = 'Dhanush Ranga, Software Engineer, Full-Stack Developer, AI Engineer, FastAPI, React, Python, TypeScript, LangGraph, Kong',
   ogImage = 'https://dhanushranga1.dev/og-image.png',
   ogType = 'website',
   canonicalUrl,
@@ -72,21 +72,21 @@ export function SEO({
 // Predefined SEO configs for different pages
 export const seoConfigs = {
   home: {
-    title: 'Dhanush Ranga Gopisetty | Full-Stack Developer & AI Engineer',
-    description: 'Full-stack developer intern at Tonik, final-year B.Tech CSE at SRM IST Kattankulathur. Building AI platforms, agentic systems, and API gateway tools.',
-    keywords: 'Dhanush Ranga, Full-Stack Developer, AI Engineer, FastAPI, React, LangGraph, Kong, Python, TypeScript, SRM IST',
+    title: 'Dhanush Ranga Gopisetty | Software Engineer',
+    description: 'Junior Software Engineer at Tonik. Building AI platforms, agentic systems, and API gateway tools.',
+    keywords: 'Dhanush Ranga, Software Engineer, Full-Stack Developer, AI Engineer, FastAPI, React, LangGraph, Kong, Python, TypeScript',
     canonicalUrl: 'https://dhanushranga1.dev/',
   },
   about: {
     title: 'About Me | Dhanush Ranga Gopisetty',
-    description: 'Full-stack developer intern at Tonik. Final-year B.Tech CSE at SRM IST Kattankulathur (2022–2026), CGPA 9.06. AI governance, Kong API Gateway, LangGraph.',
+    description: 'Junior Software Engineer at Tonik, leading a vendor-replacement migration to Kong OSS. B.Tech CSE from SRM IST Kattankulathur. AI governance, API gateways, LangGraph.',
     keywords: 'Dhanush Ranga, About, SRM IST, Computer Science, Software Engineer, Tonik, Kong, LangGraph',
     canonicalUrl: 'https://dhanushranga1.dev/about',
   },
   projects: {
     title: 'Projects | Dhanush Ranga Gopisetty',
-    description: 'Portfolio: TicketPilot (multi-tenant RAG support platform), Kong-Agentic (natural-language Kong OSS interface), CineReads, Mesh3, ScrubPy.',
-    keywords: 'Projects, Portfolio, TicketPilot, Kong-Agentic, CineReads, ScrubPy, FastAPI, React, AI, CASPER, LangGraph',
+    description: 'Portfolio: Strata (AI-first SME IT-ops platform), Loupe (MCP server for Claude Code), Kong-Agentic (natural-language Kong OSS interface), CineReads, ScrubPy.',
+    keywords: 'Projects, Portfolio, Strata, Loupe, Kong-Agentic, CineReads, ScrubPy, FastAPI, React, AI, LangGraph, MCP',
     canonicalUrl: 'https://dhanushranga1.dev/projects',
   },
   blog: {
@@ -103,8 +103,8 @@ export const seoConfigs = {
   },
   contact: {
     title: 'Contact Me | Dhanush Ranga Gopisetty',
-    description: 'Get in touch with me for collaboration opportunities, project inquiries, or just to connect. Available for internships and freelance work.',
-    keywords: 'Contact, Email, Collaboration, Hire, Internship, Freelance',
+    description: 'Get in touch for collaboration opportunities, project inquiries, or just to connect.',
+    keywords: 'Contact, Email, Collaboration, Software Engineer',
     canonicalUrl: 'https://dhanushranga1.dev/contact',
   },
   favorites: {

@@ -69,7 +69,7 @@ export default function Contact() {
         >
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Contact</h1>
           <p className="text-muted-foreground max-w-[55ch]">
-            {settings?.contactIntro ?? "Open to collaboration, internship opportunities, and interesting conversations."}
+            {settings?.contactIntro ?? "Open to collaboration, interesting projects, and good conversations."}
           </p>
         </motion.div>
 
